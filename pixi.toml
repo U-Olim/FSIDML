@@ -1,0 +1,25 @@
+[workspace]
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+
+[dependencies]
+python = ">=3.11,<3.12"
+numpy = ">=2.4,<2.5"
+pandas = ">=3.0,<3.1"
+scipy = ">=1.16,<1.17"
+scikit-learn = ">=1.7,<1.8"
+matplotlib = ">=3.10,<3.11"
+pyarrow = ">=21,<24"
+pip = ">=25,<26"
+
+[pypi-dependencies]
+pytask = "==0.5.8"
+pytest = ">=9.0,<9.1"
+
+[tasks]
+pytask = "python -m pytask --force"
+pytask-fast = { cmd = "python -m pytask --force", env = { DML_RUN_MODE = "fast" } }
+paper-render = "quarto render documents/paper/paper.md --to html"
+paper-pdf = "quarto render documents/paper/paper.md --to pdf"
+presentation-render = "quarto render documents/presentation/presentation.md --to html"
+presentation-pdf = "python scripts/export_presentation_pdf.py"

@@ -1,0 +1,13 @@
+DGP,scenario,n,p,OLS,Lasso,Elastic Net
+Linear Baseline,n200_p100,200,100,0.7863,0.0853,0.0913
+Linear Baseline,n200_p150,200,150,0.1262,0.0825,0.0959
+Linear Baseline,n300_p100,300,100,0.1121,0.0654,0.072
+Linear Baseline,n300_p150,300,150,0.7679,0.0663,0.0737
+Linear Baseline,n400_p100,400,100,0.0821,0.0562,0.0611
+Linear Baseline,n400_p150,400,150,0.1024,0.0574,0.0646
+Linear Sparse Correlated,n200_p100,200,100,0.7439,0.0738,0.089
+Linear Sparse Correlated,n200_p150,200,150,0.1209,0.0807,0.0865
+Linear Sparse Correlated,n300_p100,300,100,0.1133,0.0624,0.0706
+Linear Sparse Correlated,n300_p150,300,150,0.7863,0.0623,0.0704
+Linear Sparse Correlated,n400_p100,400,100,0.0823,0.0547,0.0589
+Linear Sparse Correlated,n400_p150,400,150,0.1076,0.0536,0.0619

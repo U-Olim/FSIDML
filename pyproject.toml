@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dml_project"
+version = "0.1.0"
+description = "Monte Carlo project for Double Machine Learning validity analysis"
+requires-python = ">=3.11"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "src"]
+addopts = "-ra"
+norecursedirs = [".git", ".pixi", ".pytest_cache", "documents", "pytest-cache-files-*"]

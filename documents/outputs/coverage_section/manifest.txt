@@ -1,0 +1,4 @@
+﻿C:\Users\User\DML_project\documents\outputs\coverage_section\figures\fig_coverage_grouped_bar.png
+C:\Users\User\DML_project\documents\outputs\coverage_section\figures\fig_coverage_line.png
+C:\Users\User\DML_project\documents\outputs\coverage_section\tables\coverage_table_by_dgp.csv
+C:\Users\User\DML_project\documents\outputs\coverage_section\tables\coverage_table_by_dgp.md
