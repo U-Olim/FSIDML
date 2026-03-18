@@ -1,6 +1,7 @@
 ﻿---
 bibliography: refs.bib
 citeproc: true
+nocite: '@*'
 format:
   html:
     from: markdown+citations
@@ -15,8 +16,8 @@ format:
     geometry:
       - margin=1in
     linestretch: 1.15
-    pdf-engine: xelatex
-    include-in-header: preamble.tex
+    pdf-engine: pdflatex
+    include-in-header: documents/paper/preamble.tex
 ---
 
 ::: {=latex}
@@ -610,23 +611,31 @@ The empirical results are consistent with the simulation findings: while point e
 
 The results imply that reliable DML inference in finite samples requires controlling the fold-level ratio $pK/n$. In settings where this ratio is non-negligible, unregularized nuisance estimation can lead to unstable behavior even when $p < n$. Regularization provides a practical way to reduce this problem.
 
+### Conflict of interest
+
+The authors declare no conflict of interest.
+
+### Funding
+
+This research received no external funding.
+
 ## References
 
-Bach, Philipp, Oliver Schacht, Victor Chernozhukov, Sven Klaassen, and Martin Spindler. 2024. "Hyperparameter Tuning for Causal Inference with Double Machine Learning: A Simulation Study." In *Proceedings of the Third Conference on Causal Learning and Reasoning*, *Proceedings of Machine Learning Research* 236: 1065--1117. PMLR.
+Bach, Philipp, Oliver Schacht, Victor Chernozhukov, Sven Klaassen, and Martin Spindler. 2024. "Hyperparameter Tuning for Causal Inference with Double Machine Learning: A Simulation Study." In *Proceedings of the Third Conference on Causal Learning and Reasoning*, [*Proceedings of Machine Learning Research*](https://proceedings.mlr.press/v236/bach24a/bach24a.pdf) 236: 1065--1117. PMLR.
 
-Ballinari, Dario, and Noemi Bearth. 2024. "Improving the finite sample performance of double/debiased machine learning with propensity score calibration." arXiv:2409.04874.
+Ballinari, Dario, and Noemi Bearth. 2024. "Improving the finite sample performance of double/debiased machine learning with propensity score calibration." [arXiv:2409.04874](https://arxiv.org/pdf/2409.04874).
 
-Belloni, Alexandre, Victor Chernozhukov, and Christian Hansen. 2014. "Inference on Treatment Effects after Selection among High-Dimensional Controls." *The Review of Economic Studies* 81 (2): 608--650.
+Belloni, Alexandre, Victor Chernozhukov, and Christian Hansen. 2014. "Inference on Treatment Effects after Selection among High-Dimensional Controls." [*The Review of Economic Studies*](https://academic.oup.com/restud/article/81/2/608/1523757?login=true) 81 (2): 608--650.
 
-Buhlmann, Peter, and Sara van de Geer. 2011. *Statistics for High-Dimensional Data: Methods, Theory and Applications.* Springer.
+Buhlmann, Peter, and Sara van de Geer. 2011. [*Statistics for High-Dimensional Data: Methods, Theory and Applications.*](https://www.mimuw.edu.pl/~pokar/StatystykaMgr/Books/BuhlmannVanDeGeer_StatisticsHighDimensionalData11.pdf) Springer.
 
-Chernozhukov, Victor, Christian Hansen, Nathan Kallus, Martin Spindler, and Vasilis Syrgkanis. 2024. *Applied Causal Inference Powered by Machine Learning and AI.* Springer. https://doi.org/10.1007/978-3-031-64316-9
+Chernozhukov, Victor, Christian Hansen, Nathan Kallus, Martin Spindler, and Vasilis Syrgkanis. 2024. [*Applied Causal Inference Powered by Machine Learning and AI.*](https://arxiv.org/pdf/2403.02467) Springer.
 
-Chernozhukov, Victor, Denis Chetverikov, Mert Demirer, Esther Duflo, Christian Hansen, Whitney Newey, and James Robins. 2018. "Double/debiased Machine Learning for Treatment and Structural Parameters." *The Econometrics Journal* 21 (1): C1--C68.
+Chernozhukov, Victor, Denis Chetverikov, Mert Demirer, Esther Duflo, Christian Hansen, Whitney Newey, and James Robins. 2018. "Double/debiased Machine Learning for Treatment and Structural Parameters." [*The Econometrics Journal*](https://academic.oup.com/ectj/article/21/1/C1/5056401) 21 (1): C1--C68.
 
-Farrell, Max H. 2015. "Robust Inference on Average Treatment Effects with Possibly More Covariates than Observations." *Journal of Econometrics* 189 (1): 1--23.
+Farrell, Max H. 2015. "Robust Inference on Average Treatment Effects with Possibly More Covariates than Observations." [*Journal of Econometrics*](https://arxiv.org/abs/1309.4686) 189 (1): 1--23.
 
-Naghi, Amin. 2021. "Finite Sample Evaluation of Causal Machine Learning Methods: Guidelines for the Applied Researcher." *Tinbergen Institute Discussion Paper 2021-090*.
+Naghi, Andrea A., and Christian P. Wirths. 2021. "Finite Sample Evaluation of Causal Machine Learning Methods: Guidelines for the Applied Researcher." [*Tinbergen Institute Discussion Paper 2021-090*](https://papers.tinbergen.nl/21090.pdf).
 
 ::: {=latex}
 \clearpage
