@@ -502,7 +502,7 @@ To sum up, these results help explain the severe coverage failures observed in t
 
 ### 5.1 Data description
 
-The empirical analysis uses 401(k) eligibility dataset originally studied by Poterba, Venti, and Wise (1994). The dataset contains information on U.S. households and is frequently used to study the causal effect of retirement plan eligibility on household wealth.
+The empirical analysis uses 401(k) eligibility dataset originally studied by Poterba, Venti, and Wise ([1994](https://www.sciencedirect.com/science/article/pii/004727279401462W)). The dataset contains information on U.S. households and is frequently used to study the causal effect of retirement plan eligibility on household wealth.
 
 The outcome variable in the analysis is **household financial wealth**, measured by the variable `net_tfa`. The treatment variable is **401(k) eligibility**, denoted by `e401`, which is a binary indicator equal to one if the household is eligible to participate in a 401(k) retirement plan and zero otherwise. Eligibility is determined by the employer and therefore provides a source of variation that can be used to study how access to retirement savings plans affects wealth accumulation.
 
