@@ -1,119 +1,109 @@
-"""Tests for DGP modules and generated data behavior."""
+"""Tests for Fuhr-style DGP modules and shared helpers."""
 
 from __future__ import annotations
+
+import importlib
+from collections.abc import Callable
 
 import numpy as np
 import pytest
 
-from dml_project.dgps.base import generate_covariates
-from dml_project.dgps import linear_baseline, linear_sparse_correlated
-
-
-def _decay_coef() -> np.ndarray:
-    idx = np.arange(1, 6, dtype=float)
-    coef = 1.0 / (idx**2)
-    coef = coef / np.linalg.norm(coef)
-    return coef
-
-
-@pytest.mark.parametrize(
-    "generator",
-    [
-        linear_baseline.generate_data,
-        linear_sparse_correlated.generate_data,
-    ],
+from dml_project import config
+from dml_project.dgps.base import (
+    active_dimension,
+    centered_quadratic,
+    standard_normal_step,
 )
-def test_generate_data_shapes(generator) -> None:
-    """DGPs should return arrays with expected shapes."""
-    n = 200
-    p = 10
-    y, d, x = generator(n=n, p=p, theta=2.0, seed=123)
-    assert isinstance(y, np.ndarray)
-    assert isinstance(d, np.ndarray)
-    assert isinstance(x, np.ndarray)
-    assert y.shape == (n,)
-    assert d.shape == (n,)
-    assert x.shape == (n, p)
+
+DGPOutput = tuple[np.ndarray, np.ndarray, np.ndarray]
+DGPGenerator = Callable[[int, int, float, int], DGPOutput]
 
 
-@pytest.mark.parametrize(
-    "generator",
-    [
-        linear_baseline.generate_data,
-        linear_sparse_correlated.generate_data,
-    ],
-)
-def test_generate_data_reproducible_same_seed(generator) -> None:
-    """Same seed should generate identical data."""
-    first = generator(n=200, p=10, theta=2.0, seed=321)
-    second = generator(n=200, p=10, theta=2.0, seed=321)
-    for a, b in zip(first, second, strict=True):
-        assert np.array_equal(a, b)
+def _theta_0() -> float:
+    return getattr(config, "THETA_0", 1.0)
 
 
-@pytest.mark.parametrize(
-    "generator",
-    [
-        linear_baseline.generate_data,
-        linear_sparse_correlated.generate_data,
-    ],
-)
-def test_generate_data_changes_with_different_seed(generator) -> None:
-    """Different seeds should produce different generated arrays."""
-    first = generator(n=200, p=10, theta=2.0, seed=111)
-    second = generator(n=200, p=10, theta=2.0, seed=112)
-    assert any(not np.array_equal(a, b) for a, b in zip(first, second, strict=True))
+def _generator(dgp_name: str) -> DGPGenerator:
+    module = importlib.import_module(f"dml_project.dgps.{dgp_name}")
+    return module.generate_data
 
 
-def test_covariate_correlation_is_fixed() -> None:
-    """Covariate dependence in X should follow the fixed AR(1) design."""
-    n = 10000
-    p = 5
-    seed = 1234
+@pytest.mark.parametrize("dgp_name", config.DGP_NAMES)
+def test_every_configured_dgp_generates_expected_shapes(dgp_name: str) -> None:
+    """Every configured DGP should generate the runner-compatible tuple."""
 
-    x = generate_covariates(n=n, p=p, rng=np.random.default_rng(seed))
-    corr = np.corrcoef(x[:, 0], x[:, 1])[0, 1]
-    assert 0.45 < corr < 0.55
+    n_obs = 50
+    n_covariates = 20
+    y, d, x = _generator(dgp_name)(
+        n_obs,
+        n_covariates,
+        _theta_0(),
+        123,
+    )
 
-
-@pytest.mark.parametrize(
-    "generator,recover_m0,recover_g0",
-    [
-        (
-            linear_baseline.generate_data,
-            lambda x: x[:, :5] @ _decay_coef(),
-            lambda x: 0.5 * (x[:, :5] @ _decay_coef()),
-        ),
-        (
-            linear_sparse_correlated.generate_data,
-            lambda x: x[:, :5] @ _decay_coef(),
-            lambda x: 0.5 * (x[:, :5] @ _decay_coef()),
-        ),
-    ],
-)
-def test_error_correlation_follows_fixed_baseline(
-    generator, recover_m0, recover_g0
-) -> None:
-    """Recovered corr(epsilon, v) should follow the fixed baseline design."""
-    theta = 2.0
-    y, d, x = generator(n=8000, p=10, theta=theta, seed=999)
-    v = d - recover_m0(x)
-    epsilon = y - theta * d - recover_g0(x)
-    corr = np.corrcoef(epsilon, v)[0, 1]
-    assert np.isclose(corr, 0.0, atol=0.03)
+    assert x.shape == (n_obs, n_covariates)
+    assert d.shape == (n_obs,)
+    assert y.shape == (n_obs,)
+    assert _theta_0() == 1.0
 
 
-def test_linear_sparse_correlated_theta_is_consistent_with_true_plr_equation() -> None:
-    """Using true nuisances should recover theta in expectation."""
-    theta = 1.0
-    estimates = []
-    for seed in range(30):
-        y, d, x = linear_sparse_correlated.generate_data(n=1500, p=10, theta=theta, seed=seed)
-        signal = x[:, :5] @ _decay_coef()
-        m0 = signal
-        g0 = 0.5 * signal
-        y_res = y - g0
-        d_res = d - m0
-        estimates.append(np.mean(d_res * y_res) / np.mean(d_res**2))
+@pytest.mark.parametrize("dgp_name", config.DGP_NAMES)
+def test_generate_data_reproducible_same_seed(dgp_name: str) -> None:
+    """Same seed should generate identical arrays."""
 
-    assert np.isclose(float(np.mean(estimates)), theta, atol=0.03)
+    first = _generator(dgp_name)(50, 20, _theta_0(), 321)
+    second = _generator(dgp_name)(50, 20, _theta_0(), 321)
+
+    for first_array, second_array in zip(first, second, strict=True):
+        assert np.array_equal(first_array, second_array)
+
+
+@pytest.mark.parametrize("dgp_name", config.DGP_NAMES)
+def test_generate_data_changes_with_different_seed(dgp_name: str) -> None:
+    """Different seeds should change generated data."""
+
+    first = _generator(dgp_name)(50, 20, _theta_0(), 111)
+    second = _generator(dgp_name)(50, 20, _theta_0(), 112)
+
+    assert any(
+        not np.array_equal(first_array, second_array)
+        for first_array, second_array in zip(first, second, strict=True)
+    )
+
+
+def test_active_dimension_caps_at_ten() -> None:
+    """Active dimension should be min(10, p)."""
+
+    assert active_dimension(5) == 5
+    assert active_dimension(20) == 10
+
+
+def test_standard_normal_step_values() -> None:
+    """Step helper should implement the fixed quartile thresholds."""
+
+    actual = standard_normal_step(np.array([-1.0, -0.1, 0.1, 1.0]))
+
+    assert np.array_equal(actual, np.array([-3.0, -1.0, 1.0, 3.0]))
+
+
+def test_centered_quadratic_values() -> None:
+    """Quadratic helper should return x squared minus one."""
+
+    actual = centered_quadratic(np.array([0.0, 1.0, 2.0]))
+
+    assert np.array_equal(actual, np.array([-1.0, 0.0, 3.0]))
+
+
+def test_dgp_names_are_fuhr_style_names_only() -> None:
+    """Config should not include deprecated DGP names."""
+
+    assert config.DGP_NAMES == [
+        "linear_confounding",
+        "quadratic_confounding",
+        "interaction_confounding",
+        "step_confounding",
+    ]
+    assert "linear_dense_independent" not in config.DGP_NAMES
+    assert "linear_sparse_correlated" not in config.DGP_NAMES
+    assert "nonlinear_smooth" not in config.DGP_NAMES
+    assert "threshold_interaction" not in config.DGP_NAMES

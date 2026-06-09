@@ -1,0 +1,657 @@
+---
+title: "Major Revision Plan"
+subtitle: "Computational Statistics Resubmission"
+author: "Olim Umurzokov and co-author(s)"
+format:
+  pdf:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+# Revised Paper Identity
+
+## New Working Title
+
+**Cross-Fitting, Nuisance Learner Stability, and Finite-Sample Inference in Double Machine Learning**
+
+## Previous Title
+
+**Finite-Sample Inference in Double Machine Learning: OLS Instability under Cross-Fitting**
+
+## Reason for Title Change
+
+The previous title focused too narrowly on OLS instability. The revised title reflects the broader and more publishable contribution: finite-sample DML inference under cross-fitting, with emphasis on nuisance learner stability, fold-level dimensionality, and numerical diagnostics.
+
+# Core Revision Strategy
+
+This is a major reconstruction, not a cosmetic revision.
+
+The revised paper will study how cross-fitting affects the effective sample size available for nuisance estimation and how this affects finite-sample inference in Double/Debiased Machine Learning (DML). The paper will no longer present OLS failure as the sole contribution. Instead, OLS will be treated as one benchmark learner among several nuisance estimators.
+
+The central empirical diagnostic will be fold-level dimensionality:
+
+$$
+n_{\text{train}} = n\left(1 - \frac{1}{K}\right),
+$$
+
+$$
+\rho_{\text{fold}} = \frac{p}{n_{\text{train}}}.
+$$
+
+The paper will not claim that $\rho_{\text{fold}}$ is a formal theoretical determinant. It will be presented as an empirical diagnostic for finite-sample fragility in cross-fitted DML.
+
+# Revised Contribution
+
+The revised paper makes four contributions.
+
+First, it evaluates how fold-level nuisance-estimation sample size affects finite-sample DML inference across different numbers of cross-fitting folds.
+
+Second, it compares unregularized, regularized, and nonlinear learners under the same DML framework.
+
+Third, it introduces numerical and predictive diagnostics that help explain coverage distortions, including condition numbers, minimum eigenvalues, rank deficiency, nuisance MSPE, and cross-fitted nuisance $R^2$.
+
+Fourth, it provides practical guidance on reporting fold choice, learner choice, and diagnostic evidence in empirical DML applications.
+
+# Main Reviewer Problems and Required Fixes
+
+| Priority | Reviewer concern                                                      | Required fix                                                               |                      |      |
+| -------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------- | ---- |
+| Critical | Motivation for using OLS inside DML is weak.                          | Reframe the paper around nuisance learner stability, not only OLS failure. |                      |      |
+| Critical | Only $K=2$ is used.                                                   | Add $K \in \{2,5,10\}$.                                                    |                      |      |
+| Critical | Simulation design is too narrow.                                      | Add more DGPs, more learners, and broader dimensional regimes.             |                      |      |
+| Critical | The $pK/n$ claim is overstated.                                       | Reframe as an empirical diagnostic, not a theoretical result.              |                      |      |
+| Critical | Empirical 401(k) application does not support the instability regime. | Downgrade to empirical illustration or add a stress-test design.           |                      |      |
+| Critical | PLR notation is incorrect.                                            | Correct notation: distinguish $g_0(X)$, $\ell_0(X)=E[Y \mid X]$, and $r_0(X)=E[D \mid X]$. |                      |      |
+| High     | Learner set is too limited.                                           | Add Random Forest and Gradient Boosting.                                   |                      |      |
+| High     | DGPs are only linear.                                                 | Add smooth nonlinear and threshold/interacted DGPs.                        |                      |      |
+| High     | Mean bias can hide cancellation.                                      | Add mean absolute bias.                                                    |                      |      |
+| High     | Results are redundant.                                                | Reduce duplicated tables and figures.                                      |                      |      |
+| High     | "Instability" is vague.                                               | Define instability using numerical and inferential diagnostics.            |                      |      |
+| Medium   | Figures and tables are poorly formatted.                              | Rebuild publication-quality figures and tables.                            |                      |      |
+| Medium   | Reference inconsistencies.                                            | Correct bibliography and in-text citations.                                |                      |      |
+
+# Revised Model Framework
+
+The paper will use the partially linear regression model:
+
+$$
+Y_i = \theta_0 D_i + g_0(X_i) + U_i,
+$$
+
+where $\theta_0$ is the scalar target parameter and $g_0(X_i)$ is an unknown nuisance function.
+
+The treatment equation is:
+
+$$
+D_i = r_0(X_i) + V_i,
+$$
+
+where
+
+$$
+r_0(X_i)=E[D_i \mid X_i],
+$$
+
+and
+
+$$
+E[V_i \mid X_i]=0.
+$$
+
+The outcome nuisance used in the orthogonal score is:
+
+$$
+\ell_0(X_i)=E[Y_i \mid X_i].
+$$
+
+The identifying orthogonality condition for the partially linear regression coefficient is:
+
+$$
+E[(D_i-r_0(X_i))U_i]=0.
+$$
+
+Equivalently, the residualized treatment $D_i-r_0(X_i)$ must be orthogonal to the structural outcome error $U_i$.
+
+The Neyman orthogonal score is:
+$$
+\psi(W_i;\theta,\eta)
+=
+\{Y_i-\ell(X_i)-\theta[D_i-r(X_i)]\}[D_i-r(X_i)].
+$$
+
+where
+
+$$
+\eta=(\ell,r).
+$$
+
+The cross-fitted DML estimator solves:
+
+$$
+\frac{1}{n}\sum_{i=1}^{n}
+\psi(W_i;\hat{\theta},\hat{\eta}_{-k(i)})=0,
+$$
+
+where $\hat{\eta}_{-k(i)}$ is estimated using only observations outside observation $i$'s fold.
+
+Important clarification: $g_0(X)$ is the structural nuisance function in the partially linear model, while $\ell_0(X)=E[Y\mid X]$ is the reduced-form outcome regression used in the orthogonal score. These two objects should not be treated as identical.
+
+# Revised Simulation Design
+
+## Fold Choices
+
+The revised simulations will use:
+
+$$
+K \in \{2,5,10\}.
+$$
+
+This directly addresses the criticism that the old paper used only $K=2$.
+
+## Sample Sizes
+
+Candidate sample sizes:
+
+$$
+n \in \{250,500,1000\}.
+$$
+
+The final set may be reduced after pilot simulations if runtime is too high.
+
+## Covariate Dimensions
+
+Candidate dimensions:
+
+$$
+p \in \{25,50,100,150,300\}.
+$$
+
+The design should include low-dimensional, moderate-dimensional, near-critical, and high-dimensional regimes. The paper should not use only $p>n_{\text{train}}$, because that would make OLS failure trivial.
+
+# Data-Generating Processes
+
+All simulation designs follow the same partially linear structure:
+
+$$
+X_i \sim F_X,
+$$
+
+$$
+D_i = r_0(X_i) + V_i,
+$$
+
+$$
+Y_i = \theta_0D_i + g_0(X_i) + U_i.
+$$
+
+The target parameter is fixed at:
+
+$$
+\theta_0=1.
+$$
+
+Unless otherwise stated, the simulation uses exogenous treatment errors:
+
+$$
+E[U_i \mid X_i,V_i]=0,
+$$
+
+or equivalently,
+
+$$
+E[(D_i-r_0(X_i))U_i]=0.
+$$
+
+For the baseline design, use:
+
+$$
+U_i \sim N(0,\sigma_U^2),
+$$
+
+$$
+V_i \sim N(0,\sigma_V^2),
+$$
+
+with
+
+$$
+U_i \perp V_i \mid X_i.
+$$
+
+This restriction is important because the paper studies DML for the partially linear regression model, not IV-DML. If $U_i$ and $V_i$ are correlated conditional on $X_i$, treatment becomes endogenous and the PLR score no longer identifies $\theta_0$ without an instrument.
+
+## DGP 1: Linear Dense Independent
+
+Purpose: baseline linear setting.
+
+$$
+X_i \sim N(0,I_p).
+$$
+
+$$
+g_0(X_i)=X_i'\beta_g,
+$$
+
+$$
+r_0(X_i)=X_i'\beta_r.
+$$
+
+The coefficient vectors $\beta_g$ and $\beta_r$ are dense with decaying magnitudes, for example:
+
+$$
+\beta_{g,j}=c_g/j,
+\qquad
+\beta_{r,j}=c_r/j,
+\qquad
+j=1,\ldots,p.
+$$
+
+## DGP 2: Linear Sparse Correlated
+
+Purpose: setting favorable to sparse regularized learners.
+
+$$
+X_i \sim N(0,\Sigma),
+$$
+
+where
+
+$$
+\Sigma_{jk}=\rho_X^{|j-k|}.
+$$
+
+Use:
+
+$$
+\rho_X=0.5.
+$$
+
+Only the first $s$ coefficients are nonzero:
+
+$$
+\beta_{g,j}\neq 0,\quad \beta_{r,j}\neq 0
+\quad \text{for } j\leq s,
+$$
+
+and
+
+$$
+\beta_{g,j}=\beta_{r,j}=0
+\quad \text{for } j>s.
+$$
+
+A baseline choice is:
+
+$$
+s=10.
+$$
+
+## DGP 3: Smooth Nonlinear
+
+Purpose: test flexible learners under smooth nonlinear nuisance functions.
+
+$$
+X_i \sim N(0,I_p).
+$$
+
+$$
+g_0(X_i)
+=
+\sin(X_{i1})+X_{i2}^2+X_{i3}X_{i4}
++0.5X_{i5},
+$$
+
+$$
+r_0(X_i)
+=
+0.5X_{i1}+0.25X_{i2}^2+\sin(X_{i3})
++0.5X_{i4}X_{i5}.
+$$
+
+## DGP 4: Threshold and Interaction
+
+Purpose: nonsmooth setting with threshold effects and interactions.
+## DGP 4: Threshold and Interaction
+
+Purpose: nonsmooth setting with threshold effects and interactions.
+
+$$
+X_i \sim N(0,I_p).
+$$
+
+$$
+g_0(X_i)
+=
+\mathbf{1}\{X_{i1}>0\}
++
+X_{i2}\mathbf{1}\{X_{i3}>0\}
++
+0.5X_{i4}.
+$$
+
+$$
+r_0(X_i)
+=
+\mathbf{1}\{X_{i4}>0\}
++
+0.5X_{i5}X_{i6}
++
+0.25X_{i7}.
+$$
+
+This DGP is included because a purely linear simulation design cannot evaluate the role of flexible nonlinear learners in DML.
+
+# Learners
+
+The revised paper will use five nuisance learners:
+
+| Learner           | Role                                                   |
+| ----------------- | ------------------------------------------------------ |
+| OLS               | Unregularized baseline                                 |
+| Lasso             | Sparse regularized linear benchmark                    |
+| Elastic Net       | Regularized linear benchmark for correlated covariates |
+| Random Forest     | Nonlinear nonparametric benchmark                      |
+| Gradient Boosting | Strong nonlinear learner                               |
+
+Neural networks are optional and should not be added unless runtime and tuning are manageable.
+
+# Main Metrics
+
+For each scenario, report:
+
+$$
+\text{Bias} = \frac{1}{R}\sum_{r=1}^{R}(\hat{\theta}_r-\theta_0),
+$$
+
+$$
+\text{MAE} = \frac{1}{R}\sum_{r=1}^{R}|\hat{\theta}_r-\theta_0|,
+$$
+
+$$
+\text{RMSE} =
+\sqrt{
+\frac{1}{R}\sum_{r=1}^{R}(\hat{\theta}_r-\theta_0)^2
+}.
+$$
+
+Coverage:
+
+$$
+\text{Coverage}
+=
+\frac{1}{R}\sum_{r=1}^{R}
+\mathbf{1}\{\theta_0 \in CI_r\}.
+$$
+
+Average confidence interval length:
+$$
+\frac{1}{R}
+\sum_{r=1}^{R}
+\left(CI^{upper}_r-CI^{lower}_r\right).
+$$
+
+Standard-error ratio:
+
+$$
+\text{SE Ratio}
+=
+\frac{
+R^{-1}\sum_{r=1}^{R}\widehat{SE}_r
+}{
+\operatorname{sd}(\hat{\theta}_1,\ldots,\hat{\theta}_R)
+}.
+$$
+
+This metric compares the average estimated standard error with the Monte Carlo standard deviation of the estimator. Values below one indicate that the estimator tends to understate sampling uncertainty; values above one indicate overstatement.
+
+Non-convergence rate:
+
+$$
+\text{Non-convergence Rate}
+=
+\frac{\text{failed replications}}{R}.
+$$
+
+# Diagnostic Metrics
+
+For every replication and fold, compute:
+
+| Diagnostic                              | Meaning                                                             |
+| --------------------------------------- | ------------------------------------------------------------------- |
+| $\rho_{\text{fold}}=p/n_{\text{train}}$ | Fold-level dimensionality                                           |
+| Condition number of $X'X$               | Numerical instability of OLS nuisance estimation                    |
+| Minimum eigenvalue of $X'X$             | Near-singularity diagnostic                                         |
+| Rank-deficiency indicator               | Whether fold-level design matrix is singular                        |
+| Nuisance MSPE for $Y$                   | Out-of-fold prediction error for outcome nuisance                   |
+| Nuisance MSPE for $D$                   | Out-of-fold prediction error for treatment nuisance                 |
+| Cross-fitted $R^2_Y$                    | Predictive quality for outcome nuisance                             |
+| Cross-fitted $R^2_D$                    | Predictive quality for treatment nuisance                           |
+| SE ratio                                | Estimated standard error relative to Monte Carlo standard deviation |
+
+# Code Tasks
+
+## Task 1: Fix DGP Consistency
+
+Ensure that the code and paper describe exactly the same DGPs.
+
+No mismatch is acceptable. If the paper says independent covariates, the code must generate independent covariates. If the paper says AR(1), the code must generate AR(1).
+
+## Task 2: Add Fold Parameter
+
+Add a configurable fold parameter:
+
+```python
+n_folds: int
+```
+
+Run simulations for:
+
+```python
+K_values = [2, 5, 10]
+```
+
+## Task 3: Add New DGPs
+
+Implement:
+
+- `linear_dense_independent`
+- `linear_sparse_correlated`
+- `nonlinear_smooth`
+- `threshold_interaction`
+
+## Task 4: Add New Learners
+
+Implement:
+
+- `ols`
+- `lasso`
+- `elastic_net`
+- `random_forest`
+- `gradient_boosting`
+
+
+## Task 5: Add Diagnostics
+
+For each replication, save:
+
+- `condition_number`
+- `min_eigenvalue`
+- `rank_deficient`
+- `fold_train_size`
+- `fold_ratio`
+- `nuisance_mse_y`
+- `nuisance_mse_d`
+- `nuisance_r2_y`
+- `nuisance_r2_d`
+
+## Task 6: Add Final Aggregation Metrics
+
+Aggregate:
+
+- `bias`
+- `median_bias`
+- `mae`
+- `rmse`
+- `coverage`
+- `ci_length`
+- `se_ratio`
+- `non_convergence_rate`
+
+## Task 7: Rebuild Tables and Figures
+
+Generate:
+
+- `table_simulation_design`
+- `table_main_results`
+- `table_diagnostics`
+- `figure_coverage_by_fold_ratio`
+- `figure_condition_number_vs_se_distortion`
+- `figure_k_sensitivity`
+- `figure_nonlinear_dgp_learners`
+
+# Pilot Simulation Plan
+
+Before running full simulations, run a pilot with:
+
+$R = 100$
+
+Pilot goals:
+
+1. detect coding errors;
+2. estimate runtime;
+3. check whether the main empirical pattern exists;
+4. verify that diagnostics explain coverage failures;
+5. decide whether the full grid is computationally feasible.
+
+Only after the pilot succeeds should the full simulation be run.
+
+# Full Simulation Plan
+
+Target:
+
+$R = 1000$
+
+# Revised Paper Structure
+
+## 1. Introduction
+
+Main points:
+
+* `DML depends on nuisance estimation quality.`
+* `Cross-fitting changes the effective sample size for nuisance estimation.`
+* `Fold-level dimensionality and numerical conditioning can affect finite-sample inference.`
+* `The paper provides simulation evidence and diagnostics, not a new theorem.`
+
+## 2. DML Framework and Cross-Fitting
+
+Include:
+
+* `PLR model`;
+* `correct nuisance notation`;
+* `orthogonal score`;
+* `cross-fitting estimator`;
+* `fold-level training sample size`.
+
+## 3. Fold-Level Dimensionality and Diagnostics
+
+Define:
+
+$$
+n_{\text{train}} = n(1-1/K),
+$$
+
+$$
+\rho_{\text{fold}} = p/n_{\text{train}}.
+$$
+
+Explain diagnostics:
+
+* `condition number`;
+* `minimum eigenvalue`;
+* `rank deficiency`;
+* `nuisance prediction quality`;
+* `SE distortion`.
+
+Condition-number, eigenvalue, and rank diagnostics are primarily design-matrix diagnostics for linear nuisance learners. For Random Forest and Gradient Boosting, the main diagnostics are nuisance prediction quality, standard-error behavior, convergence/failure indicators, and split sensitivity.
+
+## 4. Simulation Design
+
+Describe:
+
+* `DGPs`;
+* `learners`;
+* `$K$ values`;
+* `$n,p$ combinations`;
+* `Monte Carlo replications`;
+* `performance metrics`.
+
+## 5. Simulation Results
+
+Organize results by:
+
+1. fold-level dimensionality;
+2. learner;
+3. DGP;
+4. fold number.
+
+Avoid redundant figures.
+
+## 6. Practical Recommendations
+
+Recommend that applied researchers report:
+
+* `number of folds $K$`;
+* `fold-level training sample size`;
+* `$\rho_{\text{fold}}$`;
+* `learner set`;
+* `nuisance prediction diagnostics`;
+* `repeated cross-fitting sensitivity`;
+* `condition/rank diagnostics for linear learners`.
+
+## 7. Conclusion
+
+State:
+
+* `fold-level dimensionality is useful as a diagnostic`;
+* `OLS can become fragile near fold-level singularity`;
+* `regularized and nonlinear learners can improve stability but may introduce bias or tuning sensitivity`;
+* `DML applications should report diagnostics, not only point estimates and standard errors`.
+
+# Final Simulation Grid
+
+The final simulation grid is selected to cover low, moderate, near-critical, and high fold-level dimensionality regimes.
+
+For each scenario, define:
+
+$$
+n_{\text{train}} = n\left(1-\frac{1}{K}\right),
+$$
+
+and
+
+$$
+\rho_{\text{fold}} = \frac{p}{n_{\text{train}}}.
+$$
+
+The quantity $\rho_{\text{fold}}$ is used as an empirical diagnostic for fold-level nuisance-estimation difficulty.
+
+## Pilot Grid
+
+The pilot simulation uses $R=100$ replications.
+
+| Scenario | \(n\) | \(p\) | Reason |
+|---|---:|---:|---|
+| P1 | 500 | 50 | Stable low-dimensional benchmark |
+| P2 | 500 | 150 | Moderate-dimensional transition case |
+| P3 | 250 | 150 | High fold-level dimensionality |
+| P4 | 250 | 300 | Near-singular or singular regime |

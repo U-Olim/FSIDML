@@ -3,31 +3,25 @@
 from __future__ import annotations
 
 import math
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass, fields
+from typing import Any
 
 from dml_project import config
-
-_ALLOWED_DGP_NAMES = {"linear_baseline", "linear_sparse_correlated"}
-_ALLOWED_LEARNER_NAMES = {"ols", "lasso", "elastic_net"}
 
 
 @dataclass(frozen=True)
 class Scenario:
-    """Immutable configuration for one Monte Carlo scenario.
+    """Immutable configuration for one Monte Carlo scenario."""
 
-    Each instance defines a single cell of the design grid (DGP, learner,
-    sample size, dimensionality, and replication count).
-    """
-
-    scenario_id: int
-    name: str
     dgp_name: str
     learner_name: str
-    n: int
-    p: int
-    theta: float
-    n_rep: int
-    base_seed: int
+    n_obs: int
+    n_covariates: int
+    n_folds: int
+    scenario_id: int = 0
+    theta: float = config.THETA_TRUE
+    n_rep: int = config.FULL_N_REP
+    base_seed: int = config.BASE_SEED
     matched_specification: bool = False
 
     def __post_init__(self) -> None:
@@ -35,62 +29,89 @@ class Scenario:
 
         if self.scenario_id < 0:
             raise ValueError("scenario_id must be >= 0")
-        if self.n <= 0:
-            raise ValueError("n must be > 0")
-        if self.p <= 0:
-            raise ValueError("p must be > 0")
+        if not isinstance(self.n_obs, int) or self.n_obs <= 0:
+            raise ValueError("n_obs must be a positive integer")
+        if not isinstance(self.n_covariates, int) or self.n_covariates <= 0:
+            raise ValueError("n_covariates must be a positive integer")
+        if not isinstance(self.n_folds, int):
+            raise ValueError("n_folds must be an integer")
+        if self.n_folds < 2:
+            raise ValueError("n_folds must be >= 2")
+        if self.n_folds > self.n_obs:
+            raise ValueError("n_folds must be <= n_obs")
         if self.n_rep <= 0:
             raise ValueError("n_rep must be > 0")
         if self.base_seed < 0:
             raise ValueError("base_seed must be >= 0")
-        if self.dgp_name not in _ALLOWED_DGP_NAMES:
+        if self.dgp_name not in config.DGP_NAMES:
             raise ValueError("dgp_name is not supported")
-        if self.learner_name not in _ALLOWED_LEARNER_NAMES:
+        if self.learner_name not in config.LEARNERS:
             raise ValueError("learner_name is not supported")
         if not math.isclose(self.theta, config.THETA_TRUE, abs_tol=1e-9):
             raise ValueError(f"theta must equal fixed design value {config.THETA_TRUE}")
-        # All active DGPs in the final design are linear PLR specifications.
-        matched_specification = self.dgp_name in _ALLOWED_DGP_NAMES
-        object.__setattr__(self, "matched_specification", matched_specification)
 
-    def to_dict(self) -> dict:
-        """Return a plain dictionary representation of the scenario.
+        object.__setattr__(
+            self,
+            "matched_specification",
+            self.dgp_name.startswith("linear_"),
+        )
 
-        Returns:
-            Scenario fields as a standard Python dictionary.
-        """
+    @property
+    def name(self) -> str:
+        """Return a deterministic, file-safe scenario name."""
 
-        return asdict(self)
+        return make_scenario_name(
+            dgp_name=self.dgp_name,
+            learner_name=self.learner_name,
+            n_obs=self.n_obs,
+            n_covariates=self.n_covariates,
+            n_folds=self.n_folds,
+        )
+
+    @property
+    def fold_train_size(self) -> float:
+        """Return the approximate fold-level nuisance training size."""
+
+        return self.n_obs * (1 - 1 / self.n_folds)
+
+    @property
+    def n(self) -> int:
+        """Backward-compatible alias for n_obs."""
+
+        return self.n_obs
+
+    @property
+    def p(self) -> int:
+        """Backward-compatible alias for n_covariates."""
+
+        return self.n_covariates
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a plain dictionary representation of the scenario."""
+
+        data = {field.name: getattr(self, field.name) for field in fields(self)}
+        data["name"] = self.name
+        data["n"] = self.n
+        data["p"] = self.p
+        data["fold_train_size"] = self.fold_train_size
+        return data
 
     def short_label(self) -> str:
-        """Return a compact human-readable label for logs and tables.
-
-        Returns:
-            Deterministic short label combining key scenario fields.
-        """
+        """Return a compact human-readable label for logs and tables."""
 
         return (
             f"{self.dgp_name}_{self.learner_name}_"
-            f"n{self.n}_p{self.p}_th{self.theta}"
+            f"n{self.n_obs}_p{self.n_covariates}_k{self.n_folds}_th{self.theta}"
         )
 
 
 def make_scenario_name(
     dgp_name: str,
     learner_name: str,
-    n: int,
-    p: int,
+    n_obs: int,
+    n_covariates: int,
+    n_folds: int,
 ) -> str:
-    """Create a deterministic, file-safe scenario name from key fields.
+    """Create a deterministic, file-safe scenario name from key fields."""
 
-    Args:
-        dgp_name: DGP module identifier.
-        learner_name: Learner identifier.
-        n: Sample size.
-        p: Number of covariates.
-
-    Returns:
-        String name suitable for logs and file naming.
-    """
-
-    return f"{dgp_name}_n{n}_p{p}_{learner_name}"
+    return f"{dgp_name}_n{n_obs}_p{n_covariates}_k{n_folds}_{learner_name}"

@@ -8,12 +8,36 @@ FAST_N_REP = 500
 # FULL mode is for final Monte Carlo evaluation on the same grid.
 FULL_N_REP = 1000
 
-N_VALUES = [200, 300, 400]
-P_VALUES = [100, 150]
+N_VALUES = [250, 500, 1000]
+P_VALUES = [25, 50, 100, 150, 300]
+# Outer cross-fitting folds for the simulation design.
+K_VALUES = [2, 5, 10]
+# Pilot scenarios use selected (n, p) cells rather than the full Cartesian grid.
+PILOT_N_P_PAIRS = [
+    (500, 50),
+    (500, 150),
+    (250, 150),
+    (250, 300),
+]
 THETA_TRUE = 1.0
 
 BASE_SEED = 123
-N_FOLDS = 2
+# Backward-compatible default for existing estimators and learner CV settings.
+# Inner CV folds for learner tuning are separate from K_VALUES and will be
+# configured explicitly in a later revision step.
+DEFAULT_N_FOLDS = 2
+N_FOLDS = DEFAULT_N_FOLDS
 
-DGP_NAMES = ["linear_baseline", "linear_sparse_correlated"]
-LEARNERS = ["ols", "lasso", "elastic_net"]
+DGP_NAMES = [
+    "linear_confounding",
+    "quadratic_confounding",
+    "interaction_confounding",
+    "step_confounding",
+]
+LEARNERS = [
+    "ols",
+    "lasso",
+    "elastic_net",
+    "random_forest",
+    "gradient_boosting",
+]
