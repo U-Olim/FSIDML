@@ -17,23 +17,22 @@ All results in the paper can be reproduced using the scripts provided in this re
 
 We conduct a Monte Carlo simulation where many artificial datasets are generated and the DML estimator is applied repeatedly.
 
-| Component                 | Setting                                   |
-| ------------------------- | ----------------------------------------- |
-| Sample sizes              | n = {200, 300, 400}                       |
-| Covariate dimension       | p = {100, 150}                            |
-| Nuisance estimators       | OLS, Lasso, Elastic Net                   |
-| Data generating processes | linear_baseline, linear_sparse_correlated |
-| Replications              | `1000` per scenario                       |
+| Component                 | Setting                                                                 |
+| ------------------------- | ----------------------------------------------------------------------- |
+| Sample sizes              | n = {250, 500, 1000}                                                    |
+| Covariate dimension       | p = {25, 50, 100, 150, 300}                                             |
+| Cross-fitting folds       | K = {2, 5, 10}                                                          |
+| Nuisance estimators       | OLS, Lasso, Elastic Net, Random Forest, Gradient Boosting               |
+| Data generating processes | linear_confounding, quadratic_confounding, interaction_confounding, step_confounding |
+| Replications              | `1000` per full-simulation scenario                                     |
 
-Total number of scenarios:
+The DGPs are adapted benchmark designs with linear, quadratic/U-shaped, interaction, and step-function confounding. The contribution is not inventing new theoretical DGPs; it is studying how these nuisance structures interact with fold-level dimensionality and learner stability in finite-sample DML inference.
 
-2 (DGP) x 3 (n) x 2 (p) x 3 (learners) = 36
+Total number of full scenarios:
 
-Each simulation scenario is repeated 1000 times. R = 1000 requires many thousands of model fits and can take hours depending on hardware.
+4 (DGP) x 3 (n) x 5 (p) x 3 (K) x 5 (learners) = 900
 
-Total Monte Carlo estimations in FULL mode: 36 x 1000 = 36 000
-
-This is the total number of simulated estimation runs across all scenarios and replications.
+Full simulation mode requires many model fits and can take substantial time depending on hardware. Smoke and pilot workflow modes are available for validation without running the full Monte Carlo design.
 
 ## Real Data Application
 

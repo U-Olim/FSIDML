@@ -1,6 +1,6 @@
 ---
 title: "Major Revision Plan"
-subtitle: "Computational Statistics Resubmission"
+subtitle: "A Simulation Study"
 author: "Olim Umurzokov and co-author(s)"
 format:
   pdf:
@@ -62,6 +62,8 @@ Third, it introduces numerical and predictive diagnostics that help explain cove
 
 Fourth, it provides practical guidance on reporting fold choice, learner choice, and diagnostic evidence in empirical DML applications.
 
+The simulation designs are adapted from published DML method-evaluation designs rather than introduced as new theoretical DGPs. The present paper contributes by studying how these nuisance structures interact with cross-fitting fold size, dimensionality, and learner stability.
+
 # Main Reviewer Problems and Required Fixes
 
 | Priority | Reviewer concern                                                      | Required fix                                                               |                      |      |
@@ -73,7 +75,7 @@ Fourth, it provides practical guidance on reporting fold choice, learner choice,
 | Critical | Empirical 401(k) application does not support the instability regime. | Downgrade to empirical illustration or add a stress-test design.           |                      |      |
 | Critical | PLR notation is incorrect.                                            | Correct notation: distinguish $g_0(X)$, $\ell_0(X)=E[Y \mid X]$, and $r_0(X)=E[D \mid X]$. |                      |      |
 | High     | Learner set is too limited.                                           | Add Random Forest and Gradient Boosting.                                   |                      |      |
-| High     | DGPs are only linear.                                                 | Add smooth nonlinear and threshold/interacted DGPs.                        |                      |      |
+| High     | DGPs are only linear.                                                 | Added adapted benchmark DGPs with linear, quadratic/U-shaped, interaction, and step-function confounding. |                      |      |
 | High     | Mean bias can hide cancellation.                                      | Add mean absolute bias.                                                    |                      |      |
 | High     | Results are redundant.                                                | Reduce duplicated tables and figures.                                      |                      |      |
 | High     | "Instability" is vague.                                               | Define instability using numerical and inferential diagnostics.            |                      |      |
@@ -180,176 +182,147 @@ The design should include low-dimensional, moderate-dimensional, near-critical, 
 
 # Data-Generating Processes
 
-All simulation designs follow the same partially linear structure:
-
-$$
-X_i \sim F_X,
-$$
+The revised simulation design uses four adapted benchmark DGPs for the partially linear regression model:
 
 $$
 D_i = r_0(X_i) + V_i,
 $$
 
 $$
-Y_i = \theta_0D_i + g_0(X_i) + U_i.
-$$
-
-The target parameter is fixed at:
-
-$$
-\theta_0=1.
-$$
-
-Unless otherwise stated, the simulation uses exogenous treatment errors:
-
-$$
-E[U_i \mid X_i,V_i]=0,
-$$
-
-or equivalently,
-
-$$
-E[(D_i-r_0(X_i))U_i]=0.
-$$
-
-For the baseline design, use:
-
-$$
-U_i \sim N(0,\sigma_U^2),
-$$
-
-$$
-V_i \sim N(0,\sigma_V^2),
+Y_i = \theta_0 D_i + g_0(X_i) + U_i,
 $$
 
 with
 
 $$
-U_i \perp V_i \mid X_i.
+\theta_0 = 1.
 $$
 
-This restriction is important because the paper studies DML for the partially linear regression model, not IV-DML. If $U_i$ and $V_i$ are correlated conditional on $X_i$, treatment becomes endogenous and the PLR score no longer identifies $\theta_0$ without an instrument.
+The DGPs are adapted from the functional-form classes used in Fuhr, Berens, and Papies (2024), "Estimating Causal Effects with Double Machine Learning -- A Method Evaluation": linear, U-shaped/quadratic, interaction, and step-function confounding. They are adapted to the present paper by varying \(n\), \(p\), and \(K\), because the purpose of this paper is to study fold-level nuisance learner stability under cross-fitting.
 
-## DGP 1: Linear Dense Independent
-
-Purpose: baseline linear setting.
+The covariates are generated as:
 
 $$
 X_i \sim N(0,I_p).
 $$
 
-$$
-g_0(X_i)=X_i'\beta_g,
-$$
+Unless otherwise stated, the errors satisfy:
 
 $$
-r_0(X_i)=X_i'\beta_r.
-$$
-
-The coefficient vectors $\beta_g$ and $\beta_r$ are dense with decaying magnitudes, for example:
-
-$$
-\beta_{g,j}=c_g/j,
+U_i \sim N(0,1),
 \qquad
-\beta_{r,j}=c_r/j,
-\qquad
-j=1,\ldots,p.
-$$
-
-## DGP 2: Linear Sparse Correlated
-
-Purpose: setting favorable to sparse regularized learners.
-
-$$
-X_i \sim N(0,\Sigma),
-$$
-
-where
-
-$$
-\Sigma_{jk}=\rho_X^{|j-k|}.
-$$
-
-Use:
-
-$$
-\rho_X=0.5.
-$$
-
-Only the first $s$ coefficients are nonzero:
-
-$$
-\beta_{g,j}\neq 0,\quad \beta_{r,j}\neq 0
-\quad \text{for } j\leq s,
+V_i \sim N(0,1),
 $$
 
 and
 
 $$
-\beta_{g,j}=\beta_{r,j}=0
-\quad \text{for } j>s.
+U_i \perp V_i \mid X_i.
 $$
 
-A baseline choice is:
+Thus, the simulations study observed confounding adjusted by \(X_i\), not IV-DML or unobserved endogeneity.
+
+For all DGPs, define:
 
 $$
-s=10.
+s=\min(10,p),
 $$
 
-## DGP 3: Smooth Nonlinear
-
-Purpose: test flexible learners under smooth nonlinear nuisance functions.
+and for \(j=1,\ldots,s\),
 
 $$
-X_i \sim N(0,I_p).
+a_j=\frac{1}{j},
+\qquad
+b_j=\frac{(-1)^{j+1}}{j}.
 $$
 
-$$
-g_0(X_i)
-=
-\sin(X_{i1})+X_{i2}^2+X_{i3}X_{i4}
-+0.5X_{i5},
-$$
+The coefficients \(a_j\) determine \(r_0(X)\), while \(b_j\) determine \(g_0(X)\). Only the first \(s\) covariates are active; the remaining \(p-s\) covariates are irrelevant controls.
+
+## DGP 1: Linear Confounding
 
 $$
-r_0(X_i)
-=
-0.5X_{i1}+0.25X_{i2}^2+\sin(X_{i3})
-+0.5X_{i4}X_{i5}.
-$$
-
-## DGP 4: Threshold and Interaction
-
-Purpose: nonsmooth setting with threshold effects and interactions.
-## DGP 4: Threshold and Interaction
-
-Purpose: nonsmooth setting with threshold effects and interactions.
-
-$$
-X_i \sim N(0,I_p).
+r_0(X_i)=\sum_{j=1}^{s}a_jX_{ij},
 $$
 
 $$
-g_0(X_i)
-=
-\mathbf{1}\{X_{i1}>0\}
-+
-X_{i2}\mathbf{1}\{X_{i3}>0\}
-+
-0.5X_{i4}.
+g_0(X_i)=\sum_{j=1}^{s}b_jX_{ij}.
+$$
+
+Purpose: baseline linear nuisance setting.
+
+## DGP 2: Quadratic Confounding
+
+Define the centered quadratic transformation:
+
+$$
+q(x)=x^2-1.
+$$
+
+Then:
+
+$$
+r_0(X_i)=\sum_{j=1}^{s}a_jq(X_{ij}),
 $$
 
 $$
-r_0(X_i)
-=
-\mathbf{1}\{X_{i4}>0\}
-+
-0.5X_{i5}X_{i6}
-+
-0.25X_{i7}.
+g_0(X_i)=\sum_{j=1}^{s}b_jq(X_{ij}).
 $$
 
-This DGP is included because a purely linear simulation design cannot evaluate the role of flexible nonlinear learners in DML.
+Purpose: smooth nonlinear/U-shaped nuisance setting.
+
+## DGP 3: Interaction Confounding
+
+Define the deterministic pairing:
+
+$$
+\pi(j)=
+\begin{cases}
+j+1, & j<s,\\
+1, & j=s.
+\end{cases}
+$$
+
+Then:
+
+$$
+r_0(X_i)=\sum_{j=1}^{s}a_jX_{ij}X_{i,\pi(j)},
+$$
+
+$$
+g_0(X_i)=\sum_{j=1}^{s}b_jX_{ij}X_{i,\pi(j)}.
+$$
+
+Purpose: non-additive nuisance setting with interactions.
+
+## DGP 4: Step Confounding
+
+Define the standard-normal quartile step function:
+
+$$
+h(x)=
+\begin{cases}
+-3, & x<-0.67448975,\\
+-1, & -0.67448975\le x<0,\\
+1, & 0\le x<0.67448975,\\
+3, & x\ge 0.67448975.
+\end{cases}
+$$
+
+Then:
+
+$$
+r_0(X_i)=\sum_{j=1}^{s}a_jh(X_{ij}),
+$$
+
+$$
+g_0(X_i)=\sum_{j=1}^{s}b_jh(X_{ij}).
+$$
+
+Purpose: nonsmooth threshold nuisance setting.
+
+Citation note: TODO: add BibTeX entry for Fuhr, Berens, and Papies (2024), "Estimating Causal Effects with Double Machine Learning -- A Method Evaluation."
+
+The DGPs are adapted benchmark designs, not exact replications of a single paper. The contribution is not inventing DGPs; it is studying how fold-level dimensionality and learner stability affect finite-sample DML inference.
 
 # Learners
 
@@ -440,38 +413,22 @@ For every replication and fold, compute:
 
 # Code Tasks
 
-## Task 1: Fix DGP Consistency
+## Step 1: Scenario and Configuration
 
-Ensure that the code and paper describe exactly the same DGPs.
+Scenario objects and configuration constants now support scenario-specific \(n\), \(p\), \(K\), DGP names, learner names, and replication counts.
 
-No mismatch is acceptable. If the paper says independent covariates, the code must generate independent covariates. If the paper says AR(1), the code must generate AR(1).
+## Step 2: Adapted Fuhr-Style DGPs
 
-## Task 2: Add Fold Parameter
+Implemented adapted benchmark DGPs:
 
-Add a configurable fold parameter:
+- `linear_confounding`
+- `quadratic_confounding`
+- `interaction_confounding`
+- `step_confounding`
 
-```python
-n_folds: int
-```
+## Step 3: Learners
 
-Run simulations for:
-
-```python
-K_values = [2, 5, 10]
-```
-
-## Task 3: Add New DGPs
-
-Implement:
-
-- `linear_dense_independent`
-- `linear_sparse_correlated`
-- `nonlinear_smooth`
-- `threshold_interaction`
-
-## Task 4: Add New Learners
-
-Implement:
+Implemented:
 
 - `ols`
 - `lasso`
@@ -479,8 +436,7 @@ Implement:
 - `random_forest`
 - `gradient_boosting`
 
-
-## Task 5: Add Diagnostics
+## Step 4: Estimator Diagnostics
 
 For each replication, save:
 
@@ -494,7 +450,11 @@ For each replication, save:
 - `nuisance_r2_y`
 - `nuisance_r2_d`
 
-## Task 6: Add Final Aggregation Metrics
+## Step 5: Runner Failure Handling
+
+The runner records failed replications, failure reasons, and successful replications without stopping the full scenario grid.
+
+## Step 6: Aggregation
 
 Aggregate:
 
@@ -507,7 +467,7 @@ Aggregate:
 - `se_ratio`
 - `non_convergence_rate`
 
-## Task 7: Rebuild Tables and Figures
+## Step 7: Tables and Figures
 
 Generate:
 
@@ -518,6 +478,10 @@ Generate:
 - `figure_condition_number_vs_se_distortion`
 - `figure_k_sensitivity`
 - `figure_nonlinear_dgp_learners`
+
+## Step 9: Workflow Modes
+
+The workflow layer supports explicit `smoke`, `pilot`, and `full` modes. Smoke and pilot modes are available for validation and runtime checks without triggering the full Monte Carlo simulation.
 
 # Pilot Simulation Plan
 

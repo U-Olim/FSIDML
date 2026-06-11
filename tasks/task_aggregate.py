@@ -19,8 +19,8 @@ try:
     from dml_project.pipeline_mode import get_replication_count, get_run_mode, output_suffix
     from dml_project.simulation.aggregate import aggregate_results
     from dml_project.simulation.scenario_builders import (
-        build_main_scenarios,
-        count_main_scenarios,
+        build_scenarios_for_mode,
+        count_scenarios_for_mode,
     )
     from dml_project.utils.checks import (
         SCENARIO_SUMMARY_COLUMNS,
@@ -33,8 +33,8 @@ except ModuleNotFoundError:
     from src.dml_project.pipeline_mode import get_replication_count, get_run_mode, output_suffix
     from src.dml_project.simulation.aggregate import aggregate_results
     from src.dml_project.simulation.scenario_builders import (
-        build_main_scenarios,
-        count_main_scenarios,
+        build_scenarios_for_mode,
+        count_scenarios_for_mode,
     )
     from src.dml_project.utils.checks import (
         SCENARIO_SUMMARY_COLUMNS,
@@ -48,16 +48,16 @@ SUFFIX = output_suffix(MODE)
 
 
 def task_aggregate(
-    path_to_raw: Path = PROJECT_ROOT / f"documents/outputs/raw/simulations{SUFFIX}.csv",
+    path_to_raw: Path = config.RAW_RESULTS_DIR / f"simulations{SUFFIX}.csv",
     path_to_aggregated: Annotated[Path, Product] = (
-        PROJECT_ROOT / f"documents/outputs/aggregated/scenario_summary{SUFFIX}.csv"
+        config.AGGREGATED_RESULTS_DIR / f"scenario_summary{SUFFIX}.csv"
     ),
 ) -> None:
     """Create scenario summary with identifiers and diagnostics."""
 
     expected_n_rep = get_replication_count(MODE)
-    expected_raw = PROJECT_ROOT / f"documents/outputs/raw/simulations{SUFFIX}.csv"
-    expected_summary = PROJECT_ROOT / f"documents/outputs/aggregated/scenario_summary{SUFFIX}.csv"
+    expected_raw = config.RAW_RESULTS_DIR / f"simulations{SUFFIX}.csv"
+    expected_summary = config.AGGREGATED_RESULTS_DIR / f"scenario_summary{SUFFIX}.csv"
     if path_to_raw != expected_raw:
         raise ValueError(f"task_aggregate must read {expected_raw}, got {path_to_raw}")
     if path_to_aggregated != expected_summary:
@@ -66,13 +66,13 @@ def task_aggregate(
         )
 
     raw_df = pd.read_csv(path_to_raw)
-    main_scenarios = build_main_scenarios(n_rep=expected_n_rep)
-    expected_scenarios = count_main_scenarios()
-    if len(main_scenarios) != expected_scenarios:
-        raise ValueError(f"Scenario count must be {expected_scenarios}, got {len(main_scenarios)}")
+    scenarios = build_scenarios_for_mode(MODE, n_rep=expected_n_rep)
+    expected_scenarios = count_scenarios_for_mode(MODE)
+    if len(scenarios) != expected_scenarios:
+        raise ValueError(f"Scenario count must be {expected_scenarios}, got={len(scenarios)}")
 
     validate_replication_structure(raw_df, expected_n_rep=expected_n_rep)
-    if set(raw_df["scenario_id"]) != {scenario.scenario_id for scenario in main_scenarios}:
+    if set(raw_df["scenario_id"]) != {scenario.scenario_id for scenario in scenarios}:
         raise ValueError("Raw simulation scenario_id set does not match scenario definitions")
 
     summary_df = pd.DataFrame(
@@ -85,24 +85,23 @@ def task_aggregate(
                 "matched_specification": scenario.matched_specification,
                 "n": scenario.n,
                 "p": scenario.p,
+                "n_obs": scenario.n_obs,
+                "n_covariates": scenario.n_covariates,
+                "n_folds": scenario.n_folds,
                 "n_rep": scenario.n_rep,
             }
-            for scenario in main_scenarios
+            for scenario in scenarios
         ]
     )
-    metrics_df = aggregate_results(raw_df)[
-        [
-            "scenario_id",
-            "bias",
-            "rmse",
-            "empirical_sd",
-            "mean_se",
-            "coverage",
-            "mean_ci_length",
-            "variance_ratio",
-            "t_stat_mean",
-            "t_stat_sd",
-        ]
+    aggregated_metrics = aggregate_results(raw_df)
+    metric_columns = [
+        column
+        for column in SCENARIO_SUMMARY_COLUMNS
+        if column in aggregated_metrics.columns
+        and (column == "scenario_id" or column not in summary_df.columns)
+    ]
+    metrics_df = aggregated_metrics[
+        ["scenario_id", *[column for column in metric_columns if column != "scenario_id"]]
     ]
     summary_df = summary_df.merge(
         metrics_df,
@@ -112,14 +111,15 @@ def task_aggregate(
     ).loc[:, SCENARIO_SUMMARY_COLUMNS]
     required_metrics = {
         "bias",
+        "median_bias",
+        "mae",
         "rmse",
         "empirical_sd",
         "mean_se",
         "coverage",
-        "mean_ci_length",
-        "variance_ratio",
-        "t_stat_mean",
-        "t_stat_sd",
+        "ci_length",
+        "se_ratio",
+        "non_convergence_rate",
     }
     missing_metrics = sorted(required_metrics.difference(summary_df.columns))
     if missing_metrics:
@@ -139,7 +139,7 @@ def task_aggregate(
 
     validate_summary_structure(
         summary_df=summary_df,
-        expected_scenarios=len(main_scenarios),
+        expected_scenarios=len(scenarios),
         design_key_columns=[
             "scenario_name",
             "dgp_name",
@@ -147,6 +147,7 @@ def task_aggregate(
             "matched_specification",
             "n",
             "p",
+            "n_folds",
             "n_rep",
         ],
     )

@@ -15,21 +15,56 @@ RMSE_DIR = PROJECT_ROOT / "documents/outputs/rmse_section"
 COVERAGE_DIR = PROJECT_ROOT / "documents/outputs/coverage_section"
 TSTAT_DIR = PROJECT_ROOT / "documents/outputs/tstat_section"
 
-MAIN_RESULTS_PATH = TABLE_DIR / "main_results.csv"
+MAIN_RESULTS_PATH = TABLE_DIR / "table_main_results.csv"
 SCENARIO_SUMMARY_PATH = PROJECT_ROOT / "documents/outputs/aggregated/scenario_summary.csv"
 
-DGP_ORDER = ["linear_baseline", "linear_sparse_correlated"]
+DGP_ORDER = [
+    "linear_confounding",
+    "quadratic_confounding",
+    "interaction_confounding",
+    "step_confounding",
+]
 DGP_LABELS = {
-    "linear_baseline": "Linear Baseline",
-    "linear_sparse_correlated": "Linear Sparse Correlated",
+    "linear_confounding": "Linear",
+    "quadratic_confounding": "Quadratic",
+    "interaction_confounding": "Interaction",
+    "step_confounding": "Step",
 }
-LEARNER_ORDER = ["ols", "lasso", "elastic_net"]
-LEARNER_LABELS = {"ols": "OLS", "lasso": "Lasso", "elastic_net": "Elastic Net"}
-SCENARIO_ORDER = ["n200_p100", "n200_p150", "n300_p100", "n300_p150", "n400_p100", "n400_p150"]
+LEARNER_ORDER = ["ols", "lasso", "elastic_net", "random_forest", "gradient_boosting"]
+LEARNER_LABELS = {
+    "ols": "OLS",
+    "lasso": "Lasso",
+    "elastic_net": "Elastic Net",
+    "random_forest": "Random Forest",
+    "gradient_boosting": "Gradient Boosting",
+}
+SCENARIO_ORDER = [
+    f"n{n}_p{p}"
+    for n in [250, 500, 1000]
+    for p in [25, 50, 100, 150, 300]
+]
 
-COLORS = {"ols": "#264653", "lasso": "#2a9d8f", "elastic_net": "#e76f51"}
-MARKERS = {"ols": "o", "lasso": "s", "elastic_net": "^"}
-LINESTYLES = {"ols": "-", "lasso": "--", "elastic_net": "-."}
+COLORS = {
+    "ols": "#264653",
+    "lasso": "#2a9d8f",
+    "elastic_net": "#e76f51",
+    "random_forest": "#b279a2",
+    "gradient_boosting": "#e45756",
+}
+MARKERS = {
+    "ols": "o",
+    "lasso": "s",
+    "elastic_net": "^",
+    "random_forest": "D",
+    "gradient_boosting": "v",
+}
+LINESTYLES = {
+    "ols": "-",
+    "lasso": "--",
+    "elastic_net": "-.",
+    "random_forest": ":",
+    "gradient_boosting": (0, (3, 1, 1, 1)),
+}
 
 
 def _configure_style() -> None:
@@ -271,8 +306,8 @@ def _write_coverage_outputs(df: pd.DataFrame) -> list[Path]:
     cov_figs = COVERAGE_DIR / "figures"
     cov_tables.mkdir(parents=True, exist_ok=True)
     cov_figs.mkdir(parents=True, exist_ok=True)
-    csv = cov_tables / "coverage_table_by_dgp.csv"
-    md = cov_tables / "coverage_table_by_dgp.md"
+    csv = cov_tables / "table_coverage_by_dgp.csv"
+    md = cov_tables / "table_coverage_by_dgp.md"
     table.to_csv(csv, index=False, encoding="utf-8")
     md.write_text(
         _to_markdown(table, "Confidence interval coverage by DGP and simulation scenario."),

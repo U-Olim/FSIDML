@@ -191,32 +191,22 @@ Overall, the results indicate that the threshold for instability in DML with OLS
 
 ### 3.3 Data Generating Processes
 
-A data generating process (DGP) describes how the data used in a simulation are created. It specifies the underlying model that links the variables together and defines the probability distributions of the random components. The covariate vector $X_i \in \mathbb{R}^p$ is generated from a multivariate normal distribution $X_i \sim N(0,\Sigma).$ Two covariance structures are considered. In the baseline setting the covariates are independent, implying $\Sigma = I_p,$ where $I_p$ denotes the $p \times p$ identity matrix. In the correlated setting the covariance matrix follows the autoregressive structure
+The revised simulation design uses four adapted benchmark DGPs for the partially linear regression model,
 $$
-\Sigma_{jk} = \rho^{|j-k|},
+D_i = r_0(X_i) + V_i,
 $$
-where $\rho = 0.5$. This specification introduces moderate correlation among the covariates and creates a more challenging estimation environment.
-
-The signal in the model is generated through a sparse linear combination of covariates 
-$$S_i = \sum_{j=1}^{s} \beta_j X_{ij}.$$
-The coefficients are defined as $\beta_j \propto \frac{1}{j^2},$ and normalized to satisfy $\|\beta\|_2 = 1.$ The sparsity level is defined as $s = \min(5,p),$ so that only a small subset of covariates contributes to the signal.
-
-\textbf{Noise Terms.}
-The stochastic disturbances are generated as independent Gaussian noise 
 $$
-U_i \sim N(0,1), \qquad V_i \sim N(0,1).
+Y_i = \theta_0 D_i + g_0(X_i) + U_i,
 $$
-These error terms represent unobserved factors affecting the outcome and treatment variables.
+with $\theta_0 = 1$. The DGPs are adapted from the functional-form classes used in Fuhr, Berens, and Papies (2024), "Estimating Causal Effects with Double Machine Learning -- A Method Evaluation": linear, U-shaped/quadratic, interaction, and step-function confounding. They are adapted to this paper by varying $n$, $p$, and $K$ to study fold-level nuisance learner stability under cross-fitting.
 
-\paragraph{DGP Specifications}
-Based on the framework described above, the simulation study considers two data generating processes.
+The covariates are generated as $X_i \sim N(0,I_p)$. Unless otherwise stated, the errors satisfy $U_i \sim N(0,1)$, $V_i \sim N(0,1)$, and $U_i \perp V_i \mid X_i$. Thus, the simulations study observed confounding adjusted by $X_i$, not IV-DML or unobserved endogeneity.
 
-\textbf{DGP 1: Linear Baseline.}
-The first design represents a baseline scenario with independent covariates. In this case the covariance matrix satisfies $\Sigma = I_p.$ The structural relationships between the variables remain linear and the nuisance functions follow the sparse signal structure described above. This setting serves as a benchmark environment for evaluating the finite-sample behavior of the estimator.
+For all DGPs, define $s=\min(10,p)$ and, for $j=1,\ldots,s$, define $a_j=1/j$ and $b_j=(-1)^{j+1}/j$. The coefficients $a_j$ determine $r_0(X)$, while $b_j$ determine $g_0(X)$. Only the first $s$ covariates are active; the remaining $p-s$ covariates are irrelevant controls.
 
-\textbf{DGP 2: Linear Sparse Correlated.}
-The second design introduces correlation among the covariates through the autoregressive covariance structure $\Sigma_{jk} = \rho^{|j-k|}, \quad \rho = 0.5.$ All other components of the data generating process remain unchanged. The presence of correlated covariates increases the complexity of the estimation problem and allows us to evaluate the robustness of the estimator under more realistic dependence structures among the control variables.
-Taken together, these two DGPs allow us to compare estimator performance in a baseline environment with independent controls and in a more challenging setting characterized by correlated covariates.
+The four implemented DGPs are: `linear_confounding`, a baseline linear nuisance setting; `quadratic_confounding`, a smooth nonlinear/U-shaped setting using $q(x)=x^2-1$; `interaction_confounding`, a non-additive setting with deterministic pairwise interactions; and `step_confounding`, a nonsmooth threshold setting based on standard-normal quartile steps.
+
+The simulation designs are adapted from published DML method-evaluation designs rather than introduced as new theoretical DGPs. The present paper contributes by studying how these nuisance structures interact with cross-fitting fold size, dimensionality, and learner stability.
 
 ### 3.4 Simulation Design
 
@@ -226,15 +216,15 @@ Also, the simulation framework provides a controlled environment in which the tr
 
 | Design Component                   | Specification                             |
 | ---------------------------------- | ----------------------------------------- |
-| Data-generating processes (DGPs)   | linear_baseline; linear_sparse_correlated |
-| Sample sizes ($n$)                 | 200; 300; 400                             |
-| Covariate dimensions ($p$)         | 100; 150                                  |
-| Nuisance estimators                | OLS; Lasso; Elastic Net                   |
+| Data-generating processes (DGPs)   | linear_confounding; quadratic_confounding; interaction_confounding; step_confounding |
+| Sample sizes ($n$)                 | 250; 500; 1000                            |
+| Covariate dimensions ($p$)         | 25; 50; 100; 150; 300                     |
+| Nuisance estimators                | OLS; Lasso; Elastic Net; Random Forest; Gradient Boosting |
 | True treatment effect ($\theta_0$) | 1.0                                       |
-| Cross-fitting folds                | 2                                         |
+| Cross-fitting folds                | 2; 5; 10                                  |
 | Base random seed                   | 123                                       |
 | Replications per scenario          | 1000                                      |
-| Total scenario count               | $3 \times 2 \times 2 \times 3 = 36$       |
+| Total scenario count               | $3 \times 5 \times 3 \times 4 \times 5 = 900$ |
 
 A key feature of the DML framework is that the estimation of the parameter of interest depends on the estimation of nuisance functions. In the partially linear model, the nuisance functions are defined as
 $$
@@ -418,7 +408,7 @@ RMSE combines both bias and dispersion and therefore provides a broader measure 
 \input{../outputs/rmse_section/tables/rmse_table_by_dgp.tex}
 :::
 
-Table 2 below reports that Lasso achieves the lowest RMSE in every scenario ranging from 0.054 to 0.085, while Elastic Net performs similarly but remains slightly less accurate, between 0.059-0.096. In contrast, OLS displays considerably larger RMSE in several cells, most notably when $(n,p)=(200,100)$ and $(300,150)$, where the RMSE rises to approximately 0.74–0.79, an order of magnitude larger than the values obtained with the regularized learners. In the remaining scenarios, OLS RMSE falls to the range 0.08–0.12, yet it still remains above the corresponding Lasso and Elastic Net values. The same pattern appears in both the Linear Baseline and the Linear Sparse Correlated DGP, indicating that the instability of OLS is not driven by the correlation structure of the controls but rather by the dimensionality of the covariate set relative to the effective training sample.
+Table 2 below reports that Lasso achieves the lowest RMSE in every scenario ranging from 0.054 to 0.085, while Elastic Net performs similarly but remains slightly less accurate, between 0.059-0.096. In contrast, OLS displays considerably larger RMSE in several cells, most notably when $(n,p)=(200,100)$ and $(300,150)$, where the RMSE rises to approximately 0.74–0.79, an order of magnitude larger than the values obtained with the regularized learners. In the remaining scenarios, OLS RMSE falls to the range 0.08–0.12, yet it still remains above the corresponding Lasso and Elastic Net values. The same pattern appears across the adapted benchmark DGPs, indicating that the instability of OLS is driven by the dimensionality of the covariate set relative to the effective training sample rather than by a single nuisance functional form.
 
 ::: {=latex}
 \begin{figure}[!htbp]
@@ -460,7 +450,7 @@ This section presents the coverage of the 95% confidence intervals for the treat
 
 Table 3 reveals a clear pattern: the coverage of OLS is considerably below the nominal level in most scenarios and becomes extremely low in the most demanding cells. In particular, when $(n,p)=(200,100)$ and $(300,150)$ the coverage drops to around 0.15–0.19 in both data-generating processes, indicating a severe breakdown of inference reliability. Even in scenarios where OLS performs better, the coverage remains well below the nominal level of 0.95.
 
-On the other hand, the regularized learners significantly improve inference relative to OLS, but their coverage remains below the nominal 95% level in all scenarios. Lasso consistently delivers coverage rates much closer to the nominal level than OLS, typically between 0.89 and 0.93 across scenarios. Elastic Net performs similarly but tends to produce slightly lower coverage than Lasso. Importantly, the same pattern appears in both the linear_baseline and the linear_sparse_correlated DGP, indicating that the difference across learners is not driven by the correlation structure of the controls.
+On the other hand, the regularized learners significantly improve inference relative to OLS, but their coverage remains below the nominal 95% level in all scenarios. Lasso consistently delivers coverage rates much closer to the nominal level than OLS, typically between 0.89 and 0.93 across scenarios. Elastic Net performs similarly but tends to produce slightly lower coverage than Lasso. Importantly, the same pattern appears across the adapted benchmark DGPs, indicating that the difference across learners is not driven by the correlation structure of the controls.
 
 ::: {=latex}
 \begin{figure}[!htbp]
@@ -471,7 +461,7 @@ On the other hand, the regularized learners significantly improve inference rela
 \end{figure}
 :::
 
-Figure 5 visualizes the coverage results across scenarios and reinforces the patterns observed in Table 3. The horizontal reference line marks the nominal 95% coverage level, which provides a clear benchmark for evaluating the reliability of the different nuisance estimators. Across both data-generating processes, the bars corresponding to OLS lie well below this reference line in most scenarios, indicating systematic undercoverage. In contrast, the bars for Lasso and Elastic Net remain consistently close to the nominal level across scenarios.
+Figure 5 visualizes the coverage results across scenarios and reinforces the patterns observed in Table 3. The horizontal reference line marks the nominal 95% coverage level, which provides a clear benchmark for evaluating the reliability of the different nuisance estimators. Across the adapted benchmark data-generating processes, the bars corresponding to OLS lie well below this reference line in most scenarios, indicating systematic undercoverage. In contrast, the bars for Lasso and Elastic Net remain consistently close to the nominal level across scenarios.
 
 The severe undercoverage observed in several scenarios suggests that the estimated standard errors do not adequately reflect the true variability of the estimator. When the coverage rate collapses to values around 0.15–0.19, this indicates that the confidence intervals are far too narrow relative to the actual dispersion of the estimates.
 
@@ -479,7 +469,7 @@ The severe undercoverage observed in several scenarios suggests that the estimat
 
 We now examine the standardized estimator to evaluate whether the distributional assumptions underlying inference are satisfied. If the procedure is valid, the resulting $t$-statistics should follow an approximate $\mathcal{N}(0,1)$ distribution. Deviations from this benchmark provide direct evidence on whether errors arise from bias, incorrect scaling, or excess dispersion.
 
-Table A2 reports diagnostic statistics for the t-statistics of the treatment effect estimator. The results reveal a striking difference across nuisance estimators. For OLS, the standard deviation of the t-statistics becomes extremely large in the most demanding scenarios. In particular, when $(n,p)=(200,100)$ and $(300,150)$ the standard deviation exceeds 24 and 28 in the Linear Baseline design and reaches values above 30 in the Linear Sparse Correlated design.
+Table A2 reports diagnostic statistics for the t-statistics of the treatment effect estimator. The results reveal a striking difference across nuisance estimators. For OLS, the standard deviation of the t-statistics becomes extremely large in the most demanding scenarios. In particular, when $(n,p)=(200,100)$ and $(300,150)$ the standard deviation exceeds 24 and 28 in the linear confounding design and reaches values above 30 in the adapted nonlinear and threshold designs.
 
 Relative to OLS, deviations for Lasso and Elastic Net are modest but systematic: mean t-statistics are slightly positive and standard deviations exceed one in most scenarios, consistent with the moderate undercoverage reported in Table 3. Overall, these deviations remain limited, with means close to zero and standard deviations near one. This suggests that regularized nuisance estimation yields more stable standard error estimates and improves the finite-sample reliability of DML inference.
 

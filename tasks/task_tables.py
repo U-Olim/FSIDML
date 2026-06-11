@@ -16,8 +16,10 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 try:
+    from dml_project import config
     from dml_project.pipeline_mode import get_run_mode, output_suffix
 except ModuleNotFoundError:
+    from src.dml_project import config
     from src.dml_project.pipeline_mode import get_run_mode, output_suffix
 
 MODE = get_run_mode()
@@ -282,10 +284,10 @@ def _write_table_outputs(table: pd.DataFrame, output_stem: Path) -> list[Path]:
 
 
 def task_tables(
-    path_to_raw: Path = PROJECT_ROOT / f"documents/outputs/raw/simulations{SUFFIX}.csv",
-    path_to_summary: Path = PROJECT_ROOT / f"documents/outputs/aggregated/scenario_summary{SUFFIX}.csv",
+    path_to_raw: Path = config.RAW_RESULTS_DIR / f"simulations{SUFFIX}.csv",
+    path_to_summary: Path = config.AGGREGATED_RESULTS_DIR / f"scenario_summary{SUFFIX}.csv",
     path_to_table: Annotated[Path, Product] = (
-        PROJECT_ROOT / f"documents/outputs/tables/table_main_results{SUFFIX}.csv"
+        config.TABLES_DIR / f"table_main_results{SUFFIX}.csv"
     ),
     path_to_table_manifest: Annotated[Path, Product] = (
         PROJECT_ROOT / f"documents/outputs/tables/table_suite_manifest{SUFFIX}.txt"
@@ -293,9 +295,9 @@ def task_tables(
 ) -> None:
     """Create the revised publication table suite from aggregated results."""
 
-    expected_raw = PROJECT_ROOT / f"documents/outputs/raw/simulations{SUFFIX}.csv"
-    expected_summary = PROJECT_ROOT / f"documents/outputs/aggregated/scenario_summary{SUFFIX}.csv"
-    expected_table = PROJECT_ROOT / f"documents/outputs/tables/table_main_results{SUFFIX}.csv"
+    expected_raw = config.RAW_RESULTS_DIR / f"simulations{SUFFIX}.csv"
+    expected_summary = config.AGGREGATED_RESULTS_DIR / f"scenario_summary{SUFFIX}.csv"
+    expected_table = config.TABLES_DIR / f"table_main_results{SUFFIX}.csv"
     if path_to_raw != expected_raw:
         raise ValueError(f"task_tables must read {expected_raw}, got {path_to_raw}")
     if path_to_summary != expected_summary:

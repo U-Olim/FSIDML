@@ -1,9 +1,4 @@
-"""Helpers for selecting pipeline mode, replication counts, and file suffixes.
-
-The project supports two execution modes:
-- ``full``: production-scale replication count.
-- ``fast``: reduced replication count for quicker iteration.
-"""
+"""Helpers for selecting workflow mode, replication counts, and file suffixes."""
 
 from __future__ import annotations
 
@@ -11,14 +6,14 @@ import os
 
 from dml_project import config
 
-VALID_RUN_MODES = {"full", "fast"}
+VALID_RUN_MODES = {"smoke", "pilot", "full", "fast"}
 
 
 def get_run_mode() -> str:
     """Read and validate the run mode from ``DML_RUN_MODE``.
 
     Returns:
-        Normalized mode string (``"full"`` or ``"fast"``).
+        Normalized mode string.
 
     Raises:
         ValueError: If the environment variable is set to an unsupported value.
@@ -29,13 +24,11 @@ def get_run_mode() -> str:
         raise ValueError(
             f"Unsupported DML_RUN_MODE={mode!r}. Use one of {sorted(VALID_RUN_MODES)}."
         )
-    return mode
+    return "pilot" if mode == "fast" else mode
 
 
 def get_replication_count(mode: str) -> int:
     """Return run-mode-specific replication count.
-
-    FAST and FULL must use the same scenario grid and differ only in ``n_rep``.
 
     Args:
         mode: Run mode string (case-insensitive).
@@ -48,10 +41,12 @@ def get_replication_count(mode: str) -> int:
     """
 
     normalized_mode = mode.lower()
+    if normalized_mode == "smoke":
+        return config.SMOKE_N_REPLICATIONS
+    if normalized_mode in {"pilot", "fast"}:
+        return config.PILOT_N_REPLICATIONS
     if normalized_mode == "full":
         return config.FULL_N_REP
-    if normalized_mode == "fast":
-        return config.FAST_N_REP
     raise ValueError(f"Unknown mode: {mode}")
 
 
@@ -62,7 +57,7 @@ def output_suffix(mode: str) -> str:
         mode: Run mode string (case-insensitive).
 
     Returns:
-        ``""`` for ``full`` mode and ``"_fast"`` for ``fast`` mode.
+        ``""`` for ``full`` mode and a mode suffix otherwise.
 
     Raises:
         ValueError: If ``mode`` is not recognized.
@@ -71,6 +66,8 @@ def output_suffix(mode: str) -> str:
     normalized_mode = mode.lower()
     if normalized_mode == "full":
         return ""
-    if normalized_mode == "fast":
-        return "_fast"
+    if normalized_mode == "smoke":
+        return "_smoke"
+    if normalized_mode in {"pilot", "fast"}:
+        return "_pilot"
     raise ValueError(f"Unknown mode: {mode}")

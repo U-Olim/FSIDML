@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 # Run-mode replication counts.
 # FAST mode is for development and quick iteration on the full design grid.
 FAST_N_REP = 500
 # FULL mode is for final Monte Carlo evaluation on the same grid.
 FULL_N_REP = 1000
+PILOT_N_REPLICATIONS = 100
+SMOKE_N_REPLICATIONS = 3
 
 N_VALUES = [250, 500, 1000]
 P_VALUES = [25, 50, 100, 150, 300]
@@ -19,6 +23,13 @@ PILOT_N_P_PAIRS = [
     (250, 150),
     (250, 300),
 ]
+SMOKE_SCENARIO = {
+    "n_obs": 100,
+    "n_covariates": 10,
+    "n_folds": 2,
+    "dgp_name": "linear_confounding",
+    "learner_name": "ols",
+}
 THETA_TRUE = 1.0
 
 BASE_SEED = 123
@@ -41,3 +52,10 @@ LEARNERS = [
     "random_forest",
     "gradient_boosting",
 ]
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+OUTPUT_DIR = PROJECT_ROOT / "documents" / "outputs"
+RAW_RESULTS_DIR = OUTPUT_DIR / "raw"
+AGGREGATED_RESULTS_DIR = OUTPUT_DIR / "aggregated"
+TABLES_DIR = OUTPUT_DIR / "tables"
+FIGURES_DIR = OUTPUT_DIR / "figures"

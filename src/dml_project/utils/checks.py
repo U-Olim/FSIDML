@@ -18,19 +18,43 @@ SCENARIO_SUMMARY_COLUMNS = [
     "scenario_name",
     "n",
     "p",
+    "n_obs",
+    "n_covariates",
+    "n_folds",
     "dgp_name",
     "learner_name",
     "n_rep",
     "matched_specification",
     "bias",
+    "median_bias",
+    "mae",
     "rmse",
+    "coverage",
+    "ci_length",
+    "mean_ci_length",
     "empirical_sd",
     "mean_se",
-    "coverage",
-    "mean_ci_length",
+    "se_ratio",
     "variance_ratio",
+    "non_convergence_rate",
+    "n_replications_total",
+    "n_replications_success",
+    "n_replications_failed",
     "t_stat_mean",
     "t_stat_sd",
+    "mean_fold_train_size",
+    "mean_fold_test_size",
+    "mean_fold_ratio",
+    "max_fold_ratio",
+    "mean_condition_number",
+    "max_condition_number",
+    "mean_min_eigenvalue",
+    "min_min_eigenvalue",
+    "rank_deficiency_rate",
+    "mean_nuisance_mse_y",
+    "mean_nuisance_mse_d",
+    "mean_nuisance_r2_y",
+    "mean_nuisance_r2_d",
 ]
 MAIN_RESULTS_COLUMNS = SCENARIO_SUMMARY_COLUMNS.copy()
 
@@ -158,14 +182,15 @@ def validate_scenario_summary_schema(summary_df: pd.DataFrame) -> None:
         )
     required_metrics = {
         "bias",
+        "median_bias",
+        "mae",
         "rmse",
+        "coverage",
+        "ci_length",
         "empirical_sd",
         "mean_se",
-        "coverage",
-        "mean_ci_length",
-        "variance_ratio",
-        "t_stat_mean",
-        "t_stat_sd",
+        "se_ratio",
+        "non_convergence_rate",
     }
     missing = sorted(required_metrics.difference(summary_df.columns))
     if missing:
@@ -180,7 +205,16 @@ def validate_main_results_schema(main_results_df: pd.DataFrame) -> None:
             "main_results has unexpected columns. "
             f"Expected {MAIN_RESULTS_COLUMNS}, got {list(main_results_df.columns)}"
         )
-    required = {"scenario_id", "scenario_name", "n", "p", "dgp_name", "learner_name", "n_rep"}
+    required = {
+        "scenario_id",
+        "scenario_name",
+        "n",
+        "p",
+        "n_folds",
+        "dgp_name",
+        "learner_name",
+        "n_rep",
+    }
     if not required.issubset(main_results_df.columns):
         raise ValueError(f"main_results missing required columns: {sorted(required)}")
 

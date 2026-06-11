@@ -13,11 +13,28 @@ RAW_PATH = PROJECT_ROOT / "documents/outputs/raw/simulations.csv"
 SUMMARY_PATH = PROJECT_ROOT / "documents/outputs/aggregated/scenario_summary.csv"
 OUT_DIR = PROJECT_ROOT / "documents/outputs/checks"
 
-SUSPICIOUS_SCENARIOS = [(200, 100), (300, 150)]
-DGP_ORDER = ["linear_baseline", "linear_sparse_correlated"]
-LEARNER_ORDER = ["ols", "lasso", "elastic_net"]
-LEARNER_LABELS = {"ols": "OLS", "lasso": "Lasso", "elastic_net": "Elastic Net"}
-COLORS = {"ols": "#264653", "lasso": "#2a9d8f", "elastic_net": "#e76f51"}
+SUSPICIOUS_SCENARIOS = [(250, 150), (500, 150)]
+DGP_ORDER = [
+    "linear_confounding",
+    "quadratic_confounding",
+    "interaction_confounding",
+    "step_confounding",
+]
+LEARNER_ORDER = ["ols", "lasso", "elastic_net", "random_forest", "gradient_boosting"]
+LEARNER_LABELS = {
+    "ols": "OLS",
+    "lasso": "Lasso",
+    "elastic_net": "Elastic Net",
+    "random_forest": "Random Forest",
+    "gradient_boosting": "Gradient Boosting",
+}
+COLORS = {
+    "ols": "#264653",
+    "lasso": "#2a9d8f",
+    "elastic_net": "#e76f51",
+    "random_forest": "#b279a2",
+    "gradient_boosting": "#e45756",
+}
 
 
 def _setup_style() -> None:
@@ -149,7 +166,7 @@ def _build_summary(raw: pd.DataFrame, summary: pd.DataFrame) -> pd.DataFrame:
                     "q99": float(stats["q99"]),
                     "t_stat_sd_aggregated": float(agg["t_stat_sd"]),
                     "mean_se_aggregated": float(agg["mean_se"]),
-                    "variance_ratio_aggregated": float(agg["variance_ratio"]),
+                    "se_ratio_aggregated": float(agg["se_ratio"]),
                     **extremes,
                 }
                 rows.append(row)
@@ -228,7 +245,7 @@ def _write_report(
 
     ols_rows = check_df.loc[check_df["learner_name"] == "ols"].copy()
     outlier_counts = ols_rows[["abs_err_gt_2", "abs_err_gt_5", "abs_err_gt_10"]].sum()
-    high_ratio = ols_rows["variance_ratio_aggregated"].to_numpy(dtype=float)
+    high_ratio = ols_rows["se_ratio_aggregated"].to_numpy(dtype=float)
 
     lines: list[str] = []
     lines.append("# RMSE Check Report")

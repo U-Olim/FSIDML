@@ -18,6 +18,7 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 try:
+    from dml_project import config
     from dml_project.pipeline_mode import (
         get_replication_count,
         get_run_mode,
@@ -25,11 +26,12 @@ try:
     )
     from dml_project.simulation.runner import run_scenario_with_runtime
     from dml_project.simulation.scenario_builders import (
-        build_main_scenarios,
-        count_main_scenarios,
+        build_scenarios_for_mode,
+        count_scenarios_for_mode,
     )
     from dml_project.utils.checks import validate_replication_structure
 except ModuleNotFoundError:
+    from src.dml_project import config
     from src.dml_project.pipeline_mode import (
         get_replication_count,
         get_run_mode,
@@ -37,8 +39,8 @@ except ModuleNotFoundError:
     )
     from src.dml_project.simulation.runner import run_scenario_with_runtime
     from src.dml_project.simulation.scenario_builders import (
-        build_main_scenarios,
-        count_main_scenarios,
+        build_scenarios_for_mode,
+        count_scenarios_for_mode,
     )
     from src.dml_project.utils.checks import validate_replication_structure
 
@@ -92,21 +94,21 @@ def _make_progress(total_scenarios: int) -> Any:
 
 def task_simulations(
     path_to_raw: Annotated[Path, Product] = (
-        PROJECT_ROOT / f"documents/outputs/raw/simulations{SUFFIX}.csv"
+        config.RAW_RESULTS_DIR / f"simulations{SUFFIX}.csv"
     ),
 ) -> None:
     """Run simulations and write replication-level outputs with integrity checks."""
     mode = MODE
     suffix = SUFFIX
-    expected_path = PROJECT_ROOT / f"documents/outputs/raw/simulations{suffix}.csv"
+    expected_path = config.RAW_RESULTS_DIR / f"simulations{suffix}.csv"
     if path_to_raw != expected_path:
         raise ValueError(
             f"task_simulations must write to {expected_path}, got {path_to_raw}"
         )
 
     expected_n_rep = get_replication_count(mode)
-    scenarios = build_main_scenarios(n_rep=expected_n_rep)
-    expected_scenarios = count_main_scenarios()
+    scenarios = build_scenarios_for_mode(mode, n_rep=expected_n_rep)
+    expected_scenarios = count_scenarios_for_mode(mode)
     if len(scenarios) != expected_scenarios:
         raise ValueError(
             f"Scenario count must be {expected_scenarios}, got {len(scenarios)}"
@@ -118,7 +120,7 @@ def task_simulations(
     if path_to_raw.exists():
         path_to_raw.unlink()
     runtime_stats_path = (
-        PROJECT_ROOT / "documents/outputs/aggregated/scenario_runtime_stats.csv"
+        config.AGGREGATED_RESULTS_DIR / f"scenario_runtime_stats{suffix}.csv"
     )
     runtime_stats_path.parent.mkdir(parents=True, exist_ok=True)
     if runtime_stats_path.exists():

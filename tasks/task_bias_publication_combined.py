@@ -12,20 +12,51 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 INPUT_PATH = PROJECT_ROOT / "documents/outputs/aggregated/scenario_summary.csv"
 OUT_DIR = PROJECT_ROOT / "documents/outputs/bias_section/publication"
 
-DGP_ORDER = ["linear_baseline", "linear_sparse_correlated"]
-LEARNER_ORDER = ["ols", "lasso", "elastic_net"]
-N_ORDER = [200, 300, 400]
-P_ORDER = [100, 150]
+DGP_ORDER = [
+    "linear_confounding",
+    "quadratic_confounding",
+    "interaction_confounding",
+    "step_confounding",
+]
+LEARNER_ORDER = ["ols", "lasso", "elastic_net", "random_forest", "gradient_boosting"]
+N_ORDER = [250, 500, 1000]
+P_ORDER = [25, 50, 100, 150, 300]
 SCENARIOS = [f"n{n}_p{p}" for n in N_ORDER for p in P_ORDER]
 
 DGP_LABELS = {
-    "linear_baseline": "Linear Baseline",
-    "linear_sparse_correlated": "Linear Sparse Correlated",
+    "linear_confounding": "Linear",
+    "quadratic_confounding": "Quadratic",
+    "interaction_confounding": "Interaction",
+    "step_confounding": "Step",
 }
-LEARNER_LABELS = {"ols": "OLS", "lasso": "Lasso", "elastic_net": "Elastic Net"}
-LEARNER_COLORS = {"ols": "#264653", "lasso": "#2a9d8f", "elastic_net": "#e76f51"}
-LEARNER_MARKERS = {"ols": "o", "lasso": "s", "elastic_net": "^"}
-LEARNER_LINESTYLES = {"ols": "-", "lasso": "--", "elastic_net": "-."}
+LEARNER_LABELS = {
+    "ols": "OLS",
+    "lasso": "Lasso",
+    "elastic_net": "Elastic Net",
+    "random_forest": "Random Forest",
+    "gradient_boosting": "Gradient Boosting",
+}
+LEARNER_COLORS = {
+    "ols": "#264653",
+    "lasso": "#2a9d8f",
+    "elastic_net": "#e76f51",
+    "random_forest": "#b279a2",
+    "gradient_boosting": "#e45756",
+}
+LEARNER_MARKERS = {
+    "ols": "o",
+    "lasso": "s",
+    "elastic_net": "^",
+    "random_forest": "D",
+    "gradient_boosting": "v",
+}
+LEARNER_LINESTYLES = {
+    "ols": "-",
+    "lasso": "--",
+    "elastic_net": "-.",
+    "random_forest": ":",
+    "gradient_boosting": (0, (3, 1, 1, 1)),
+}
 
 
 def _configure() -> None:

@@ -18,8 +18,10 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 try:
+    from dml_project import config
     from dml_project.pipeline_mode import get_run_mode, output_suffix
 except ModuleNotFoundError:
+    from src.dml_project import config
     from src.dml_project.pipeline_mode import get_run_mode, output_suffix
 
 MODE = get_run_mode()
@@ -403,7 +405,7 @@ def plot_nonlinear_dgp_learners(
 
 def task_figures(
     path_to_aggregated_results: Path = (
-        PROJECT_ROOT / f"documents/outputs/aggregated/scenario_summary{SUFFIX}.csv"
+        config.AGGREGATED_RESULTS_DIR / f"scenario_summary{SUFFIX}.csv"
     ),
     path_to_figure_manifest: Annotated[Path, Product] = (
         PROJECT_ROOT / f"documents/outputs/figures/figure_manifest{SUFFIX}.txt"
@@ -411,12 +413,12 @@ def task_figures(
 ) -> None:
     """Create the revised main simulation figure suite."""
 
-    expected_results = PROJECT_ROOT / f"documents/outputs/aggregated/scenario_summary{SUFFIX}.csv"
+    expected_results = config.AGGREGATED_RESULTS_DIR / f"scenario_summary{SUFFIX}.csv"
     if path_to_aggregated_results != expected_results:
         raise ValueError(f"task_figures must read {expected_results}, got {path_to_aggregated_results}")
 
     results = pd.read_csv(path_to_aggregated_results)
-    figure_dir = PROJECT_ROOT / "documents/outputs/figures"
+    figure_dir = config.FIGURES_DIR
     figure_dir.mkdir(parents=True, exist_ok=True)
 
     output_paths = [
