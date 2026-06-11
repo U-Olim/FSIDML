@@ -32,7 +32,7 @@ Total number of full scenarios:
 
 4 (DGP) x 3 (n) x 5 (p) x 3 (K) x 5 (learners) = 900
 
-Full simulation mode requires many model fits and can take substantial time depending on hardware. Smoke and pilot workflow modes are available for validation without running the full Monte Carlo design.
+Full simulation mode requires many model fits and can take substantial time depending on hardware. The revised workflow uses two modes: `smoke`, which runs the full scenario grid with R = 10, and `full`, which runs the full scenario grid with R = 1000.
 
 ## Real Data Application
 

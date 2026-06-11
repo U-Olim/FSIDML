@@ -5,31 +5,18 @@ from __future__ import annotations
 from pathlib import Path
 
 # Run-mode replication counts.
-# FAST mode is for development and quick iteration on the full design grid.
-FAST_N_REP = 500
-# FULL mode is for final Monte Carlo evaluation on the same grid.
-FULL_N_REP = 1000
-PILOT_N_REPLICATIONS = 100
-SMOKE_N_REPLICATIONS = 3
+# Smoke mode checks the full scenario grid with a low replication count.
+SMOKE_N_REPLICATIONS = 10
+# Full mode is for final Monte Carlo evaluation on the same grid.
+N_REPLICATIONS = 1000
+FULL_N_REPLICATIONS = N_REPLICATIONS
+# Backward-compatible alias for existing scenario defaults.
+FULL_N_REP = N_REPLICATIONS
 
 N_VALUES = [250, 500, 1000]
 P_VALUES = [25, 50, 100, 150, 300]
 # Outer cross-fitting folds for the simulation design.
 K_VALUES = [2, 5, 10]
-# Pilot scenarios use selected (n, p) cells rather than the full Cartesian grid.
-PILOT_N_P_PAIRS = [
-    (500, 50),
-    (500, 150),
-    (250, 150),
-    (250, 300),
-]
-SMOKE_SCENARIO = {
-    "n_obs": 100,
-    "n_covariates": 10,
-    "n_folds": 2,
-    "dgp_name": "linear_confounding",
-    "learner_name": "ols",
-}
 THETA_TRUE = 1.0
 
 BASE_SEED = 123

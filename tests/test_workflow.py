@@ -5,11 +5,16 @@ from __future__ import annotations
 import importlib
 from pathlib import Path
 
+import pytest
+
 from dml_project import config
-from dml_project.pipeline_mode import get_replication_count, output_suffix
+from dml_project.pipeline_mode import (
+    VALID_RUN_MODES,
+    get_replication_count,
+    output_suffix,
+)
 from dml_project.simulation.scenario_builders import (
     build_all_scenarios,
-    build_pilot_scenarios,
     build_scenarios_for_mode,
     build_smoke_scenarios,
 )
@@ -47,41 +52,8 @@ def test_workflow_task_files_do_not_use_n_folds_constant() -> None:
         assert "N_FOLDS" not in text, f"{path} still references N_FOLDS"
 
 
-def test_smoke_scenario_builder_returns_one_scenario() -> None:
-    """Smoke workflow should build exactly one configured scenario."""
-
-    scenarios = build_smoke_scenarios()
-
-    assert len(scenarios) == 1
-    scenario = scenarios[0]
-    assert scenario.n_obs == config.SMOKE_SCENARIO["n_obs"]
-    assert scenario.n_covariates == config.SMOKE_SCENARIO["n_covariates"]
-    assert scenario.n_folds == config.SMOKE_SCENARIO["n_folds"]
-    assert scenario.dgp_name == config.SMOKE_SCENARIO["dgp_name"]
-    assert scenario.learner_name == config.SMOKE_SCENARIO["learner_name"]
-    assert scenario.n_rep == config.SMOKE_N_REPLICATIONS
-
-
-def test_pilot_scenario_builder_count_matches_design() -> None:
-    """Pilot workflow should use selected n/p pairs over K/DGP/learner cells."""
-
-    scenarios = build_pilot_scenarios()
-    expected = (
-        len(config.PILOT_N_P_PAIRS)
-        * len(config.K_VALUES)
-        * len(config.DGP_NAMES)
-        * len(config.LEARNERS)
-    )
-
-    assert len(scenarios) == expected
-    assert all(scenario.n_rep == config.PILOT_N_REPLICATIONS for scenario in scenarios)
-
-
-def test_full_scenario_builder_count_matches_design() -> None:
-    """Full workflow should use the complete n/p/K/DGP/learner grid."""
-
-    scenarios = build_all_scenarios()
-    expected = (
+def _expected_full_scenario_count() -> int:
+    return (
         len(config.N_VALUES)
         * len(config.P_VALUES)
         * len(config.K_VALUES)
@@ -89,22 +61,72 @@ def test_full_scenario_builder_count_matches_design() -> None:
         * len(config.LEARNERS)
     )
 
+
+def test_allowed_modes_are_smoke_and_full() -> None:
+    """Workflow should expose only the two supported simulation modes."""
+
+    assert VALID_RUN_MODES == {"smoke", "full"}
+
+
+@pytest.mark.parametrize("mode", ["pilot", "dev", "fast"])
+def test_removed_modes_are_rejected(mode: str) -> None:
+    """Removed workflow modes should fail clearly."""
+
+    with pytest.raises(ValueError, match="Allowed modes are smoke and full"):
+        build_scenarios_for_mode(mode)
+    with pytest.raises(ValueError, match="Allowed modes are smoke and full"):
+        get_replication_count(mode)
+    with pytest.raises(ValueError, match="Allowed modes are smoke and full"):
+        output_suffix(mode)
+
+
+def test_smoke_scenario_builder_returns_full_grid() -> None:
+    """Smoke workflow should use the complete scenario grid."""
+
+    scenarios = build_smoke_scenarios()
+
+    assert len(scenarios) == _expected_full_scenario_count()
+    assert all(scenario.n_rep == config.SMOKE_N_REPLICATIONS for scenario in scenarios)
+
+
+def test_full_scenario_builder_count_matches_design() -> None:
+    """Full workflow should use the complete n/p/K/DGP/learner grid."""
+
+    scenarios = build_all_scenarios()
+    expected = _expected_full_scenario_count()
+
     assert len(scenarios) == expected
-    assert all(scenario.n_rep == config.FULL_N_REP for scenario in scenarios)
+    assert all(scenario.n_rep == config.N_REPLICATIONS for scenario in scenarios)
+
+
+def test_smoke_and_full_have_same_scenario_names() -> None:
+    """Smoke and full modes should differ only by replication count."""
+
+    smoke_names = [scenario.name for scenario in build_scenarios_for_mode("smoke")]
+    full_names = [scenario.name for scenario in build_scenarios_for_mode("full")]
+
+    assert smoke_names == full_names
 
 
 def test_mode_specific_builders_and_replication_counts() -> None:
-    """Workflow modes should select smoke, pilot, and full grids explicitly."""
+    """Workflow modes should select smoke and full grids explicitly."""
 
-    assert len(build_scenarios_for_mode("smoke")) == 1
-    assert len(build_scenarios_for_mode("pilot")) == len(build_pilot_scenarios())
+    assert len(build_scenarios_for_mode("smoke")) == _expected_full_scenario_count()
     assert len(build_scenarios_for_mode("full")) == len(build_all_scenarios())
+    assert config.SMOKE_N_REPLICATIONS == 10
+    assert config.N_REPLICATIONS == 1000
     assert get_replication_count("smoke") == config.SMOKE_N_REPLICATIONS
-    assert get_replication_count("pilot") == config.PILOT_N_REPLICATIONS
-    assert get_replication_count("full") == config.FULL_N_REP
+    assert get_replication_count("full") == config.N_REPLICATIONS
     assert output_suffix("smoke") == "_smoke"
-    assert output_suffix("pilot") == "_pilot"
     assert output_suffix("full") == ""
+
+
+def test_task_files_do_not_use_pilot_grid() -> None:
+    """Workflow tasks should not use the removed pilot grid."""
+
+    for path in TASK_FILES:
+        text = path.read_text(encoding="utf-8")
+        assert "PILOT_N_P_PAIRS" not in text, f"{path} still uses pilot grid"
 
 
 def test_workflow_output_paths_construct_without_running() -> None:

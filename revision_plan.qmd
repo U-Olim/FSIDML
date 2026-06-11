@@ -168,7 +168,7 @@ $$
 n \in \{250,500,1000\}.
 $$
 
-The final set may be reduced after pilot simulations if runtime is too high.
+The full grid is first checked in smoke mode with a low replication count before the final simulation is run.
 
 ## Covariate Dimensions
 
@@ -481,15 +481,18 @@ Generate:
 
 ## Step 9: Workflow Modes
 
-The workflow layer supports explicit `smoke`, `pilot`, and `full` modes. Smoke and pilot modes are available for validation and runtime checks without triggering the full Monte Carlo simulation.
+The revised workflow uses two modes:
 
-# Pilot Simulation Plan
+- `smoke`: full scenario grid with \(R=10\);
+- `full`: full scenario grid with \(R=1000\).
 
-Before running full simulations, run a pilot with:
+# Smoke Simulation Plan
 
-$R = 100$
+Before running full simulations, run smoke mode over the full scenario grid with:
 
-Pilot goals:
+$R = 10$
+
+Smoke goals:
 
 1. detect coding errors;
 2. estimate runtime;
@@ -497,7 +500,7 @@ Pilot goals:
 4. verify that diagnostics explain coverage failures;
 5. decide whether the full grid is computationally feasible.
 
-Only after the pilot succeeds should the full simulation be run.
+Only after smoke mode succeeds should the full simulation be run.
 
 # Full Simulation Plan
 
@@ -609,13 +612,18 @@ $$
 
 The quantity $\rho_{\text{fold}}$ is used as an empirical diagnostic for fold-level nuisance-estimation difficulty.
 
-## Pilot Grid
+## Smoke Grid
 
-The pilot simulation uses $R=100$ replications.
+The smoke simulation uses the full scenario grid with $R=10$ replications:
 
-| Scenario | \(n\) | \(p\) | Reason |
-|---|---:|---:|---|
-| P1 | 500 | 50 | Stable low-dimensional benchmark |
-| P2 | 500 | 150 | Moderate-dimensional transition case |
-| P3 | 250 | 150 | High fold-level dimensionality |
-| P4 | 250 | 300 | Near-singular or singular regime |
+$$
+\{250,500,1000\}
+\times
+\{25,50,100,150,300\}
+\times
+\{2,5,10\}
+\times
+\{\text{linear},\text{quadratic},\text{interaction},\text{step}\}
+\times
+\{\text{OLS},\text{Lasso},\text{Elastic Net},\text{Random Forest},\text{Gradient Boosting}\}.
+$$

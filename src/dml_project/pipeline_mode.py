@@ -6,7 +6,8 @@ import os
 
 from dml_project import config
 
-VALID_RUN_MODES = {"smoke", "pilot", "full", "fast"}
+VALID_RUN_MODES = {"smoke", "full"}
+ALLOWED_MODES_MESSAGE = "Allowed modes are smoke and full."
 
 
 def get_run_mode() -> str:
@@ -21,10 +22,8 @@ def get_run_mode() -> str:
 
     mode = os.getenv("DML_RUN_MODE", "full").lower()
     if mode not in VALID_RUN_MODES:
-        raise ValueError(
-            f"Unsupported DML_RUN_MODE={mode!r}. Use one of {sorted(VALID_RUN_MODES)}."
-        )
-    return "pilot" if mode == "fast" else mode
+        raise ValueError(f"Unsupported DML_RUN_MODE={mode!r}. {ALLOWED_MODES_MESSAGE}")
+    return mode
 
 
 def get_replication_count(mode: str) -> int:
@@ -43,11 +42,9 @@ def get_replication_count(mode: str) -> int:
     normalized_mode = mode.lower()
     if normalized_mode == "smoke":
         return config.SMOKE_N_REPLICATIONS
-    if normalized_mode in {"pilot", "fast"}:
-        return config.PILOT_N_REPLICATIONS
     if normalized_mode == "full":
-        return config.FULL_N_REP
-    raise ValueError(f"Unknown mode: {mode}")
+        return config.N_REPLICATIONS
+    raise ValueError(f"Unknown mode: {mode}. {ALLOWED_MODES_MESSAGE}")
 
 
 def output_suffix(mode: str) -> str:
@@ -57,7 +54,7 @@ def output_suffix(mode: str) -> str:
         mode: Run mode string (case-insensitive).
 
     Returns:
-        ``""`` for ``full`` mode and a mode suffix otherwise.
+        ``""`` for ``full`` mode and ``"_smoke"`` for smoke mode.
 
     Raises:
         ValueError: If ``mode`` is not recognized.
@@ -68,6 +65,4 @@ def output_suffix(mode: str) -> str:
         return ""
     if normalized_mode == "smoke":
         return "_smoke"
-    if normalized_mode in {"pilot", "fast"}:
-        return "_pilot"
-    raise ValueError(f"Unknown mode: {mode}")
+    raise ValueError(f"Unknown mode: {mode}. {ALLOWED_MODES_MESSAGE}")

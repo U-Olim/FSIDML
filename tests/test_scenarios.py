@@ -8,11 +8,12 @@ from dml_project import config
 from dml_project.simulation.scenario import Scenario, make_scenario_name
 from dml_project.simulation.scenario_builders import (
     build_all_scenarios,
+    build_full_scenarios,
     build_main_scenarios,
-    build_pilot_scenarios,
+    build_smoke_scenarios,
     count_all_scenarios,
     count_main_scenarios,
-    count_pilot_scenarios,
+    count_smoke_scenarios,
 )
 
 
@@ -41,12 +42,10 @@ def test_config_contains_revised_design_constants() -> None:
     assert config.DEFAULT_N_FOLDS == 2
     assert config.N_FOLDS == config.DEFAULT_N_FOLDS
     assert config.INNER_CV_FOLDS == 5
-    assert config.PILOT_N_P_PAIRS == [
-        (500, 50),
-        (500, 150),
-        (250, 150),
-        (250, 300),
-    ]
+    assert config.SMOKE_N_REPLICATIONS == 10
+    assert config.N_REPLICATIONS == 1000
+    assert config.FULL_N_REPLICATIONS == config.N_REPLICATIONS
+    assert config.FULL_N_REP == config.N_REPLICATIONS
     assert config.DGP_NAMES == [
         "linear_confounding",
         "quadratic_confounding",
@@ -140,21 +139,6 @@ def test_scenario_keeps_n_and_p_aliases() -> None:
     assert scenario.to_dict()["fold_train_size"] == scenario.fold_train_size
 
 
-def test_build_pilot_scenarios_count_matches_design() -> None:
-    """Pilot scenarios should use selected n/p pairs over all K/DGP/learner cells."""
-
-    scenarios = build_pilot_scenarios()
-    expected_count = (
-        len(config.PILOT_N_P_PAIRS)
-        * len(config.K_VALUES)
-        * len(config.DGP_NAMES)
-        * len(config.LEARNERS)
-    )
-
-    assert len(scenarios) == expected_count
-    assert count_pilot_scenarios() == expected_count
-
-
 def test_build_all_scenarios_count_matches_design() -> None:
     """Full scenarios should use N x P x K x DGP x learner."""
 
@@ -170,6 +154,16 @@ def test_build_all_scenarios_count_matches_design() -> None:
     assert len(scenarios) == expected_count
     assert count_all_scenarios() == expected_count
     assert count_main_scenarios() == expected_count
+    assert count_smoke_scenarios() == expected_count
+
+
+def test_build_smoke_scenarios_uses_full_grid() -> None:
+    """Smoke scenarios should cover the full grid with low replications."""
+
+    scenarios = build_smoke_scenarios()
+
+    assert len(scenarios) == count_all_scenarios()
+    assert all(scenario.n_rep == config.SMOKE_N_REPLICATIONS for scenario in scenarios)
 
 
 def test_build_main_scenarios_is_backward_compatible_alias() -> None:
@@ -191,7 +185,7 @@ def test_generated_scenarios_include_k10() -> None:
 
 @pytest.mark.parametrize(
     "builder",
-    [build_all_scenarios, build_pilot_scenarios],
+    [build_all_scenarios, build_full_scenarios, build_smoke_scenarios],
 )
 def test_scenario_names_are_unique(builder: object) -> None:
     """Scenario names should uniquely identify design cells."""
