@@ -24,6 +24,22 @@ from dml_project.estimators.dml_plr import DMLPLR
 from dml_project.learners.tuning import make_main_learner
 from dml_project.utils.seeds import make_seed_bundle
 
+AGGREGATE_DIAGNOSTIC_COLUMNS = [
+    "mean_fold_train_size",
+    "mean_fold_test_size",
+    "mean_fold_ratio",
+    "max_fold_ratio",
+    "mean_condition_number",
+    "max_condition_number",
+    "mean_min_eigenvalue",
+    "min_min_eigenvalue",
+    "rank_deficiency_rate",
+    "mean_nuisance_mse_y",
+    "mean_nuisance_mse_d",
+    "mean_nuisance_r2_y",
+    "mean_nuisance_r2_d",
+]
+
 
 class DGPGenerator(Protocol):
     """Callable protocol for DGP generator functions."""
@@ -61,6 +77,110 @@ def _get_dgp_generator(dgp_name: str) -> DGPGenerator:
     return cast(DGPGenerator, generator)
 
 
+def _diagnostics_to_row(diagnostics: dict | None) -> dict[str, float]:
+    """Convert aggregate estimator diagnostics to stable result columns."""
+
+    if diagnostics is None:
+        diagnostics = {}
+    return {
+        column: float(diagnostics.get(column, np.nan))
+        for column in AGGREGATE_DIAGNOSTIC_COLUMNS
+    }
+
+
+def _base_result_row(scenario, replication: int, seed_bundle) -> dict:
+    """Create metadata and seed columns shared by success and failure rows."""
+
+    return {
+        "scenario_id": scenario.scenario_id,
+        "scenario_name": scenario.name,
+        "replication": replication,
+        "dgp_name": scenario.dgp_name,
+        "learner_name": scenario.learner_name,
+        "n": scenario.n,
+        "p": scenario.p,
+        "n_obs": scenario.n_obs,
+        "n_covariates": scenario.n_covariates,
+        "n_folds": scenario.n_folds,
+        "theta_true": scenario.theta,
+        "theta_0": scenario.theta,
+        "data_seed": seed_bundle.data_seed,
+        "split_seed": seed_bundle.split_seed,
+        "learner_g_seed": seed_bundle.learner_g_seed,
+        "learner_m_seed": seed_bundle.learner_m_seed,
+    }
+
+
+def _success_result_row(scenario, replication: int, seed_bundle, estimator: DMLPLR) -> dict:
+    """Create one successful replication result row."""
+
+    theta_hat = estimator.predict_effect()
+    se = estimator.se_
+    ci_lower = estimator.ci_lower_
+    ci_upper = estimator.ci_upper_
+    t_stat = (theta_hat - scenario.theta) / se if se > 0 else np.nan
+    ci_length = ci_upper - ci_lower
+    if ci_length < 0.0:
+        raise ValueError(
+            "Invalid confidence interval length in run_single_replication: "
+            f"scenario_id={scenario.scenario_id}, replication={replication}, "
+            f"theta_hat={theta_hat}, se={se}, "
+            f"ci_lower={ci_lower}, ci_upper={ci_upper}, "
+            f"ci_length={ci_length}."
+        )
+    error = theta_hat - scenario.theta
+    row = _base_result_row(scenario, replication, seed_bundle)
+    row.update(
+        {
+            "learner_y": estimator.learner_g_name_,
+            "learner_d": estimator.learner_m_name_,
+            "theta_hat": theta_hat,
+            "se": se,
+            "t_stat": t_stat,
+            "ci_lower": ci_lower,
+            "ci_upper": ci_upper,
+            "ci_length": ci_length,
+            "covered": bool(ci_lower <= scenario.theta <= ci_upper),
+            "error": error,
+            "squared_error": error**2,
+            "failed": False,
+            "failure_reason": "",
+        }
+    )
+    row.update(_diagnostics_to_row(getattr(estimator, "aggregate_diagnostics_", None)))
+    return row
+
+
+def _failed_result_row(
+    scenario,
+    replication: int,
+    seed_bundle,
+    exc: ValueError | np.linalg.LinAlgError | FloatingPointError,
+) -> dict:
+    """Create one failed replication result row without aborting the scenario."""
+
+    row = _base_result_row(scenario, replication, seed_bundle)
+    row.update(
+        {
+            "learner_y": "",
+            "learner_d": "",
+            "theta_hat": np.nan,
+            "se": np.nan,
+            "t_stat": np.nan,
+            "ci_lower": np.nan,
+            "ci_upper": np.nan,
+            "ci_length": np.nan,
+            "covered": False,
+            "error": np.nan,
+            "squared_error": np.nan,
+            "failed": True,
+            "failure_reason": f"{type(exc).__name__}: {exc}",
+        }
+    )
+    row.update(_diagnostics_to_row(None))
+    return row
+
+
 def run_single_replication(scenario, replication: int) -> dict:
     """Run one Monte Carlo replication for a scenario.
 
@@ -79,72 +199,32 @@ def run_single_replication(scenario, replication: int) -> dict:
         base_seed=scenario.base_seed,
     )
 
-    dgp_generator = _get_dgp_generator(scenario.dgp_name)
-    y, d, x = dgp_generator(
-        n=scenario.n,
-        p=scenario.p,
-        theta=scenario.theta,
-        seed=seed_bundle.data_seed,
-    )
-
-    learner_g = make_main_learner(
-        scenario.learner_name, random_state=seed_bundle.learner_g_seed
-    )
-    learner_m = make_main_learner(
-        scenario.learner_name, random_state=seed_bundle.learner_m_seed
-    )
-
-    estimator = DMLPLR(
-        learner_g=learner_g,
-        learner_m=learner_m,
-        n_folds=config.N_FOLDS,
-        random_state=seed_bundle.split_seed,
-    )
-    estimator.fit(y, d, x)
-
-    theta_hat = estimator.predict_effect()
-    if estimator.se_ > 0:
-        t_stat = (theta_hat - scenario.theta) / estimator.se_
-    else:
-        t_stat = np.nan
-    ci_length = estimator.ci_upper_ - estimator.ci_lower_
-    if ci_length < 0.0:
-        raise ValueError(
-            "Invalid confidence interval length in run_single_replication: "
-            f"scenario_id={scenario.scenario_id}, replication={replication}, "
-            f"theta_hat={theta_hat}, se={estimator.se_}, "
-            f"ci_lower={estimator.ci_lower_}, ci_upper={estimator.ci_upper_}, "
-            f"ci_length={ci_length}."
+    try:
+        dgp_generator = _get_dgp_generator(scenario.dgp_name)
+        y, d, x = dgp_generator(
+            n=scenario.n,
+            p=scenario.p,
+            theta=scenario.theta,
+            seed=seed_bundle.data_seed,
         )
-    error = theta_hat - scenario.theta
-    squared_error = error**2
-    covered = int(estimator.ci_lower_ <= scenario.theta <= estimator.ci_upper_)
 
-    return {
-        "scenario_id": scenario.scenario_id,
-        "scenario_name": scenario.name,
-        "replication": replication,
-        "dgp_name": scenario.dgp_name,
-        "learner_name": scenario.learner_name,
-        "n": scenario.n,
-        "p": scenario.p,
-        "theta_true": scenario.theta,
-        "learner_y": estimator.learner_g_name_,
-        "learner_d": estimator.learner_m_name_,
-        "data_seed": seed_bundle.data_seed,
-        "split_seed": seed_bundle.split_seed,
-        "learner_g_seed": seed_bundle.learner_g_seed,
-        "learner_m_seed": seed_bundle.learner_m_seed,
-        "theta_hat": theta_hat,
-        "se": estimator.se_,
-        "t_stat": t_stat,
-        "ci_lower": estimator.ci_lower_,
-        "ci_upper": estimator.ci_upper_,
-        "ci_length": ci_length,
-        "covered": covered,
-        "error": error,
-        "squared_error": squared_error,
-    }
+        learner_g = make_main_learner(
+            scenario.learner_name, random_state=seed_bundle.learner_g_seed
+        )
+        learner_m = make_main_learner(
+            scenario.learner_name, random_state=seed_bundle.learner_m_seed
+        )
+
+        estimator = DMLPLR(
+            learner_g=learner_g,
+            learner_m=learner_m,
+            n_folds=scenario.n_folds,
+            random_state=seed_bundle.split_seed,
+        )
+        estimator.fit(y, d, x)
+        return _success_result_row(scenario, replication, seed_bundle, estimator)
+    except (ValueError, np.linalg.LinAlgError, FloatingPointError) as exc:
+        return _failed_result_row(scenario, replication, seed_bundle, exc)
 
 
 def run_scenario(scenario) -> pd.DataFrame:
