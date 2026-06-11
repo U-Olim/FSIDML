@@ -17,7 +17,7 @@ class LassoCVLearner:
 
     def __init__(
         self,
-        cv: int = config.N_FOLDS,
+        cv: int = config.INNER_CV_FOLDS,
         random_state: int | None = None,
         max_iter: int = 10_000,
     ) -> None:

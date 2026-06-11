@@ -23,10 +23,10 @@ THETA_TRUE = 1.0
 
 BASE_SEED = 123
 # Backward-compatible default for existing estimators and learner CV settings.
-# Inner CV folds for learner tuning are separate from K_VALUES and will be
-# configured explicitly in a later revision step.
 DEFAULT_N_FOLDS = 2
 N_FOLDS = DEFAULT_N_FOLDS
+# Inner hyperparameter tuning folds are separate from outer DML cross-fitting K.
+INNER_CV_FOLDS = 5
 
 DGP_NAMES = [
     "linear_confounding",

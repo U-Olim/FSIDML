@@ -17,9 +17,10 @@ class ElasticNetCVLearner:
 
     def __init__(
         self,
-        cv: int = config.N_FOLDS,
+        cv: int = config.INNER_CV_FOLDS,
         random_state: int | None = None,
         max_iter: int = 10_000,
+        l1_ratio: list[float] | None = None,
     ) -> None:
         """Initialize a cross-validated Elastic Net learner.
 
@@ -28,10 +29,12 @@ class ElasticNetCVLearner:
             random_state: Optional random seed for reproducible randomness in
                 sklearn's fitting routine.
             max_iter: Maximum solver iterations for each fit.
+            l1_ratio: Candidate L1 mixing ratios for cross-validation.
         """
         self.cv = cv
         self.random_state = random_state
         self.max_iter = max_iter
+        self.l1_ratio = l1_ratio if l1_ratio is not None else [0.1, 0.5, 0.9]
         self.is_fitted_ = False
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
@@ -44,6 +47,7 @@ class ElasticNetCVLearner:
 
         model = ElasticNetCV(
             cv=self.cv,
+            l1_ratio=self.l1_ratio,
             random_state=self.random_state,
             max_iter=self.max_iter,
             selection="random",

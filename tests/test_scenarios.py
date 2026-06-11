@@ -40,6 +40,7 @@ def test_config_contains_revised_design_constants() -> None:
     assert config.K_VALUES == [2, 5, 10]
     assert config.DEFAULT_N_FOLDS == 2
     assert config.N_FOLDS == config.DEFAULT_N_FOLDS
+    assert config.INNER_CV_FOLDS == 5
     assert config.PILOT_N_P_PAIRS == [
         (500, 50),
         (500, 150),

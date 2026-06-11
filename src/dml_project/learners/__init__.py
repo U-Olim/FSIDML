@@ -6,7 +6,15 @@ types directly.
 """
 
 from dml_project.learners.elastic_net import ElasticNetCVLearner
+from dml_project.learners.gradient_boosting import GradientBoostingLearner
 from dml_project.learners.lasso import LassoCVLearner
 from dml_project.learners.ols import OLSLearner
+from dml_project.learners.random_forest import RandomForestLearner
 
-__all__ = ["OLSLearner", "LassoCVLearner", "ElasticNetCVLearner"]
+__all__ = [
+    "OLSLearner",
+    "LassoCVLearner",
+    "ElasticNetCVLearner",
+    "RandomForestLearner",
+    "GradientBoostingLearner",
+]
