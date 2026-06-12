@@ -1,0 +1,901 @@
+DGP,Learner,n,p,K,n_train,rho_fold
+Interaction,Elastic Net,250,25,2,125.0,0.2
+Interaction,Elastic Net,250,25,5,200.0,0.125
+Interaction,Elastic Net,250,25,10,225.0,0.111
+Interaction,Elastic Net,250,50,2,125.0,0.4
+Interaction,Elastic Net,250,50,5,200.0,0.25
+Interaction,Elastic Net,250,50,10,225.0,0.222
+Interaction,Elastic Net,250,100,2,125.0,0.8
+Interaction,Elastic Net,250,100,5,200.0,0.5
+Interaction,Elastic Net,250,100,10,225.0,0.444
+Interaction,Elastic Net,250,150,2,125.0,1.2
+Interaction,Elastic Net,250,150,5,200.0,0.75
+Interaction,Elastic Net,250,150,10,225.0,0.667
+Interaction,Elastic Net,250,300,2,125.0,2.4
+Interaction,Elastic Net,250,300,5,200.0,1.5
+Interaction,Elastic Net,250,300,10,225.0,1.333
+Interaction,Elastic Net,500,25,2,250.0,0.1
+Interaction,Elastic Net,500,25,5,400.0,0.062
+Interaction,Elastic Net,500,25,10,450.0,0.056
+Interaction,Elastic Net,500,50,2,250.0,0.2
+Interaction,Elastic Net,500,50,5,400.0,0.125
+Interaction,Elastic Net,500,50,10,450.0,0.111
+Interaction,Elastic Net,500,100,2,250.0,0.4
+Interaction,Elastic Net,500,100,5,400.0,0.25
+Interaction,Elastic Net,500,100,10,450.0,0.222
+Interaction,Elastic Net,500,150,2,250.0,0.6
+Interaction,Elastic Net,500,150,5,400.0,0.375
+Interaction,Elastic Net,500,150,10,450.0,0.333
+Interaction,Elastic Net,500,300,2,250.0,1.2
+Interaction,Elastic Net,500,300,5,400.0,0.75
+Interaction,Elastic Net,500,300,10,450.0,0.667
+Interaction,Elastic Net,1000,25,2,500.0,0.05
+Interaction,Elastic Net,1000,25,5,800.0,0.031
+Interaction,Elastic Net,1000,25,10,900.0,0.028
+Interaction,Elastic Net,1000,50,2,500.0,0.1
+Interaction,Elastic Net,1000,50,5,800.0,0.062
+Interaction,Elastic Net,1000,50,10,900.0,0.056
+Interaction,Elastic Net,1000,100,2,500.0,0.2
+Interaction,Elastic Net,1000,100,5,800.0,0.125
+Interaction,Elastic Net,1000,100,10,900.0,0.111
+Interaction,Elastic Net,1000,150,2,500.0,0.3
+Interaction,Elastic Net,1000,150,5,800.0,0.188
+Interaction,Elastic Net,1000,150,10,900.0,0.167
+Interaction,Elastic Net,1000,300,2,500.0,0.6
+Interaction,Elastic Net,1000,300,5,800.0,0.375
+Interaction,Elastic Net,1000,300,10,900.0,0.333
+Interaction,Gradient Boosting,250,25,2,125.0,0.2
+Interaction,Gradient Boosting,250,25,5,200.0,0.125
+Interaction,Gradient Boosting,250,25,10,225.0,0.111
+Interaction,Gradient Boosting,250,50,2,125.0,0.4
+Interaction,Gradient Boosting,250,50,5,200.0,0.25
+Interaction,Gradient Boosting,250,50,10,225.0,0.222
+Interaction,Gradient Boosting,250,100,2,125.0,0.8
+Interaction,Gradient Boosting,250,100,5,200.0,0.5
+Interaction,Gradient Boosting,250,100,10,225.0,0.444
+Interaction,Gradient Boosting,250,150,2,125.0,1.2
+Interaction,Gradient Boosting,250,150,5,200.0,0.75
+Interaction,Gradient Boosting,250,150,10,225.0,0.667
+Interaction,Gradient Boosting,250,300,2,125.0,2.4
+Interaction,Gradient Boosting,250,300,5,200.0,1.5
+Interaction,Gradient Boosting,250,300,10,225.0,1.333
+Interaction,Gradient Boosting,500,25,2,250.0,0.1
+Interaction,Gradient Boosting,500,25,5,400.0,0.062
+Interaction,Gradient Boosting,500,25,10,450.0,0.056
+Interaction,Gradient Boosting,500,50,2,250.0,0.2
+Interaction,Gradient Boosting,500,50,5,400.0,0.125
+Interaction,Gradient Boosting,500,50,10,450.0,0.111
+Interaction,Gradient Boosting,500,100,2,250.0,0.4
+Interaction,Gradient Boosting,500,100,5,400.0,0.25
+Interaction,Gradient Boosting,500,100,10,450.0,0.222
+Interaction,Gradient Boosting,500,150,2,250.0,0.6
+Interaction,Gradient Boosting,500,150,5,400.0,0.375
+Interaction,Gradient Boosting,500,150,10,450.0,0.333
+Interaction,Gradient Boosting,500,300,2,250.0,1.2
+Interaction,Gradient Boosting,500,300,5,400.0,0.75
+Interaction,Gradient Boosting,500,300,10,450.0,0.667
+Interaction,Gradient Boosting,1000,25,2,500.0,0.05
+Interaction,Gradient Boosting,1000,25,5,800.0,0.031
+Interaction,Gradient Boosting,1000,25,10,900.0,0.028
+Interaction,Gradient Boosting,1000,50,2,500.0,0.1
+Interaction,Gradient Boosting,1000,50,5,800.0,0.062
+Interaction,Gradient Boosting,1000,50,10,900.0,0.056
+Interaction,Gradient Boosting,1000,100,2,500.0,0.2
+Interaction,Gradient Boosting,1000,100,5,800.0,0.125
+Interaction,Gradient Boosting,1000,100,10,900.0,0.111
+Interaction,Gradient Boosting,1000,150,2,500.0,0.3
+Interaction,Gradient Boosting,1000,150,5,800.0,0.188
+Interaction,Gradient Boosting,1000,150,10,900.0,0.167
+Interaction,Gradient Boosting,1000,300,2,500.0,0.6
+Interaction,Gradient Boosting,1000,300,5,800.0,0.375
+Interaction,Gradient Boosting,1000,300,10,900.0,0.333
+Interaction,Lasso,250,25,2,125.0,0.2
+Interaction,Lasso,250,25,5,200.0,0.125
+Interaction,Lasso,250,25,10,225.0,0.111
+Interaction,Lasso,250,50,2,125.0,0.4
+Interaction,Lasso,250,50,5,200.0,0.25
+Interaction,Lasso,250,50,10,225.0,0.222
+Interaction,Lasso,250,100,2,125.0,0.8
+Interaction,Lasso,250,100,5,200.0,0.5
+Interaction,Lasso,250,100,10,225.0,0.444
+Interaction,Lasso,250,150,2,125.0,1.2
+Interaction,Lasso,250,150,5,200.0,0.75
+Interaction,Lasso,250,150,10,225.0,0.667
+Interaction,Lasso,250,300,2,125.0,2.4
+Interaction,Lasso,250,300,5,200.0,1.5
+Interaction,Lasso,250,300,10,225.0,1.333
+Interaction,Lasso,500,25,2,250.0,0.1
+Interaction,Lasso,500,25,5,400.0,0.062
+Interaction,Lasso,500,25,10,450.0,0.056
+Interaction,Lasso,500,50,2,250.0,0.2
+Interaction,Lasso,500,50,5,400.0,0.125
+Interaction,Lasso,500,50,10,450.0,0.111
+Interaction,Lasso,500,100,2,250.0,0.4
+Interaction,Lasso,500,100,5,400.0,0.25
+Interaction,Lasso,500,100,10,450.0,0.222
+Interaction,Lasso,500,150,2,250.0,0.6
+Interaction,Lasso,500,150,5,400.0,0.375
+Interaction,Lasso,500,150,10,450.0,0.333
+Interaction,Lasso,500,300,2,250.0,1.2
+Interaction,Lasso,500,300,5,400.0,0.75
+Interaction,Lasso,500,300,10,450.0,0.667
+Interaction,Lasso,1000,25,2,500.0,0.05
+Interaction,Lasso,1000,25,5,800.0,0.031
+Interaction,Lasso,1000,25,10,900.0,0.028
+Interaction,Lasso,1000,50,2,500.0,0.1
+Interaction,Lasso,1000,50,5,800.0,0.062
+Interaction,Lasso,1000,50,10,900.0,0.056
+Interaction,Lasso,1000,100,2,500.0,0.2
+Interaction,Lasso,1000,100,5,800.0,0.125
+Interaction,Lasso,1000,100,10,900.0,0.111
+Interaction,Lasso,1000,150,2,500.0,0.3
+Interaction,Lasso,1000,150,5,800.0,0.188
+Interaction,Lasso,1000,150,10,900.0,0.167
+Interaction,Lasso,1000,300,2,500.0,0.6
+Interaction,Lasso,1000,300,5,800.0,0.375
+Interaction,Lasso,1000,300,10,900.0,0.333
+Interaction,OLS,250,25,2,125.0,0.2
+Interaction,OLS,250,25,5,200.0,0.125
+Interaction,OLS,250,25,10,225.0,0.111
+Interaction,OLS,250,50,2,125.0,0.4
+Interaction,OLS,250,50,5,200.0,0.25
+Interaction,OLS,250,50,10,225.0,0.222
+Interaction,OLS,250,100,2,125.0,0.8
+Interaction,OLS,250,100,5,200.0,0.5
+Interaction,OLS,250,100,10,225.0,0.444
+Interaction,OLS,250,150,2,125.0,1.2
+Interaction,OLS,250,150,5,200.0,0.75
+Interaction,OLS,250,150,10,225.0,0.667
+Interaction,OLS,250,300,2,125.0,2.4
+Interaction,OLS,250,300,5,200.0,1.5
+Interaction,OLS,250,300,10,225.0,1.333
+Interaction,OLS,500,25,2,250.0,0.1
+Interaction,OLS,500,25,5,400.0,0.062
+Interaction,OLS,500,25,10,450.0,0.056
+Interaction,OLS,500,50,2,250.0,0.2
+Interaction,OLS,500,50,5,400.0,0.125
+Interaction,OLS,500,50,10,450.0,0.111
+Interaction,OLS,500,100,2,250.0,0.4
+Interaction,OLS,500,100,5,400.0,0.25
+Interaction,OLS,500,100,10,450.0,0.222
+Interaction,OLS,500,150,2,250.0,0.6
+Interaction,OLS,500,150,5,400.0,0.375
+Interaction,OLS,500,150,10,450.0,0.333
+Interaction,OLS,500,300,2,250.0,1.2
+Interaction,OLS,500,300,5,400.0,0.75
+Interaction,OLS,500,300,10,450.0,0.667
+Interaction,OLS,1000,25,2,500.0,0.05
+Interaction,OLS,1000,25,5,800.0,0.031
+Interaction,OLS,1000,25,10,900.0,0.028
+Interaction,OLS,1000,50,2,500.0,0.1
+Interaction,OLS,1000,50,5,800.0,0.062
+Interaction,OLS,1000,50,10,900.0,0.056
+Interaction,OLS,1000,100,2,500.0,0.2
+Interaction,OLS,1000,100,5,800.0,0.125
+Interaction,OLS,1000,100,10,900.0,0.111
+Interaction,OLS,1000,150,2,500.0,0.3
+Interaction,OLS,1000,150,5,800.0,0.188
+Interaction,OLS,1000,150,10,900.0,0.167
+Interaction,OLS,1000,300,2,500.0,0.6
+Interaction,OLS,1000,300,5,800.0,0.375
+Interaction,OLS,1000,300,10,900.0,0.333
+Interaction,Random Forest,250,25,2,125.0,0.2
+Interaction,Random Forest,250,25,5,200.0,0.125
+Interaction,Random Forest,250,25,10,225.0,0.111
+Interaction,Random Forest,250,50,2,125.0,0.4
+Interaction,Random Forest,250,50,5,200.0,0.25
+Interaction,Random Forest,250,50,10,225.0,0.222
+Interaction,Random Forest,250,100,2,125.0,0.8
+Interaction,Random Forest,250,100,5,200.0,0.5
+Interaction,Random Forest,250,100,10,225.0,0.444
+Interaction,Random Forest,250,150,2,125.0,1.2
+Interaction,Random Forest,250,150,5,200.0,0.75
+Interaction,Random Forest,250,150,10,225.0,0.667
+Interaction,Random Forest,250,300,2,125.0,2.4
+Interaction,Random Forest,250,300,5,200.0,1.5
+Interaction,Random Forest,250,300,10,225.0,1.333
+Interaction,Random Forest,500,25,2,250.0,0.1
+Interaction,Random Forest,500,25,5,400.0,0.062
+Interaction,Random Forest,500,25,10,450.0,0.056
+Interaction,Random Forest,500,50,2,250.0,0.2
+Interaction,Random Forest,500,50,5,400.0,0.125
+Interaction,Random Forest,500,50,10,450.0,0.111
+Interaction,Random Forest,500,100,2,250.0,0.4
+Interaction,Random Forest,500,100,5,400.0,0.25
+Interaction,Random Forest,500,100,10,450.0,0.222
+Interaction,Random Forest,500,150,2,250.0,0.6
+Interaction,Random Forest,500,150,5,400.0,0.375
+Interaction,Random Forest,500,150,10,450.0,0.333
+Interaction,Random Forest,500,300,2,250.0,1.2
+Interaction,Random Forest,500,300,5,400.0,0.75
+Interaction,Random Forest,500,300,10,450.0,0.667
+Interaction,Random Forest,1000,25,2,500.0,0.05
+Interaction,Random Forest,1000,25,5,800.0,0.031
+Interaction,Random Forest,1000,25,10,900.0,0.028
+Interaction,Random Forest,1000,50,2,500.0,0.1
+Interaction,Random Forest,1000,50,5,800.0,0.062
+Interaction,Random Forest,1000,50,10,900.0,0.056
+Interaction,Random Forest,1000,100,2,500.0,0.2
+Interaction,Random Forest,1000,100,5,800.0,0.125
+Interaction,Random Forest,1000,100,10,900.0,0.111
+Interaction,Random Forest,1000,150,2,500.0,0.3
+Interaction,Random Forest,1000,150,5,800.0,0.188
+Interaction,Random Forest,1000,150,10,900.0,0.167
+Interaction,Random Forest,1000,300,2,500.0,0.6
+Interaction,Random Forest,1000,300,5,800.0,0.375
+Interaction,Random Forest,1000,300,10,900.0,0.333
+Linear,Elastic Net,250,25,2,125.0,0.2
+Linear,Elastic Net,250,25,5,200.0,0.125
+Linear,Elastic Net,250,25,10,225.0,0.111
+Linear,Elastic Net,250,50,2,125.0,0.4
+Linear,Elastic Net,250,50,5,200.0,0.25
+Linear,Elastic Net,250,50,10,225.0,0.222
+Linear,Elastic Net,250,100,2,125.0,0.8
+Linear,Elastic Net,250,100,5,200.0,0.5
+Linear,Elastic Net,250,100,10,225.0,0.444
+Linear,Elastic Net,250,150,2,125.0,1.2
+Linear,Elastic Net,250,150,5,200.0,0.75
+Linear,Elastic Net,250,150,10,225.0,0.667
+Linear,Elastic Net,250,300,2,125.0,2.4
+Linear,Elastic Net,250,300,5,200.0,1.5
+Linear,Elastic Net,250,300,10,225.0,1.333
+Linear,Elastic Net,500,25,2,250.0,0.1
+Linear,Elastic Net,500,25,5,400.0,0.062
+Linear,Elastic Net,500,25,10,450.0,0.056
+Linear,Elastic Net,500,50,2,250.0,0.2
+Linear,Elastic Net,500,50,5,400.0,0.125
+Linear,Elastic Net,500,50,10,450.0,0.111
+Linear,Elastic Net,500,100,2,250.0,0.4
+Linear,Elastic Net,500,100,5,400.0,0.25
+Linear,Elastic Net,500,100,10,450.0,0.222
+Linear,Elastic Net,500,150,2,250.0,0.6
+Linear,Elastic Net,500,150,5,400.0,0.375
+Linear,Elastic Net,500,150,10,450.0,0.333
+Linear,Elastic Net,500,300,2,250.0,1.2
+Linear,Elastic Net,500,300,5,400.0,0.75
+Linear,Elastic Net,500,300,10,450.0,0.667
+Linear,Elastic Net,1000,25,2,500.0,0.05
+Linear,Elastic Net,1000,25,5,800.0,0.031
+Linear,Elastic Net,1000,25,10,900.0,0.028
+Linear,Elastic Net,1000,50,2,500.0,0.1
+Linear,Elastic Net,1000,50,5,800.0,0.062
+Linear,Elastic Net,1000,50,10,900.0,0.056
+Linear,Elastic Net,1000,100,2,500.0,0.2
+Linear,Elastic Net,1000,100,5,800.0,0.125
+Linear,Elastic Net,1000,100,10,900.0,0.111
+Linear,Elastic Net,1000,150,2,500.0,0.3
+Linear,Elastic Net,1000,150,5,800.0,0.188
+Linear,Elastic Net,1000,150,10,900.0,0.167
+Linear,Elastic Net,1000,300,2,500.0,0.6
+Linear,Elastic Net,1000,300,5,800.0,0.375
+Linear,Elastic Net,1000,300,10,900.0,0.333
+Linear,Gradient Boosting,250,25,2,125.0,0.2
+Linear,Gradient Boosting,250,25,5,200.0,0.125
+Linear,Gradient Boosting,250,25,10,225.0,0.111
+Linear,Gradient Boosting,250,50,2,125.0,0.4
+Linear,Gradient Boosting,250,50,5,200.0,0.25
+Linear,Gradient Boosting,250,50,10,225.0,0.222
+Linear,Gradient Boosting,250,100,2,125.0,0.8
+Linear,Gradient Boosting,250,100,5,200.0,0.5
+Linear,Gradient Boosting,250,100,10,225.0,0.444
+Linear,Gradient Boosting,250,150,2,125.0,1.2
+Linear,Gradient Boosting,250,150,5,200.0,0.75
+Linear,Gradient Boosting,250,150,10,225.0,0.667
+Linear,Gradient Boosting,250,300,2,125.0,2.4
+Linear,Gradient Boosting,250,300,5,200.0,1.5
+Linear,Gradient Boosting,250,300,10,225.0,1.333
+Linear,Gradient Boosting,500,25,2,250.0,0.1
+Linear,Gradient Boosting,500,25,5,400.0,0.062
+Linear,Gradient Boosting,500,25,10,450.0,0.056
+Linear,Gradient Boosting,500,50,2,250.0,0.2
+Linear,Gradient Boosting,500,50,5,400.0,0.125
+Linear,Gradient Boosting,500,50,10,450.0,0.111
+Linear,Gradient Boosting,500,100,2,250.0,0.4
+Linear,Gradient Boosting,500,100,5,400.0,0.25
+Linear,Gradient Boosting,500,100,10,450.0,0.222
+Linear,Gradient Boosting,500,150,2,250.0,0.6
+Linear,Gradient Boosting,500,150,5,400.0,0.375
+Linear,Gradient Boosting,500,150,10,450.0,0.333
+Linear,Gradient Boosting,500,300,2,250.0,1.2
+Linear,Gradient Boosting,500,300,5,400.0,0.75
+Linear,Gradient Boosting,500,300,10,450.0,0.667
+Linear,Gradient Boosting,1000,25,2,500.0,0.05
+Linear,Gradient Boosting,1000,25,5,800.0,0.031
+Linear,Gradient Boosting,1000,25,10,900.0,0.028
+Linear,Gradient Boosting,1000,50,2,500.0,0.1
+Linear,Gradient Boosting,1000,50,5,800.0,0.062
+Linear,Gradient Boosting,1000,50,10,900.0,0.056
+Linear,Gradient Boosting,1000,100,2,500.0,0.2
+Linear,Gradient Boosting,1000,100,5,800.0,0.125
+Linear,Gradient Boosting,1000,100,10,900.0,0.111
+Linear,Gradient Boosting,1000,150,2,500.0,0.3
+Linear,Gradient Boosting,1000,150,5,800.0,0.188
+Linear,Gradient Boosting,1000,150,10,900.0,0.167
+Linear,Gradient Boosting,1000,300,2,500.0,0.6
+Linear,Gradient Boosting,1000,300,5,800.0,0.375
+Linear,Gradient Boosting,1000,300,10,900.0,0.333
+Linear,Lasso,250,25,2,125.0,0.2
+Linear,Lasso,250,25,5,200.0,0.125
+Linear,Lasso,250,25,10,225.0,0.111
+Linear,Lasso,250,50,2,125.0,0.4
+Linear,Lasso,250,50,5,200.0,0.25
+Linear,Lasso,250,50,10,225.0,0.222
+Linear,Lasso,250,100,2,125.0,0.8
+Linear,Lasso,250,100,5,200.0,0.5
+Linear,Lasso,250,100,10,225.0,0.444
+Linear,Lasso,250,150,2,125.0,1.2
+Linear,Lasso,250,150,5,200.0,0.75
+Linear,Lasso,250,150,10,225.0,0.667
+Linear,Lasso,250,300,2,125.0,2.4
+Linear,Lasso,250,300,5,200.0,1.5
+Linear,Lasso,250,300,10,225.0,1.333
+Linear,Lasso,500,25,2,250.0,0.1
+Linear,Lasso,500,25,5,400.0,0.062
+Linear,Lasso,500,25,10,450.0,0.056
+Linear,Lasso,500,50,2,250.0,0.2
+Linear,Lasso,500,50,5,400.0,0.125
+Linear,Lasso,500,50,10,450.0,0.111
+Linear,Lasso,500,100,2,250.0,0.4
+Linear,Lasso,500,100,5,400.0,0.25
+Linear,Lasso,500,100,10,450.0,0.222
+Linear,Lasso,500,150,2,250.0,0.6
+Linear,Lasso,500,150,5,400.0,0.375
+Linear,Lasso,500,150,10,450.0,0.333
+Linear,Lasso,500,300,2,250.0,1.2
+Linear,Lasso,500,300,5,400.0,0.75
+Linear,Lasso,500,300,10,450.0,0.667
+Linear,Lasso,1000,25,2,500.0,0.05
+Linear,Lasso,1000,25,5,800.0,0.031
+Linear,Lasso,1000,25,10,900.0,0.028
+Linear,Lasso,1000,50,2,500.0,0.1
+Linear,Lasso,1000,50,5,800.0,0.062
+Linear,Lasso,1000,50,10,900.0,0.056
+Linear,Lasso,1000,100,2,500.0,0.2
+Linear,Lasso,1000,100,5,800.0,0.125
+Linear,Lasso,1000,100,10,900.0,0.111
+Linear,Lasso,1000,150,2,500.0,0.3
+Linear,Lasso,1000,150,5,800.0,0.188
+Linear,Lasso,1000,150,10,900.0,0.167
+Linear,Lasso,1000,300,2,500.0,0.6
+Linear,Lasso,1000,300,5,800.0,0.375
+Linear,Lasso,1000,300,10,900.0,0.333
+Linear,OLS,250,25,2,125.0,0.2
+Linear,OLS,250,25,5,200.0,0.125
+Linear,OLS,250,25,10,225.0,0.111
+Linear,OLS,250,50,2,125.0,0.4
+Linear,OLS,250,50,5,200.0,0.25
+Linear,OLS,250,50,10,225.0,0.222
+Linear,OLS,250,100,2,125.0,0.8
+Linear,OLS,250,100,5,200.0,0.5
+Linear,OLS,250,100,10,225.0,0.444
+Linear,OLS,250,150,2,125.0,1.2
+Linear,OLS,250,150,5,200.0,0.75
+Linear,OLS,250,150,10,225.0,0.667
+Linear,OLS,250,300,2,125.0,2.4
+Linear,OLS,250,300,5,200.0,1.5
+Linear,OLS,250,300,10,225.0,1.333
+Linear,OLS,500,25,2,250.0,0.1
+Linear,OLS,500,25,5,400.0,0.062
+Linear,OLS,500,25,10,450.0,0.056
+Linear,OLS,500,50,2,250.0,0.2
+Linear,OLS,500,50,5,400.0,0.125
+Linear,OLS,500,50,10,450.0,0.111
+Linear,OLS,500,100,2,250.0,0.4
+Linear,OLS,500,100,5,400.0,0.25
+Linear,OLS,500,100,10,450.0,0.222
+Linear,OLS,500,150,2,250.0,0.6
+Linear,OLS,500,150,5,400.0,0.375
+Linear,OLS,500,150,10,450.0,0.333
+Linear,OLS,500,300,2,250.0,1.2
+Linear,OLS,500,300,5,400.0,0.75
+Linear,OLS,500,300,10,450.0,0.667
+Linear,OLS,1000,25,2,500.0,0.05
+Linear,OLS,1000,25,5,800.0,0.031
+Linear,OLS,1000,25,10,900.0,0.028
+Linear,OLS,1000,50,2,500.0,0.1
+Linear,OLS,1000,50,5,800.0,0.062
+Linear,OLS,1000,50,10,900.0,0.056
+Linear,OLS,1000,100,2,500.0,0.2
+Linear,OLS,1000,100,5,800.0,0.125
+Linear,OLS,1000,100,10,900.0,0.111
+Linear,OLS,1000,150,2,500.0,0.3
+Linear,OLS,1000,150,5,800.0,0.188
+Linear,OLS,1000,150,10,900.0,0.167
+Linear,OLS,1000,300,2,500.0,0.6
+Linear,OLS,1000,300,5,800.0,0.375
+Linear,OLS,1000,300,10,900.0,0.333
+Linear,Random Forest,250,25,2,125.0,0.2
+Linear,Random Forest,250,25,5,200.0,0.125
+Linear,Random Forest,250,25,10,225.0,0.111
+Linear,Random Forest,250,50,2,125.0,0.4
+Linear,Random Forest,250,50,5,200.0,0.25
+Linear,Random Forest,250,50,10,225.0,0.222
+Linear,Random Forest,250,100,2,125.0,0.8
+Linear,Random Forest,250,100,5,200.0,0.5
+Linear,Random Forest,250,100,10,225.0,0.444
+Linear,Random Forest,250,150,2,125.0,1.2
+Linear,Random Forest,250,150,5,200.0,0.75
+Linear,Random Forest,250,150,10,225.0,0.667
+Linear,Random Forest,250,300,2,125.0,2.4
+Linear,Random Forest,250,300,5,200.0,1.5
+Linear,Random Forest,250,300,10,225.0,1.333
+Linear,Random Forest,500,25,2,250.0,0.1
+Linear,Random Forest,500,25,5,400.0,0.062
+Linear,Random Forest,500,25,10,450.0,0.056
+Linear,Random Forest,500,50,2,250.0,0.2
+Linear,Random Forest,500,50,5,400.0,0.125
+Linear,Random Forest,500,50,10,450.0,0.111
+Linear,Random Forest,500,100,2,250.0,0.4
+Linear,Random Forest,500,100,5,400.0,0.25
+Linear,Random Forest,500,100,10,450.0,0.222
+Linear,Random Forest,500,150,2,250.0,0.6
+Linear,Random Forest,500,150,5,400.0,0.375
+Linear,Random Forest,500,150,10,450.0,0.333
+Linear,Random Forest,500,300,2,250.0,1.2
+Linear,Random Forest,500,300,5,400.0,0.75
+Linear,Random Forest,500,300,10,450.0,0.667
+Linear,Random Forest,1000,25,2,500.0,0.05
+Linear,Random Forest,1000,25,5,800.0,0.031
+Linear,Random Forest,1000,25,10,900.0,0.028
+Linear,Random Forest,1000,50,2,500.0,0.1
+Linear,Random Forest,1000,50,5,800.0,0.062
+Linear,Random Forest,1000,50,10,900.0,0.056
+Linear,Random Forest,1000,100,2,500.0,0.2
+Linear,Random Forest,1000,100,5,800.0,0.125
+Linear,Random Forest,1000,100,10,900.0,0.111
+Linear,Random Forest,1000,150,2,500.0,0.3
+Linear,Random Forest,1000,150,5,800.0,0.188
+Linear,Random Forest,1000,150,10,900.0,0.167
+Linear,Random Forest,1000,300,2,500.0,0.6
+Linear,Random Forest,1000,300,5,800.0,0.375
+Linear,Random Forest,1000,300,10,900.0,0.333
+Quadratic,Elastic Net,250,25,2,125.0,0.2
+Quadratic,Elastic Net,250,25,5,200.0,0.125
+Quadratic,Elastic Net,250,25,10,225.0,0.111
+Quadratic,Elastic Net,250,50,2,125.0,0.4
+Quadratic,Elastic Net,250,50,5,200.0,0.25
+Quadratic,Elastic Net,250,50,10,225.0,0.222
+Quadratic,Elastic Net,250,100,2,125.0,0.8
+Quadratic,Elastic Net,250,100,5,200.0,0.5
+Quadratic,Elastic Net,250,100,10,225.0,0.444
+Quadratic,Elastic Net,250,150,2,125.0,1.2
+Quadratic,Elastic Net,250,150,5,200.0,0.75
+Quadratic,Elastic Net,250,150,10,225.0,0.667
+Quadratic,Elastic Net,250,300,2,125.0,2.4
+Quadratic,Elastic Net,250,300,5,200.0,1.5
+Quadratic,Elastic Net,250,300,10,225.0,1.333
+Quadratic,Elastic Net,500,25,2,250.0,0.1
+Quadratic,Elastic Net,500,25,5,400.0,0.062
+Quadratic,Elastic Net,500,25,10,450.0,0.056
+Quadratic,Elastic Net,500,50,2,250.0,0.2
+Quadratic,Elastic Net,500,50,5,400.0,0.125
+Quadratic,Elastic Net,500,50,10,450.0,0.111
+Quadratic,Elastic Net,500,100,2,250.0,0.4
+Quadratic,Elastic Net,500,100,5,400.0,0.25
+Quadratic,Elastic Net,500,100,10,450.0,0.222
+Quadratic,Elastic Net,500,150,2,250.0,0.6
+Quadratic,Elastic Net,500,150,5,400.0,0.375
+Quadratic,Elastic Net,500,150,10,450.0,0.333
+Quadratic,Elastic Net,500,300,2,250.0,1.2
+Quadratic,Elastic Net,500,300,5,400.0,0.75
+Quadratic,Elastic Net,500,300,10,450.0,0.667
+Quadratic,Elastic Net,1000,25,2,500.0,0.05
+Quadratic,Elastic Net,1000,25,5,800.0,0.031
+Quadratic,Elastic Net,1000,25,10,900.0,0.028
+Quadratic,Elastic Net,1000,50,2,500.0,0.1
+Quadratic,Elastic Net,1000,50,5,800.0,0.062
+Quadratic,Elastic Net,1000,50,10,900.0,0.056
+Quadratic,Elastic Net,1000,100,2,500.0,0.2
+Quadratic,Elastic Net,1000,100,5,800.0,0.125
+Quadratic,Elastic Net,1000,100,10,900.0,0.111
+Quadratic,Elastic Net,1000,150,2,500.0,0.3
+Quadratic,Elastic Net,1000,150,5,800.0,0.188
+Quadratic,Elastic Net,1000,150,10,900.0,0.167
+Quadratic,Elastic Net,1000,300,2,500.0,0.6
+Quadratic,Elastic Net,1000,300,5,800.0,0.375
+Quadratic,Elastic Net,1000,300,10,900.0,0.333
+Quadratic,Gradient Boosting,250,25,2,125.0,0.2
+Quadratic,Gradient Boosting,250,25,5,200.0,0.125
+Quadratic,Gradient Boosting,250,25,10,225.0,0.111
+Quadratic,Gradient Boosting,250,50,2,125.0,0.4
+Quadratic,Gradient Boosting,250,50,5,200.0,0.25
+Quadratic,Gradient Boosting,250,50,10,225.0,0.222
+Quadratic,Gradient Boosting,250,100,2,125.0,0.8
+Quadratic,Gradient Boosting,250,100,5,200.0,0.5
+Quadratic,Gradient Boosting,250,100,10,225.0,0.444
+Quadratic,Gradient Boosting,250,150,2,125.0,1.2
+Quadratic,Gradient Boosting,250,150,5,200.0,0.75
+Quadratic,Gradient Boosting,250,150,10,225.0,0.667
+Quadratic,Gradient Boosting,250,300,2,125.0,2.4
+Quadratic,Gradient Boosting,250,300,5,200.0,1.5
+Quadratic,Gradient Boosting,250,300,10,225.0,1.333
+Quadratic,Gradient Boosting,500,25,2,250.0,0.1
+Quadratic,Gradient Boosting,500,25,5,400.0,0.062
+Quadratic,Gradient Boosting,500,25,10,450.0,0.056
+Quadratic,Gradient Boosting,500,50,2,250.0,0.2
+Quadratic,Gradient Boosting,500,50,5,400.0,0.125
+Quadratic,Gradient Boosting,500,50,10,450.0,0.111
+Quadratic,Gradient Boosting,500,100,2,250.0,0.4
+Quadratic,Gradient Boosting,500,100,5,400.0,0.25
+Quadratic,Gradient Boosting,500,100,10,450.0,0.222
+Quadratic,Gradient Boosting,500,150,2,250.0,0.6
+Quadratic,Gradient Boosting,500,150,5,400.0,0.375
+Quadratic,Gradient Boosting,500,150,10,450.0,0.333
+Quadratic,Gradient Boosting,500,300,2,250.0,1.2
+Quadratic,Gradient Boosting,500,300,5,400.0,0.75
+Quadratic,Gradient Boosting,500,300,10,450.0,0.667
+Quadratic,Gradient Boosting,1000,25,2,500.0,0.05
+Quadratic,Gradient Boosting,1000,25,5,800.0,0.031
+Quadratic,Gradient Boosting,1000,25,10,900.0,0.028
+Quadratic,Gradient Boosting,1000,50,2,500.0,0.1
+Quadratic,Gradient Boosting,1000,50,5,800.0,0.062
+Quadratic,Gradient Boosting,1000,50,10,900.0,0.056
+Quadratic,Gradient Boosting,1000,100,2,500.0,0.2
+Quadratic,Gradient Boosting,1000,100,5,800.0,0.125
+Quadratic,Gradient Boosting,1000,100,10,900.0,0.111
+Quadratic,Gradient Boosting,1000,150,2,500.0,0.3
+Quadratic,Gradient Boosting,1000,150,5,800.0,0.188
+Quadratic,Gradient Boosting,1000,150,10,900.0,0.167
+Quadratic,Gradient Boosting,1000,300,2,500.0,0.6
+Quadratic,Gradient Boosting,1000,300,5,800.0,0.375
+Quadratic,Gradient Boosting,1000,300,10,900.0,0.333
+Quadratic,Lasso,250,25,2,125.0,0.2
+Quadratic,Lasso,250,25,5,200.0,0.125
+Quadratic,Lasso,250,25,10,225.0,0.111
+Quadratic,Lasso,250,50,2,125.0,0.4
+Quadratic,Lasso,250,50,5,200.0,0.25
+Quadratic,Lasso,250,50,10,225.0,0.222
+Quadratic,Lasso,250,100,2,125.0,0.8
+Quadratic,Lasso,250,100,5,200.0,0.5
+Quadratic,Lasso,250,100,10,225.0,0.444
+Quadratic,Lasso,250,150,2,125.0,1.2
+Quadratic,Lasso,250,150,5,200.0,0.75
+Quadratic,Lasso,250,150,10,225.0,0.667
+Quadratic,Lasso,250,300,2,125.0,2.4
+Quadratic,Lasso,250,300,5,200.0,1.5
+Quadratic,Lasso,250,300,10,225.0,1.333
+Quadratic,Lasso,500,25,2,250.0,0.1
+Quadratic,Lasso,500,25,5,400.0,0.062
+Quadratic,Lasso,500,25,10,450.0,0.056
+Quadratic,Lasso,500,50,2,250.0,0.2
+Quadratic,Lasso,500,50,5,400.0,0.125
+Quadratic,Lasso,500,50,10,450.0,0.111
+Quadratic,Lasso,500,100,2,250.0,0.4
+Quadratic,Lasso,500,100,5,400.0,0.25
+Quadratic,Lasso,500,100,10,450.0,0.222
+Quadratic,Lasso,500,150,2,250.0,0.6
+Quadratic,Lasso,500,150,5,400.0,0.375
+Quadratic,Lasso,500,150,10,450.0,0.333
+Quadratic,Lasso,500,300,2,250.0,1.2
+Quadratic,Lasso,500,300,5,400.0,0.75
+Quadratic,Lasso,500,300,10,450.0,0.667
+Quadratic,Lasso,1000,25,2,500.0,0.05
+Quadratic,Lasso,1000,25,5,800.0,0.031
+Quadratic,Lasso,1000,25,10,900.0,0.028
+Quadratic,Lasso,1000,50,2,500.0,0.1
+Quadratic,Lasso,1000,50,5,800.0,0.062
+Quadratic,Lasso,1000,50,10,900.0,0.056
+Quadratic,Lasso,1000,100,2,500.0,0.2
+Quadratic,Lasso,1000,100,5,800.0,0.125
+Quadratic,Lasso,1000,100,10,900.0,0.111
+Quadratic,Lasso,1000,150,2,500.0,0.3
+Quadratic,Lasso,1000,150,5,800.0,0.188
+Quadratic,Lasso,1000,150,10,900.0,0.167
+Quadratic,Lasso,1000,300,2,500.0,0.6
+Quadratic,Lasso,1000,300,5,800.0,0.375
+Quadratic,Lasso,1000,300,10,900.0,0.333
+Quadratic,OLS,250,25,2,125.0,0.2
+Quadratic,OLS,250,25,5,200.0,0.125
+Quadratic,OLS,250,25,10,225.0,0.111
+Quadratic,OLS,250,50,2,125.0,0.4
+Quadratic,OLS,250,50,5,200.0,0.25
+Quadratic,OLS,250,50,10,225.0,0.222
+Quadratic,OLS,250,100,2,125.0,0.8
+Quadratic,OLS,250,100,5,200.0,0.5
+Quadratic,OLS,250,100,10,225.0,0.444
+Quadratic,OLS,250,150,2,125.0,1.2
+Quadratic,OLS,250,150,5,200.0,0.75
+Quadratic,OLS,250,150,10,225.0,0.667
+Quadratic,OLS,250,300,2,125.0,2.4
+Quadratic,OLS,250,300,5,200.0,1.5
+Quadratic,OLS,250,300,10,225.0,1.333
+Quadratic,OLS,500,25,2,250.0,0.1
+Quadratic,OLS,500,25,5,400.0,0.062
+Quadratic,OLS,500,25,10,450.0,0.056
+Quadratic,OLS,500,50,2,250.0,0.2
+Quadratic,OLS,500,50,5,400.0,0.125
+Quadratic,OLS,500,50,10,450.0,0.111
+Quadratic,OLS,500,100,2,250.0,0.4
+Quadratic,OLS,500,100,5,400.0,0.25
+Quadratic,OLS,500,100,10,450.0,0.222
+Quadratic,OLS,500,150,2,250.0,0.6
+Quadratic,OLS,500,150,5,400.0,0.375
+Quadratic,OLS,500,150,10,450.0,0.333
+Quadratic,OLS,500,300,2,250.0,1.2
+Quadratic,OLS,500,300,5,400.0,0.75
+Quadratic,OLS,500,300,10,450.0,0.667
+Quadratic,OLS,1000,25,2,500.0,0.05
+Quadratic,OLS,1000,25,5,800.0,0.031
+Quadratic,OLS,1000,25,10,900.0,0.028
+Quadratic,OLS,1000,50,2,500.0,0.1
+Quadratic,OLS,1000,50,5,800.0,0.062
+Quadratic,OLS,1000,50,10,900.0,0.056
+Quadratic,OLS,1000,100,2,500.0,0.2
+Quadratic,OLS,1000,100,5,800.0,0.125
+Quadratic,OLS,1000,100,10,900.0,0.111
+Quadratic,OLS,1000,150,2,500.0,0.3
+Quadratic,OLS,1000,150,5,800.0,0.188
+Quadratic,OLS,1000,150,10,900.0,0.167
+Quadratic,OLS,1000,300,2,500.0,0.6
+Quadratic,OLS,1000,300,5,800.0,0.375
+Quadratic,OLS,1000,300,10,900.0,0.333
+Quadratic,Random Forest,250,25,2,125.0,0.2
+Quadratic,Random Forest,250,25,5,200.0,0.125
+Quadratic,Random Forest,250,25,10,225.0,0.111
+Quadratic,Random Forest,250,50,2,125.0,0.4
+Quadratic,Random Forest,250,50,5,200.0,0.25
+Quadratic,Random Forest,250,50,10,225.0,0.222
+Quadratic,Random Forest,250,100,2,125.0,0.8
+Quadratic,Random Forest,250,100,5,200.0,0.5
+Quadratic,Random Forest,250,100,10,225.0,0.444
+Quadratic,Random Forest,250,150,2,125.0,1.2
+Quadratic,Random Forest,250,150,5,200.0,0.75
+Quadratic,Random Forest,250,150,10,225.0,0.667
+Quadratic,Random Forest,250,300,2,125.0,2.4
+Quadratic,Random Forest,250,300,5,200.0,1.5
+Quadratic,Random Forest,250,300,10,225.0,1.333
+Quadratic,Random Forest,500,25,2,250.0,0.1
+Quadratic,Random Forest,500,25,5,400.0,0.062
+Quadratic,Random Forest,500,25,10,450.0,0.056
+Quadratic,Random Forest,500,50,2,250.0,0.2
+Quadratic,Random Forest,500,50,5,400.0,0.125
+Quadratic,Random Forest,500,50,10,450.0,0.111
+Quadratic,Random Forest,500,100,2,250.0,0.4
+Quadratic,Random Forest,500,100,5,400.0,0.25
+Quadratic,Random Forest,500,100,10,450.0,0.222
+Quadratic,Random Forest,500,150,2,250.0,0.6
+Quadratic,Random Forest,500,150,5,400.0,0.375
+Quadratic,Random Forest,500,150,10,450.0,0.333
+Quadratic,Random Forest,500,300,2,250.0,1.2
+Quadratic,Random Forest,500,300,5,400.0,0.75
+Quadratic,Random Forest,500,300,10,450.0,0.667
+Quadratic,Random Forest,1000,25,2,500.0,0.05
+Quadratic,Random Forest,1000,25,5,800.0,0.031
+Quadratic,Random Forest,1000,25,10,900.0,0.028
+Quadratic,Random Forest,1000,50,2,500.0,0.1
+Quadratic,Random Forest,1000,50,5,800.0,0.062
+Quadratic,Random Forest,1000,50,10,900.0,0.056
+Quadratic,Random Forest,1000,100,2,500.0,0.2
+Quadratic,Random Forest,1000,100,5,800.0,0.125
+Quadratic,Random Forest,1000,100,10,900.0,0.111
+Quadratic,Random Forest,1000,150,2,500.0,0.3
+Quadratic,Random Forest,1000,150,5,800.0,0.188
+Quadratic,Random Forest,1000,150,10,900.0,0.167
+Quadratic,Random Forest,1000,300,2,500.0,0.6
+Quadratic,Random Forest,1000,300,5,800.0,0.375
+Quadratic,Random Forest,1000,300,10,900.0,0.333
+Step,Elastic Net,250,25,2,125.0,0.2
+Step,Elastic Net,250,25,5,200.0,0.125
+Step,Elastic Net,250,25,10,225.0,0.111
+Step,Elastic Net,250,50,2,125.0,0.4
+Step,Elastic Net,250,50,5,200.0,0.25
+Step,Elastic Net,250,50,10,225.0,0.222
+Step,Elastic Net,250,100,2,125.0,0.8
+Step,Elastic Net,250,100,5,200.0,0.5
+Step,Elastic Net,250,100,10,225.0,0.444
+Step,Elastic Net,250,150,2,125.0,1.2
+Step,Elastic Net,250,150,5,200.0,0.75
+Step,Elastic Net,250,150,10,225.0,0.667
+Step,Elastic Net,250,300,2,125.0,2.4
+Step,Elastic Net,250,300,5,200.0,1.5
+Step,Elastic Net,250,300,10,225.0,1.333
+Step,Elastic Net,500,25,2,250.0,0.1
+Step,Elastic Net,500,25,5,400.0,0.062
+Step,Elastic Net,500,25,10,450.0,0.056
+Step,Elastic Net,500,50,2,250.0,0.2
+Step,Elastic Net,500,50,5,400.0,0.125
+Step,Elastic Net,500,50,10,450.0,0.111
+Step,Elastic Net,500,100,2,250.0,0.4
+Step,Elastic Net,500,100,5,400.0,0.25
+Step,Elastic Net,500,100,10,450.0,0.222
+Step,Elastic Net,500,150,2,250.0,0.6
+Step,Elastic Net,500,150,5,400.0,0.375
+Step,Elastic Net,500,150,10,450.0,0.333
+Step,Elastic Net,500,300,2,250.0,1.2
+Step,Elastic Net,500,300,5,400.0,0.75
+Step,Elastic Net,500,300,10,450.0,0.667
+Step,Elastic Net,1000,25,2,500.0,0.05
+Step,Elastic Net,1000,25,5,800.0,0.031
+Step,Elastic Net,1000,25,10,900.0,0.028
+Step,Elastic Net,1000,50,2,500.0,0.1
+Step,Elastic Net,1000,50,5,800.0,0.062
+Step,Elastic Net,1000,50,10,900.0,0.056
+Step,Elastic Net,1000,100,2,500.0,0.2
+Step,Elastic Net,1000,100,5,800.0,0.125
+Step,Elastic Net,1000,100,10,900.0,0.111
+Step,Elastic Net,1000,150,2,500.0,0.3
+Step,Elastic Net,1000,150,5,800.0,0.188
+Step,Elastic Net,1000,150,10,900.0,0.167
+Step,Elastic Net,1000,300,2,500.0,0.6
+Step,Elastic Net,1000,300,5,800.0,0.375
+Step,Elastic Net,1000,300,10,900.0,0.333
+Step,Gradient Boosting,250,25,2,125.0,0.2
+Step,Gradient Boosting,250,25,5,200.0,0.125
+Step,Gradient Boosting,250,25,10,225.0,0.111
+Step,Gradient Boosting,250,50,2,125.0,0.4
+Step,Gradient Boosting,250,50,5,200.0,0.25
+Step,Gradient Boosting,250,50,10,225.0,0.222
+Step,Gradient Boosting,250,100,2,125.0,0.8
+Step,Gradient Boosting,250,100,5,200.0,0.5
+Step,Gradient Boosting,250,100,10,225.0,0.444
+Step,Gradient Boosting,250,150,2,125.0,1.2
+Step,Gradient Boosting,250,150,5,200.0,0.75
+Step,Gradient Boosting,250,150,10,225.0,0.667
+Step,Gradient Boosting,250,300,2,125.0,2.4
+Step,Gradient Boosting,250,300,5,200.0,1.5
+Step,Gradient Boosting,250,300,10,225.0,1.333
+Step,Gradient Boosting,500,25,2,250.0,0.1
+Step,Gradient Boosting,500,25,5,400.0,0.062
+Step,Gradient Boosting,500,25,10,450.0,0.056
+Step,Gradient Boosting,500,50,2,250.0,0.2
+Step,Gradient Boosting,500,50,5,400.0,0.125
+Step,Gradient Boosting,500,50,10,450.0,0.111
+Step,Gradient Boosting,500,100,2,250.0,0.4
+Step,Gradient Boosting,500,100,5,400.0,0.25
+Step,Gradient Boosting,500,100,10,450.0,0.222
+Step,Gradient Boosting,500,150,2,250.0,0.6
+Step,Gradient Boosting,500,150,5,400.0,0.375
+Step,Gradient Boosting,500,150,10,450.0,0.333
+Step,Gradient Boosting,500,300,2,250.0,1.2
+Step,Gradient Boosting,500,300,5,400.0,0.75
+Step,Gradient Boosting,500,300,10,450.0,0.667
+Step,Gradient Boosting,1000,25,2,500.0,0.05
+Step,Gradient Boosting,1000,25,5,800.0,0.031
+Step,Gradient Boosting,1000,25,10,900.0,0.028
+Step,Gradient Boosting,1000,50,2,500.0,0.1
+Step,Gradient Boosting,1000,50,5,800.0,0.062
+Step,Gradient Boosting,1000,50,10,900.0,0.056
+Step,Gradient Boosting,1000,100,2,500.0,0.2
+Step,Gradient Boosting,1000,100,5,800.0,0.125
+Step,Gradient Boosting,1000,100,10,900.0,0.111
+Step,Gradient Boosting,1000,150,2,500.0,0.3
+Step,Gradient Boosting,1000,150,5,800.0,0.188
+Step,Gradient Boosting,1000,150,10,900.0,0.167
+Step,Gradient Boosting,1000,300,2,500.0,0.6
+Step,Gradient Boosting,1000,300,5,800.0,0.375
+Step,Gradient Boosting,1000,300,10,900.0,0.333
+Step,Lasso,250,25,2,125.0,0.2
+Step,Lasso,250,25,5,200.0,0.125
+Step,Lasso,250,25,10,225.0,0.111
+Step,Lasso,250,50,2,125.0,0.4
+Step,Lasso,250,50,5,200.0,0.25
+Step,Lasso,250,50,10,225.0,0.222
+Step,Lasso,250,100,2,125.0,0.8
+Step,Lasso,250,100,5,200.0,0.5
+Step,Lasso,250,100,10,225.0,0.444
+Step,Lasso,250,150,2,125.0,1.2
+Step,Lasso,250,150,5,200.0,0.75
+Step,Lasso,250,150,10,225.0,0.667
+Step,Lasso,250,300,2,125.0,2.4
+Step,Lasso,250,300,5,200.0,1.5
+Step,Lasso,250,300,10,225.0,1.333
+Step,Lasso,500,25,2,250.0,0.1
+Step,Lasso,500,25,5,400.0,0.062
+Step,Lasso,500,25,10,450.0,0.056
+Step,Lasso,500,50,2,250.0,0.2
+Step,Lasso,500,50,5,400.0,0.125
+Step,Lasso,500,50,10,450.0,0.111
+Step,Lasso,500,100,2,250.0,0.4
+Step,Lasso,500,100,5,400.0,0.25
+Step,Lasso,500,100,10,450.0,0.222
+Step,Lasso,500,150,2,250.0,0.6
+Step,Lasso,500,150,5,400.0,0.375
+Step,Lasso,500,150,10,450.0,0.333
+Step,Lasso,500,300,2,250.0,1.2
+Step,Lasso,500,300,5,400.0,0.75
+Step,Lasso,500,300,10,450.0,0.667
+Step,Lasso,1000,25,2,500.0,0.05
+Step,Lasso,1000,25,5,800.0,0.031
+Step,Lasso,1000,25,10,900.0,0.028
+Step,Lasso,1000,50,2,500.0,0.1
+Step,Lasso,1000,50,5,800.0,0.062
+Step,Lasso,1000,50,10,900.0,0.056
+Step,Lasso,1000,100,2,500.0,0.2
+Step,Lasso,1000,100,5,800.0,0.125
+Step,Lasso,1000,100,10,900.0,0.111
+Step,Lasso,1000,150,2,500.0,0.3
+Step,Lasso,1000,150,5,800.0,0.188
+Step,Lasso,1000,150,10,900.0,0.167
+Step,Lasso,1000,300,2,500.0,0.6
+Step,Lasso,1000,300,5,800.0,0.375
+Step,Lasso,1000,300,10,900.0,0.333
+Step,OLS,250,25,2,125.0,0.2
+Step,OLS,250,25,5,200.0,0.125
+Step,OLS,250,25,10,225.0,0.111
+Step,OLS,250,50,2,125.0,0.4
+Step,OLS,250,50,5,200.0,0.25
+Step,OLS,250,50,10,225.0,0.222
+Step,OLS,250,100,2,125.0,0.8
+Step,OLS,250,100,5,200.0,0.5
+Step,OLS,250,100,10,225.0,0.444
+Step,OLS,250,150,2,125.0,1.2
+Step,OLS,250,150,5,200.0,0.75
+Step,OLS,250,150,10,225.0,0.667
+Step,OLS,250,300,2,125.0,2.4
+Step,OLS,250,300,5,200.0,1.5
+Step,OLS,250,300,10,225.0,1.333
+Step,OLS,500,25,2,250.0,0.1
+Step,OLS,500,25,5,400.0,0.062
+Step,OLS,500,25,10,450.0,0.056
+Step,OLS,500,50,2,250.0,0.2
+Step,OLS,500,50,5,400.0,0.125
+Step,OLS,500,50,10,450.0,0.111
+Step,OLS,500,100,2,250.0,0.4
+Step,OLS,500,100,5,400.0,0.25
+Step,OLS,500,100,10,450.0,0.222
+Step,OLS,500,150,2,250.0,0.6
+Step,OLS,500,150,5,400.0,0.375
+Step,OLS,500,150,10,450.0,0.333
+Step,OLS,500,300,2,250.0,1.2
+Step,OLS,500,300,5,400.0,0.75
+Step,OLS,500,300,10,450.0,0.667
+Step,OLS,1000,25,2,500.0,0.05
+Step,OLS,1000,25,5,800.0,0.031
+Step,OLS,1000,25,10,900.0,0.028
+Step,OLS,1000,50,2,500.0,0.1
+Step,OLS,1000,50,5,800.0,0.062
+Step,OLS,1000,50,10,900.0,0.056
+Step,OLS,1000,100,2,500.0,0.2
+Step,OLS,1000,100,5,800.0,0.125
+Step,OLS,1000,100,10,900.0,0.111
+Step,OLS,1000,150,2,500.0,0.3
+Step,OLS,1000,150,5,800.0,0.188
+Step,OLS,1000,150,10,900.0,0.167
+Step,OLS,1000,300,2,500.0,0.6
+Step,OLS,1000,300,5,800.0,0.375
+Step,OLS,1000,300,10,900.0,0.333
+Step,Random Forest,250,25,2,125.0,0.2
+Step,Random Forest,250,25,5,200.0,0.125
+Step,Random Forest,250,25,10,225.0,0.111
+Step,Random Forest,250,50,2,125.0,0.4
+Step,Random Forest,250,50,5,200.0,0.25
+Step,Random Forest,250,50,10,225.0,0.222
+Step,Random Forest,250,100,2,125.0,0.8
+Step,Random Forest,250,100,5,200.0,0.5
+Step,Random Forest,250,100,10,225.0,0.444
+Step,Random Forest,250,150,2,125.0,1.2
+Step,Random Forest,250,150,5,200.0,0.75
+Step,Random Forest,250,150,10,225.0,0.667
+Step,Random Forest,250,300,2,125.0,2.4
+Step,Random Forest,250,300,5,200.0,1.5
+Step,Random Forest,250,300,10,225.0,1.333
+Step,Random Forest,500,25,2,250.0,0.1
+Step,Random Forest,500,25,5,400.0,0.062
+Step,Random Forest,500,25,10,450.0,0.056
+Step,Random Forest,500,50,2,250.0,0.2
+Step,Random Forest,500,50,5,400.0,0.125
+Step,Random Forest,500,50,10,450.0,0.111
+Step,Random Forest,500,100,2,250.0,0.4
+Step,Random Forest,500,100,5,400.0,0.25
+Step,Random Forest,500,100,10,450.0,0.222
+Step,Random Forest,500,150,2,250.0,0.6
+Step,Random Forest,500,150,5,400.0,0.375
+Step,Random Forest,500,150,10,450.0,0.333
+Step,Random Forest,500,300,2,250.0,1.2
+Step,Random Forest,500,300,5,400.0,0.75
+Step,Random Forest,500,300,10,450.0,0.667
+Step,Random Forest,1000,25,2,500.0,0.05
+Step,Random Forest,1000,25,5,800.0,0.031
+Step,Random Forest,1000,25,10,900.0,0.028
+Step,Random Forest,1000,50,2,500.0,0.1
+Step,Random Forest,1000,50,5,800.0,0.062
+Step,Random Forest,1000,50,10,900.0,0.056
+Step,Random Forest,1000,100,2,500.0,0.2
+Step,Random Forest,1000,100,5,800.0,0.125
+Step,Random Forest,1000,100,10,900.0,0.111
+Step,Random Forest,1000,150,2,500.0,0.3
+Step,Random Forest,1000,150,5,800.0,0.188
+Step,Random Forest,1000,150,10,900.0,0.167
+Step,Random Forest,1000,300,2,500.0,0.6
+Step,Random Forest,1000,300,5,800.0,0.375
+Step,Random Forest,1000,300,10,900.0,0.333

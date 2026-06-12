@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -33,6 +34,7 @@ TASK_FILES = [
     for path in (Path(__file__).resolve().parents[1] / "tasks").glob("*.py")
     if path.name != "__init__.py"
 ]
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_workflow_task_files_do_not_reference_old_dgps() -> None:
@@ -127,6 +129,17 @@ def test_task_files_do_not_use_pilot_grid() -> None:
     for path in TASK_FILES:
         text = path.read_text(encoding="utf-8")
         assert "PILOT_N_P_PAIRS" not in text, f"{path} still uses pilot grid"
+
+
+def test_pytask_ignores_pytest_temp_directories() -> None:
+    """pytask should not collect pytest temp/cache folders on Windows."""
+
+    pyproject = tomllib.loads((PROJECT_ROOT / "pyproject.toml").read_text())
+    ignore = pyproject["tool"]["pytask"]["ini_options"]["ignore"]
+
+    assert ".pytest_tmp" in ignore
+    assert ".pytest_cache" in ignore
+    assert "__pycache__" in ignore
 
 
 def test_workflow_output_paths_construct_without_running() -> None:

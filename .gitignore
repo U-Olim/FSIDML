@@ -67,6 +67,8 @@ out/
 
 # Testing
 .cache/
+.test_tmp/
+.pytest_tmp/
 .pytest_cache/
 .coverage
 .coverage.*

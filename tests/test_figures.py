@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import shutil
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import pytest
@@ -114,16 +117,25 @@ def test_missing_required_core_columns_raise_clear_value_error() -> None:
         plot_coverage_by_fold_ratio(df)
 
 
-def test_save_path_writes_file(tmp_path) -> None:
+def test_save_path_writes_file() -> None:
     """Plot functions should save a file when save_path is provided."""
 
-    save_path = tmp_path / "coverage.png"
-    fig = plot_coverage_by_fold_ratio(
-        _aggregated_results(),
-        dgp_name="linear_confounding",
-        save_path=save_path,
-    )
+    temp_dir = Path(".test_tmp") / "figures"
+    shutil.rmtree(temp_dir, ignore_errors=True)
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    save_path = temp_dir / "coverage.png"
 
-    assert save_path.exists()
-    assert save_path.stat().st_size > 0
-    plt.close(fig)
+    fig: Figure | None = None
+    try:
+        fig = plot_coverage_by_fold_ratio(
+            _aggregated_results(),
+            dgp_name="linear_confounding",
+            save_path=save_path,
+        )
+
+        assert save_path.exists()
+        assert save_path.stat().st_size > 0
+    finally:
+        if fig is not None:
+            plt.close(fig)
+        shutil.rmtree(temp_dir, ignore_errors=True)
