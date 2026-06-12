@@ -19,3 +19,6 @@ testpaths = ["tests"]
 pythonpath = [".", "src"]
 addopts = "-ra"
 norecursedirs = [".git", ".pixi", ".pytest_cache", "documents", "pytest-cache-files-*"]
+
+[tool.pytask.ini_options]
+ignore = [".pytest_tmp", ".pytest_cache", "__pycache__"]
