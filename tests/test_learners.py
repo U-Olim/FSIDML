@@ -7,6 +7,8 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from sklearn.linear_model import ElasticNet, ElasticNetCV
+from sklearn.linear_model import Lasso, LassoCV
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SRC_PATH = PROJECT_ROOT / "src"
@@ -15,17 +17,17 @@ if str(SRC_PATH) not in sys.path:
 
 try:
     from dml_project import config
-    from dml_project.learners.elastic_net import ElasticNetCVLearner
+    from dml_project.learners.elastic_net import ElasticNetLearner
     from dml_project.learners.gradient_boosting import GradientBoostingLearner
-    from dml_project.learners.lasso import LassoCVLearner
+    from dml_project.learners.lasso import LassoLearner
     from dml_project.learners.ols import OLSLearner
     from dml_project.learners.random_forest import RandomForestLearner
     from dml_project.learners.tuning import make_main_learner
 except ModuleNotFoundError:
     from src.dml_project import config
-    from src.dml_project.learners.elastic_net import ElasticNetCVLearner
+    from src.dml_project.learners.elastic_net import ElasticNetLearner
     from src.dml_project.learners.gradient_boosting import GradientBoostingLearner
-    from src.dml_project.learners.lasso import LassoCVLearner
+    from src.dml_project.learners.lasso import LassoLearner
     from src.dml_project.learners.ols import OLSLearner
     from src.dml_project.learners.random_forest import RandomForestLearner
     from src.dml_project.learners.tuning import make_main_learner
@@ -43,8 +45,8 @@ def _toy_data(n: int = 80, p: int = 10) -> tuple[np.ndarray, np.ndarray]:
     "learner",
     [
         OLSLearner(),
-        LassoCVLearner(),
-        ElasticNetCVLearner(random_state=123),
+        LassoLearner(),
+        ElasticNetLearner(random_state=123),
         RandomForestLearner(random_state=123),
         GradientBoostingLearner(random_state=123),
     ],
@@ -60,8 +62,8 @@ def test_predict_before_fit_raises_runtime_error(learner) -> None:
     ("learner_name", "learner_type"),
     [
         ("ols", OLSLearner),
-        ("lasso", LassoCVLearner),
-        ("elastic_net", ElasticNetCVLearner),
+        ("lasso", LassoLearner),
+        ("elastic_net", ElasticNetLearner),
         ("random_forest", RandomForestLearner),
         ("gradient_boosting", GradientBoostingLearner),
     ],
@@ -105,18 +107,115 @@ def test_configured_learners_fit_and_predict(learner_name: str) -> None:
     assert preds.shape == (5,)
 
 
-def test_factory_uses_inner_cv_for_penalized_learners() -> None:
-    """Penalized learners should use inner tuning CV, not outer DML folds."""
+def test_lasso_uses_fixed_sklearn_estimator() -> None:
+    """Lasso should not use internal cross-validation."""
 
-    assert config.INNER_CV_FOLDS == 5
-    lasso = make_main_learner("lasso")
-    elastic = make_main_learner("elastic_net")
-    assert isinstance(lasso, LassoCVLearner)
-    assert lasso.cv == config.INNER_CV_FOLDS
-    assert lasso.cv != config.N_FOLDS
-    assert isinstance(elastic, ElasticNetCVLearner)
-    assert elastic.cv == config.INNER_CV_FOLDS
-    assert elastic.cv != config.N_FOLDS
+    X, y = _toy_data()
+    learner = make_main_learner("lasso", random_state=123)
+
+    assert isinstance(learner, LassoLearner)
+    assert hasattr(learner, "fit")
+    assert hasattr(learner, "predict")
+
+    learner.fit(X, y)
+    predictions = learner.predict(X[:7])
+
+    assert predictions.shape == (7,)
+    assert isinstance(learner.model_, Lasso)
+    assert not isinstance(learner.model_, LassoCV)
+
+
+def test_lasso_uses_configured_fixed_hyperparameters() -> None:
+    """Lasso should use centralized fixed hyperparameters."""
+
+    learner = make_main_learner("lasso", random_state=456)
+
+    assert learner.alpha == config.LASSO_ALPHA
+    assert learner.max_iter == config.LASSO_MAX_ITER
+    assert learner.tol == config.LASSO_TOL
+    assert learner.random_state == 456
+
+    X, y = _toy_data()
+    learner.fit(X, y)
+
+    assert learner.model_.alpha == config.LASSO_ALPHA
+    assert learner.model_.random_state == 456
+
+
+def test_elastic_net_uses_fixed_sklearn_estimator() -> None:
+    """Elastic Net should not use internal cross-validation."""
+
+    X, y = _toy_data()
+    learner = make_main_learner("elastic_net", random_state=123)
+
+    assert isinstance(learner, ElasticNetLearner)
+    assert hasattr(learner, "fit")
+    assert hasattr(learner, "predict")
+
+    learner.fit(X, y)
+    predictions = learner.predict(X[:7])
+
+    assert predictions.shape == (7,)
+    assert isinstance(learner.model_, ElasticNet)
+    assert not isinstance(learner.model_, ElasticNetCV)
+
+
+def test_elastic_net_uses_configured_fixed_hyperparameters() -> None:
+    """Elastic Net should use centralized fixed hyperparameters."""
+
+    learner = make_main_learner("elastic_net", random_state=456)
+
+    assert learner.alpha == config.ELASTIC_NET_ALPHA
+    assert learner.l1_ratio == config.ELASTIC_NET_L1_RATIO
+    assert learner.max_iter == config.ELASTIC_NET_MAX_ITER
+    assert learner.tol == config.ELASTIC_NET_TOL
+    assert learner.random_state == 456
+
+    X, y = _toy_data()
+    learner.fit(X, y)
+
+    assert learner.model_.alpha == config.ELASTIC_NET_ALPHA
+    assert learner.model_.l1_ratio == config.ELASTIC_NET_L1_RATIO
+    assert learner.model_.random_state == 456
+
+
+def test_random_forest_uses_configured_hyperparameters() -> None:
+    """Random Forest should use centralized runtime-conscious hyperparameters."""
+
+    X, y = _toy_data()
+    learner = make_main_learner("random_forest", random_state=456)
+
+    learner.fit(X, y)
+    predictions = learner.predict(X[:7])
+
+    assert predictions.shape == (7,)
+    assert learner.model_.n_estimators == config.RANDOM_FOREST_N_ESTIMATORS
+    assert learner.model_.max_depth == config.RANDOM_FOREST_MAX_DEPTH
+    assert learner.model_.min_samples_leaf == config.RANDOM_FOREST_MIN_SAMPLES_LEAF
+    assert learner.model_.max_features == config.RANDOM_FOREST_MAX_FEATURES
+    assert learner.model_.n_jobs == config.RANDOM_FOREST_N_JOBS
+    assert learner.model_.random_state == 456
+
+
+def test_gradient_boosting_uses_configured_hyperparameters() -> None:
+    """Gradient Boosting should use centralized runtime-conscious hyperparameters."""
+
+    X, y = _toy_data()
+    learner = make_main_learner("gradient_boosting", random_state=456)
+
+    learner.fit(X, y)
+    predictions = learner.predict(X[:7])
+
+    assert predictions.shape == (7,)
+    assert learner.model_.max_iter == config.GRADIENT_BOOSTING_MAX_ITER
+    assert learner.model_.learning_rate == config.GRADIENT_BOOSTING_LEARNING_RATE
+    assert learner.model_.max_leaf_nodes == config.GRADIENT_BOOSTING_MAX_LEAF_NODES
+    assert (
+        learner.model_.l2_regularization
+        == config.GRADIENT_BOOSTING_L2_REGULARIZATION
+    )
+    assert learner.model_.min_samples_leaf == config.GRADIENT_BOOSTING_MIN_SAMPLES_LEAF
+    assert learner.model_.random_state == 456
 
 
 @pytest.mark.parametrize("learner_name", ["random_forest", "gradient_boosting"])

@@ -3,56 +3,59 @@
 from __future__ import annotations
 
 import numpy as np
-from sklearn.linear_model import LassoCV
+from sklearn.linear_model import Lasso
 
 from dml_project import config
 
 
-class LassoCVLearner:
-    """Wrapper around :class:`sklearn.linear_model.LassoCV`.
-
-    After fitting, the selected regularization strength is available via
-    ``alpha_``.
-    """
+class LassoLearner:
+    """Wrapper around fixed-parameter :class:`sklearn.linear_model.Lasso`."""
 
     def __init__(
         self,
-        cv: int = config.INNER_CV_FOLDS,
         random_state: int | None = None,
-        max_iter: int = 10_000,
+        alpha: float = config.LASSO_ALPHA,
+        max_iter: int = config.LASSO_MAX_ITER,
+        tol: float = config.LASSO_TOL,
+        cv: int | None = None,
     ) -> None:
-        """Initialize a cross-validated Lasso learner.
+        """Initialize a fixed-hyperparameter Lasso learner.
 
         Args:
-            cv: Number of folds used internally by ``LassoCV``.
             random_state: Optional random seed for reproducible coordinate
-                descent randomness and CV shuffling behavior inside sklearn.
+                descent randomness inside sklearn.
+            alpha: Fixed regularization strength.
             max_iter: Maximum solver iterations for each fit.
+            tol: Optimization tolerance.
+            cv: Deprecated compatibility argument; ignored.
         """
-        self.cv = cv
         self.random_state = random_state
+        self.alpha = alpha
         self.max_iter = max_iter
+        self.tol = tol
+        self.cv = cv
         self.is_fitted_ = False
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
-        """Fit the LassoCV model.
+        """Fit the Lasso model.
 
         Args:
             X: Feature matrix of shape ``(n, p)``.
             y: Target vector of shape ``(n,)``.
         """
 
-        model = LassoCV(
-            cv=self.cv,
-            random_state=self.random_state,
+        model = Lasso(
+            alpha=self.alpha,
+            fit_intercept=True,
             max_iter=self.max_iter,
-            selection="random",
-            n_jobs=1,
+            tol=self.tol,
+            random_state=self.random_state,
+            selection="cyclic",
         )
         model.fit(X, y)
 
         self.model_ = model
-        self.alpha_ = float(model.alpha_)
+        self.alpha_ = float(model.alpha)
         self.is_fitted_ = True
 
     def predict(self, X: np.ndarray) -> np.ndarray:
@@ -69,5 +72,9 @@ class LassoCVLearner:
         """
 
         if not self.is_fitted_:
-            raise RuntimeError("LassoCVLearner must be fitted before predict")
+            raise RuntimeError("LassoLearner must be fitted before predict")
         return self.model_.predict(X)
+
+
+class LassoCVLearner(LassoLearner):
+    """Backward-compatible alias for the fixed Lasso learner."""

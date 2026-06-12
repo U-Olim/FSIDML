@@ -13,7 +13,7 @@ from dml_project.simulation.scenario import Scenario
 def _small_scenario(n_rep: int = 1, n_folds: int = 5) -> Scenario:
     return Scenario(
         scenario_id=101,
-        dgp_name="linear_confounding",
+        dgp_name="dense_linear_independent",
         learner_name="ols",
         n_obs=50,
         n_covariates=5,

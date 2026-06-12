@@ -75,7 +75,7 @@ The simulation designs are adapted from published DML method-evaluation designs 
 | Critical | Empirical 401(k) application does not support the instability regime. | Downgrade to empirical illustration or add a stress-test design.           |                      |      |
 | Critical | PLR notation is incorrect.                                            | Correct notation: distinguish $g_0(X)$, $\ell_0(X)=E[Y \mid X]$, and $r_0(X)=E[D \mid X]$. |                      |      |
 | High     | Learner set is too limited.                                           | Add Random Forest and Gradient Boosting.                                   |                      |      |
-| High     | DGPs are only linear.                                                 | Added adapted benchmark DGPs with linear, quadratic/U-shaped, interaction, and step-function confounding. |                      |      |
+| High     | DGPs are only linear.                                                 | Use linear PLR DGPs to isolate fold-level dimensionality and learner stability from nonlinear nuisance misspecification. |                      |      |
 | High     | Mean bias can hide cancellation.                                      | Add mean absolute bias.                                                    |                      |      |
 | High     | Results are redundant.                                                | Reduce duplicated tables and figures.                                      |                      |      |
 | High     | "Instability" is vague.                                               | Define instability using numerical and inferential diagnostics.            |                      |      |
@@ -182,7 +182,7 @@ The design should include low-dimensional, moderate-dimensional, near-critical, 
 
 # Data-Generating Processes
 
-The revised simulation design uses four adapted benchmark DGPs for the partially linear regression model:
+The revised simulation design uses four linear PLR DGPs for the partially linear regression model:
 
 $$
 D_i = r_0(X_i) + V_i,
@@ -198,12 +198,20 @@ $$
 \theta_0 = 1.
 $$
 
-The DGPs are adapted from the functional-form classes used in Fuhr, Berens, and Papies (2024), "Estimating Causal Effects with Double Machine Learning -- A Method Evaluation": linear, U-shaped/quadratic, interaction, and step-function confounding. They are adapted to the present paper by varying \(n\), \(p\), and \(K\), because the purpose of this paper is to study fold-level nuisance learner stability under cross-fitting.
+The main simulation design now uses linear PLR DGPs to isolate fold-level dimensionality and learner stability from nonlinear nuisance misspecification. The designs vary sparsity, covariate dependence, and nuisance signal strength while preserving correctly specified linear nuisance functions.
 
-The covariates are generated as:
+The independent-control DGPs use:
 
 $$
 X_i \sim N(0,I_p).
+$$
+
+The correlated-control DGP uses:
+
+$$
+X_i \sim N(0,\Sigma),
+\qquad
+\Sigma_{jk}=0.5^{|j-k|}.
 $$
 
 Unless otherwise stated, the errors satisfy:
@@ -236,93 +244,59 @@ a_j=\frac{1}{j},
 b_j=\frac{(-1)^{j+1}}{j}.
 $$
 
-The coefficients \(a_j\) determine \(r_0(X)\), while \(b_j\) determine \(g_0(X)\). Only the first \(s\) covariates are active; the remaining \(p-s\) covariates are irrelevant controls.
+The coefficients \(a_j\) determine \(r_0(X)\), while \(b_j\) determine \(g_0(X)\). Sparse DGPs use only the first \(s\) covariates; dense DGPs use all \(p\) covariates with harmonic decay.
 
-## DGP 1: Linear Confounding
+## DGP 1: `dense_linear_independent`
+
+Dense linear nuisance functions with independent controls:
+
+$$
+r_0(X_i)=X_i'\beta_r,
+\qquad
+g_0(X_i)=X_i'\beta_g,
+$$
+
+where \(\beta_{rj}=1/j\) and \(\beta_{gj}=(-1)^{j+1}/j\) for \(j=1,\ldots,p\).
+
+Purpose: baseline dense linear PLR setting.
+
+## DGP 2: `sparse_linear_independent`
+
+Sparse linear nuisance functions with independent controls:
 
 $$
 r_0(X_i)=\sum_{j=1}^{s}a_jX_{ij},
-$$
-
-$$
+\qquad
 g_0(X_i)=\sum_{j=1}^{s}b_jX_{ij}.
 $$
 
-Purpose: baseline linear nuisance setting.
+Purpose: regularization under irrelevant independent controls.
 
-## DGP 2: Quadratic Confounding
+## DGP 3: `sparse_linear_correlated`
 
-Define the centered quadratic transformation:
-
-$$
-q(x)=x^2-1.
-$$
-
-Then:
+Sparse linear nuisance functions with AR(1)-correlated controls:
 
 $$
-r_0(X_i)=\sum_{j=1}^{s}a_jq(X_{ij}),
+r_0(X_i)=\sum_{j=1}^{s}a_jX_{ij},
+\qquad
+g_0(X_i)=\sum_{j=1}^{s}b_jX_{ij}.
 $$
 
-$$
-g_0(X_i)=\sum_{j=1}^{s}b_jq(X_{ij}).
-$$
+Purpose: regularization and Elastic Net behavior under correlated covariates.
 
-Purpose: smooth nonlinear/U-shaped nuisance setting.
+## DGP 4: `weak_signal_sparse`
 
-## DGP 3: Interaction Confounding
-
-Define the deterministic pairing:
+Sparse linear nuisance functions with weaker coefficients:
 
 $$
-\pi(j)=
-\begin{cases}
-j+1, & j<s,\\
-1, & j=s.
-\end{cases}
+a_j=\frac{0.25}{j},
+\qquad
+b_j=\frac{0.25(-1)^{j+1}}{j}.
 $$
 
-Then:
+Purpose: learner stability when nuisance signals are weak but correctly specified as linear.
 
-$$
-r_0(X_i)=\sum_{j=1}^{s}a_jX_{ij}X_{i,\pi(j)},
-$$
-
-$$
-g_0(X_i)=\sum_{j=1}^{s}b_jX_{ij}X_{i,\pi(j)}.
-$$
-
-Purpose: non-additive nuisance setting with interactions.
-
-## DGP 4: Step Confounding
-
-Define the standard-normal quartile step function:
-
-$$
-h(x)=
-\begin{cases}
--3, & x<-0.67448975,\\
--1, & -0.67448975\le x<0,\\
-1, & 0\le x<0.67448975,\\
-3, & x\ge 0.67448975.
-\end{cases}
-$$
-
-Then:
-
-$$
-r_0(X_i)=\sum_{j=1}^{s}a_jh(X_{ij}),
-$$
-
-$$
-g_0(X_i)=\sum_{j=1}^{s}b_jh(X_{ij}).
-$$
-
-Purpose: nonsmooth threshold nuisance setting.
-
-Citation note: TODO: add BibTeX entry for Fuhr, Berens, and Papies (2024), "Estimating Causal Effects with Double Machine Learning -- A Method Evaluation."
-
-The DGPs are adapted benchmark designs, not exact replications of a single paper. The contribution is not inventing DGPs; it is studying how fold-level dimensionality and learner stability affect finite-sample DML inference.
+These DGPs are benchmark designs for studying how fold-level dimensionality and learner stability affect finite-sample DML inference.
 
 # Learners
 
@@ -417,14 +391,14 @@ For every replication and fold, compute:
 
 Scenario objects and configuration constants now support scenario-specific \(n\), \(p\), \(K\), DGP names, learner names, and replication counts.
 
-## Step 2: Adapted Fuhr-Style DGPs
+## Step 2: Linear PLR DGPs
 
-Implemented adapted benchmark DGPs:
+Implemented linear PLR benchmark DGPs:
 
-- `linear_confounding`
-- `quadratic_confounding`
-- `interaction_confounding`
-- `step_confounding`
+- `dense_linear_independent`
+- `sparse_linear_independent`
+- `sparse_linear_correlated`
+- `weak_signal_sparse`
 
 ## Step 3: Learners
 

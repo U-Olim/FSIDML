@@ -23,7 +23,7 @@ We conduct a Monte Carlo simulation where many artificial datasets are generated
 | Covariate dimension       | p = {25, 50, 100, 150, 300}                                             |
 | Cross-fitting folds       | K = {2, 5, 10}                                                          |
 | Nuisance estimators       | OLS, Lasso, Elastic Net, Random Forest, Gradient Boosting               |
-| Data generating processes | linear_confounding, quadratic_confounding, interaction_confounding, step_confounding |
+| Data generating processes | dense_linear_independent, sparse_linear_independent, sparse_linear_correlated, weak_signal_sparse |
 | Replications              | `1000` per full-simulation scenario                                     |
 
 The DGPs are adapted benchmark designs with linear, quadratic/U-shaped, interaction, and step-function confounding. The contribution is not inventing new theoretical DGPs; it is studying how these nuisance structures interact with fold-level dimensionality and learner stability in finite-sample DML inference.

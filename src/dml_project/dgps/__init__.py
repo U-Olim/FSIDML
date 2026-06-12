@@ -5,15 +5,15 @@ used by tasks and tests.
 """
 
 from dml_project.dgps import (
-    interaction_confounding,
-    linear_confounding,
-    quadratic_confounding,
-    step_confounding,
+    dense_linear_independent,
+    sparse_linear_correlated,
+    sparse_linear_independent,
+    weak_signal_sparse,
 )
 
 __all__ = [
-    "linear_confounding",
-    "quadratic_confounding",
-    "interaction_confounding",
-    "step_confounding",
+    "dense_linear_independent",
+    "sparse_linear_independent",
+    "sparse_linear_correlated",
+    "weak_signal_sparse",
 ]

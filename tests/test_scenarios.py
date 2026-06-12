@@ -20,7 +20,7 @@ from dml_project.simulation.scenario_builders import (
 def _valid_scenario(**overrides: object) -> Scenario:
     values = {
         "scenario_id": 0,
-        "dgp_name": "linear_confounding",
+        "dgp_name": "dense_linear_independent",
         "learner_name": "lasso",
         "n_obs": 500,
         "n_covariates": 50,
@@ -47,10 +47,10 @@ def test_config_contains_revised_design_constants() -> None:
     assert config.FULL_N_REPLICATIONS == config.N_REPLICATIONS
     assert config.FULL_N_REP == config.N_REPLICATIONS
     assert config.DGP_NAMES == [
-        "linear_confounding",
-        "quadratic_confounding",
-        "interaction_confounding",
-        "step_confounding",
+        "dense_linear_independent",
+        "sparse_linear_independent",
+        "sparse_linear_correlated",
+        "weak_signal_sparse",
     ]
     assert config.LEARNERS == [
         "ols",
@@ -101,7 +101,7 @@ def test_scenario_name_includes_fold_marker() -> None:
     assert "_k5_" in scenario.name
     assert (
         scenario.name
-        == "linear_confounding_n500_p50_k5_lasso"
+        == "dense_linear_independent_n500_p50_k5_lasso"
     )
 
 
@@ -110,13 +110,13 @@ def test_make_scenario_name_includes_fold_marker() -> None:
 
     assert (
         make_scenario_name(
-            dgp_name="linear_confounding",
+            dgp_name="dense_linear_independent",
             learner_name="lasso",
             n_obs=500,
             n_covariates=50,
             n_folds=5,
         )
-        == "linear_confounding_n500_p50_k5_lasso"
+        == "dense_linear_independent_n500_p50_k5_lasso"
     )
 
 

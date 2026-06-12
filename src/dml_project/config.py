@@ -18,6 +18,7 @@ P_VALUES = [25, 50, 100, 150, 300]
 # Outer cross-fitting folds for the simulation design.
 K_VALUES = [2, 5, 10]
 THETA_TRUE = 1.0
+THETA_0 = THETA_TRUE
 
 BASE_SEED = 123
 # Backward-compatible default for existing estimators and learner CV settings.
@@ -25,12 +26,29 @@ DEFAULT_N_FOLDS = 2
 N_FOLDS = DEFAULT_N_FOLDS
 # Inner hyperparameter tuning folds are separate from outer DML cross-fitting K.
 INNER_CV_FOLDS = 5
+LASSO_ALPHA = 0.01
+LASSO_MAX_ITER = 5000
+LASSO_TOL = 1e-4
+ELASTIC_NET_ALPHA = 0.01
+ELASTIC_NET_L1_RATIO = 0.5
+ELASTIC_NET_MAX_ITER = 5000
+ELASTIC_NET_TOL = 1e-4
+RANDOM_FOREST_N_ESTIMATORS = 100
+RANDOM_FOREST_MAX_DEPTH = None
+RANDOM_FOREST_MIN_SAMPLES_LEAF = 5
+RANDOM_FOREST_MAX_FEATURES = "sqrt"
+RANDOM_FOREST_N_JOBS = -1
+GRADIENT_BOOSTING_MAX_ITER = 100
+GRADIENT_BOOSTING_LEARNING_RATE = 0.05
+GRADIENT_BOOSTING_MAX_LEAF_NODES = 15
+GRADIENT_BOOSTING_L2_REGULARIZATION = 0.0
+GRADIENT_BOOSTING_MIN_SAMPLES_LEAF = 20
 
 DGP_NAMES = [
-    "linear_confounding",
-    "quadratic_confounding",
-    "interaction_confounding",
-    "step_confounding",
+    "dense_linear_independent",
+    "sparse_linear_independent",
+    "sparse_linear_correlated",
+    "weak_signal_sparse",
 ]
 LEARNERS = [
     "ols",
@@ -46,3 +64,4 @@ RAW_RESULTS_DIR = OUTPUT_DIR / "raw"
 AGGREGATED_RESULTS_DIR = OUTPUT_DIR / "aggregated"
 TABLES_DIR = OUTPUT_DIR / "tables"
 FIGURES_DIR = OUTPUT_DIR / "figures"
+OUTPUT_ARCHIVE_DIR = OUTPUT_DIR / "archive"

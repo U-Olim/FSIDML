@@ -5,6 +5,8 @@ from __future__ import annotations
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 
+from dml_project import config
+
 
 class RandomForestLearner:
     """Wrapper around :class:`sklearn.ensemble.RandomForestRegressor`."""
@@ -27,12 +29,12 @@ class RandomForestLearner:
         """
 
         model = RandomForestRegressor(
-            n_estimators=200,
-            max_depth=None,
-            min_samples_leaf=5,
-            max_features="sqrt",
+            n_estimators=config.RANDOM_FOREST_N_ESTIMATORS,
+            max_depth=config.RANDOM_FOREST_MAX_DEPTH,
+            min_samples_leaf=config.RANDOM_FOREST_MIN_SAMPLES_LEAF,
+            max_features=config.RANDOM_FOREST_MAX_FEATURES,
             random_state=self.random_state,
-            n_jobs=-1,
+            n_jobs=config.RANDOM_FOREST_N_JOBS,
         )
         model.fit(X, y)
         self.model_ = model

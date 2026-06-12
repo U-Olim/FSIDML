@@ -1,4 +1,4 @@
-"""Tests for Fuhr-style DGP modules and shared helpers."""
+"""Tests for linear PLR DGP modules and shared helpers."""
 
 from __future__ import annotations
 
@@ -11,7 +11,9 @@ import pytest
 from dml_project import config
 from dml_project.dgps.base import (
     active_dimension,
+    ar1_covariance,
     centered_quadratic,
+    sparse_coefficients,
     standard_normal_step,
 )
 
@@ -44,7 +46,7 @@ def test_every_configured_dgp_generates_expected_shapes(dgp_name: str) -> None:
     assert x.shape == (n_obs, n_covariates)
     assert d.shape == (n_obs,)
     assert y.shape == (n_obs,)
-    assert _theta_0() == 1.0
+    assert _theta_0() == config.THETA_0
 
 
 @pytest.mark.parametrize("dgp_name", config.DGP_NAMES)
@@ -94,16 +96,55 @@ def test_centered_quadratic_values() -> None:
     assert np.array_equal(actual, np.array([-1.0, 0.0, 3.0]))
 
 
-def test_dgp_names_are_fuhr_style_names_only() -> None:
-    """Config should not include deprecated DGP names."""
+def test_ar1_covariance_values() -> None:
+    """AR(1) covariance should use rho to the distance power."""
+
+    expected = np.array(
+        [
+            [1.0, 0.5, 0.25, 0.125],
+            [0.5, 1.0, 0.5, 0.25],
+            [0.25, 0.5, 1.0, 0.5],
+            [0.125, 0.25, 0.5, 1.0],
+        ],
+    )
+
+    assert np.array_equal(ar1_covariance(4, 0.5), expected)
+
+
+@pytest.mark.parametrize(
+    ("n_covariates", "expected_nonzero"),
+    [(20, 10), (5, 5)],
+)
+def test_sparse_coefficients_active_count(
+    n_covariates: int,
+    expected_nonzero: int,
+) -> None:
+    """Sparse helper should cap active coefficients at p."""
+
+    coefficients = sparse_coefficients(n_covariates, n_active=10)
+
+    assert np.count_nonzero(coefficients) == expected_nonzero
+
+
+def test_weak_signal_sparse_has_smaller_signal_norm() -> None:
+    """Weak-signal coefficients should be smaller than baseline sparse ones."""
+
+    baseline = sparse_coefficients(20, n_active=10, scale=1.0)
+    weak = sparse_coefficients(20, n_active=10, scale=0.25)
+
+    assert np.linalg.norm(weak) < np.linalg.norm(baseline)
+
+
+def test_dgp_names_are_linear_plr_names_only() -> None:
+    """Config should include only the active linear PLR DGP names."""
 
     assert config.DGP_NAMES == [
-        "linear_confounding",
-        "quadratic_confounding",
-        "interaction_confounding",
-        "step_confounding",
+        "dense_linear_independent",
+        "sparse_linear_independent",
+        "sparse_linear_correlated",
+        "weak_signal_sparse",
     ]
-    assert "linear_dense_independent" not in config.DGP_NAMES
-    assert "linear_sparse_correlated" not in config.DGP_NAMES
-    assert "nonlinear_smooth" not in config.DGP_NAMES
-    assert "threshold_interaction" not in config.DGP_NAMES
+    assert "linear_confounding" not in config.DGP_NAMES
+    assert "quadratic_confounding" not in config.DGP_NAMES
+    assert "interaction_confounding" not in config.DGP_NAMES
+    assert "step_confounding" not in config.DGP_NAMES

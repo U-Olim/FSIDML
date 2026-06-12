@@ -1,4 +1,0 @@
-documents/outputs/figures/figure_coverage_by_fold_ratio_smoke.png
-documents/outputs/figures/figure_condition_number_vs_se_distortion_smoke.png
-documents/outputs/figures/figure_k_sensitivity_smoke.png
-documents/outputs/figures/figure_nonlinear_dgp_learners_smoke.png

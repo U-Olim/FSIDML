@@ -5,6 +5,8 @@ from __future__ import annotations
 import numpy as np
 from sklearn.ensemble import HistGradientBoostingRegressor
 
+from dml_project import config
+
 
 class GradientBoostingLearner:
     """Wrapper around :class:`sklearn.ensemble.HistGradientBoostingRegressor`."""
@@ -27,11 +29,11 @@ class GradientBoostingLearner:
         """
 
         model = HistGradientBoostingRegressor(
-            max_iter=200,
-            learning_rate=0.05,
-            max_leaf_nodes=31,
-            l2_regularization=0.0,
-            min_samples_leaf=20,
+            max_iter=config.GRADIENT_BOOSTING_MAX_ITER,
+            learning_rate=config.GRADIENT_BOOSTING_LEARNING_RATE,
+            max_leaf_nodes=config.GRADIENT_BOOSTING_MAX_LEAF_NODES,
+            l2_regularization=config.GRADIENT_BOOSTING_L2_REGULARIZATION,
+            min_samples_leaf=config.GRADIENT_BOOSTING_MIN_SAMPLES_LEAF,
             random_state=self.random_state,
         )
         model.fit(X, y)

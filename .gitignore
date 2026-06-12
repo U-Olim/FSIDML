@@ -90,3 +90,12 @@ site/
 venv/
 .npm/
 .pnpm-store/
+
+# Generated simulation outputs
+documents/outputs/raw/*.csv
+documents/outputs/aggregated/*.csv
+documents/outputs/tables/*.csv
+documents/outputs/figures/*.png
+documents/outputs/figures/*.pdf
+documents/outputs/checks/runtime_profile/*.csv
+documents/outputs/archive/

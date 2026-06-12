@@ -22,7 +22,7 @@ def test_revised_pipeline_end_to_end_smoke() -> None:
 
     scenario = Scenario(
         scenario_id=999,
-        dgp_name="linear_confounding",
+        dgp_name="dense_linear_independent",
         learner_name="ols",
         n_obs=100,
         n_covariates=10,
