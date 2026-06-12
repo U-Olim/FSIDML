@@ -27,12 +27,7 @@ except ModuleNotFoundError:
 MODE = get_run_mode()
 SUFFIX = output_suffix(MODE)
 
-DGP_LABELS = {
-    "linear_confounding": "Linear",
-    "quadratic_confounding": "Quadratic",
-    "interaction_confounding": "Interaction",
-    "step_confounding": "Step",
-}
+DGP_LABELS = {dgp_name: dgp_name.replace("_", " ").title() for dgp_name in config.DGP_NAMES}
 
 LEARNER_LABELS = {
     "ols": "OLS",
@@ -60,12 +55,7 @@ LEARNER_MARKERS = {
     "gradient_boosting": "v",
 }
 
-DGP_MARKERS = {
-    "linear_confounding": "o",
-    "quadratic_confounding": "s",
-    "interaction_confounding": "^",
-    "step_confounding": "D",
-}
+DGP_MARKERS = dict(zip(config.DGP_NAMES, ["o", "s", "^", "D"], strict=True))
 
 METRIC_LABELS = {
     "coverage": "Coverage",

@@ -16,11 +16,11 @@ def _aggregated_results() -> pd.DataFrame:
     return pd.DataFrame(
         [
             {
-                "scenario_name": "quadratic_n100_p20_k5_lasso",
+                "scenario_name": "sparse_linear_correlated_n100_p20_k5_lasso",
                 "n_obs": 100,
                 "n_covariates": 20,
                 "n_folds": 5,
-                "dgp_name": "quadratic_confounding",
+                "dgp_name": "sparse_linear_correlated",
                 "learner_name": "lasso",
                 "mean_fold_train_size": 80.0,
                 "mean_fold_ratio": 0.25,
@@ -42,11 +42,11 @@ def _aggregated_results() -> pd.DataFrame:
                 "mean_nuisance_r2_d": 0.45678,
             },
             {
-                "scenario_name": "linear_n100_p20_k2_rf",
+                "scenario_name": "dense_linear_independent_n100_p20_k2_rf",
                 "n_obs": 100,
                 "n_covariates": 20,
                 "n_folds": 2,
-                "dgp_name": "linear_confounding",
+                "dgp_name": "dense_linear_independent",
                 "learner_name": "random_forest",
                 "bias": 0.1,
                 "median_bias": 0.2,
@@ -75,12 +75,12 @@ def test_table_simulation_design_columns_and_design_values() -> None:
     table = table_simulation_design(_aggregated_results())
 
     assert list(table.columns) == ["DGP", "Learner", "n", "p", "K", "n_train", "rho_fold"]
-    linear_row = table.loc[table["DGP"] == "Linear"].iloc[0]
-    assert linear_row["n_train"] == 50.0
-    assert linear_row["rho_fold"] == 0.4
-    quadratic_row = table.loc[table["DGP"] == "Quadratic"].iloc[0]
-    assert quadratic_row["n_train"] == 80.0
-    assert quadratic_row["rho_fold"] == 0.25
+    dense_row = table.loc[table["DGP"] == "Dense Linear Independent"].iloc[0]
+    assert dense_row["n_train"] == 50.0
+    assert dense_row["rho_fold"] == 0.4
+    sparse_row = table.loc[table["DGP"] == "Sparse Linear Correlated"].iloc[0]
+    assert sparse_row["n_train"] == 80.0
+    assert sparse_row["rho_fold"] == 0.25
 
 
 def test_table_labels_are_readable() -> None:
@@ -88,7 +88,7 @@ def test_table_labels_are_readable() -> None:
 
     table = table_simulation_design(_aggregated_results())
 
-    assert set(table["DGP"]) == {"Linear", "Quadratic"}
+    assert set(table["DGP"]) == {"Dense Linear Independent", "Sparse Linear Correlated"}
     assert set(table["Learner"]) == {"Random Forest", "Lasso"}
 
 
@@ -107,9 +107,9 @@ def test_table_main_results_contains_revised_metrics() -> None:
         "SE Ratio",
         "Non-convergence",
     }.issubset(table.columns)
-    quadratic_row = table.loc[table["DGP"] == "Quadratic"].iloc[0]
-    assert quadratic_row["Bias"] == -0.123
-    assert quadratic_row["SE Ratio"] == 1.235
+    sparse_row = table.loc[table["DGP"] == "Sparse Linear Correlated"].iloc[0]
+    assert sparse_row["Bias"] == -0.123
+    assert sparse_row["SE Ratio"] == 1.235
 
 
 def test_table_diagnostics_contains_required_columns() -> None:
@@ -123,9 +123,9 @@ def test_table_diagnostics_contains_required_columns() -> None:
         "Nuisance MSE Y",
         "Nuisance R2 D",
     }.issubset(table.columns)
-    quadratic_row = table.loc[table["DGP"] == "Quadratic"].iloc[0]
-    assert quadratic_row["Mean Cond. No."] == 123.46
-    assert quadratic_row["Mean Min Eigenvalue"] == 0.0012
+    sparse_row = table.loc[table["DGP"] == "Sparse Linear Correlated"].iloc[0]
+    assert sparse_row["Mean Cond. No."] == 123.46
+    assert sparse_row["Mean Min Eigenvalue"] == 0.0012
 
 
 def test_tables_preserve_k_scenarios() -> None:
@@ -153,4 +153,4 @@ def test_table_sorting_is_deterministic() -> None:
     df = _aggregated_results().iloc[::-1].reset_index(drop=True)
     table = table_simulation_design(df)
 
-    assert list(table["DGP"]) == ["Linear", "Quadratic"]
+    assert list(table["DGP"]) == ["Dense Linear Independent", "Sparse Linear Correlated"]

@@ -1,10 +1,7 @@
-.PHONY: reproduce fast full clean
+.PHONY: reproduce full clean
 
 reproduce:
 	pixi run pytask
-
-fast:
-	pixi run pytask-fast
 
 full:
 	pixi run pytask

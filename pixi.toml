@@ -18,7 +18,6 @@ pytest = ">=9.0,<9.1"
 
 [tasks]
 pytask = "python -m pytask --force"
-pytask-fast = { cmd = "python -m pytask --force", env = { DML_RUN_MODE = "fast" } }
 paper-render = "quarto render documents/paper/paper.md --to html"
 paper-pdf = "quarto render documents/paper/paper.md --to pdf"
 presentation-render = "quarto render documents/presentation/presentation.md --to html"

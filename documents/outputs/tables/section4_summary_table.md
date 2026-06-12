@@ -1,7 +1,0 @@
-**Average finite-sample performance by learner.**
-
-| learner | mean_bias | mean_rmse | mean_coverage | mean_t_stat_mean | mean_t_stat_sd | mean_bias_linear_baseline | mean_rmse_linear_baseline | mean_coverage_linear_baseline | mean_t_stat_mean_linear_baseline | mean_t_stat_sd_linear_baseline | mean_bias_linear_sparse_correlated | mean_rmse_linear_sparse_correlated | mean_coverage_linear_sparse_correlated | mean_t_stat_mean_linear_sparse_correlated | mean_t_stat_sd_linear_sparse_correlated |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| OLS | 0.0019 | 0.3276 | 0.5237 | -0.2535 | 11.0235 | -0.0040 | 0.3295 | 0.5267 | -0.3345 | 10.0819 | 0.0078 | 0.3257 | 0.5207 | -0.1724 | 11.9651 |
-| Lasso | 0.0165 | 0.0667 | 0.9082 | 0.2855 | 1.1118 | 0.0222 | 0.0688 | 0.8988 | 0.3864 | 1.1302 | 0.0108 | 0.0646 | 0.9175 | 0.1847 | 1.0933 |
-| Elastic Net | 0.0364 | 0.0747 | 0.8701 | 0.6287 | 1.1290 | 0.0398 | 0.0764 | 0.8597 | 0.6859 | 1.1355 | 0.0331 | 0.0729 | 0.8805 | 0.5715 | 1.1224 |

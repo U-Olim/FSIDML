@@ -144,7 +144,3 @@ def test_dgp_names_are_linear_plr_names_only() -> None:
         "sparse_linear_correlated",
         "weak_signal_sparse",
     ]
-    assert "linear_confounding" not in config.DGP_NAMES
-    assert "quadratic_confounding" not in config.DGP_NAMES
-    assert "interaction_confounding" not in config.DGP_NAMES
-    assert "step_confounding" not in config.DGP_NAMES

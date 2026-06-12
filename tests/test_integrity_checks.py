@@ -54,7 +54,7 @@ def test_validate_summary_structure_raises_on_duplicate_design_keys() -> None:
         [
             {
                 "scenario_id": 0,
-                "dgp_name": "linear_baseline",
+                "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
                 "matched_specification": True,
                 "n": 150,
@@ -64,7 +64,7 @@ def test_validate_summary_structure_raises_on_duplicate_design_keys() -> None:
             },
             {
                 "scenario_id": 1,
-                "dgp_name": "linear_baseline",
+                "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
                 "matched_specification": True,
                 "n": 150,
@@ -95,7 +95,7 @@ def test_validate_scenario_summary_schema_requires_metrics_columns() -> None:
         [
             {
                 "scenario_id": 0,
-                "dgp_name": "linear_baseline",
+                "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
                 "matched_specification": True,
                 "n": 150,
@@ -135,7 +135,7 @@ def test_validate_summary_and_results_alignment_requires_same_scenarios() -> Non
         [
             {
                 "scenario_id": 0,
-                "dgp_name": "linear_baseline",
+                "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
                 "matched_specification": True,
                 "n": 150,
@@ -158,7 +158,7 @@ def test_validate_summary_and_results_alignment_requires_same_scenarios() -> Non
         [
             {
                 "scenario_id": 1,
-                "dgp_name": "linear_baseline",
+                "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
                 "matched_specification": True,
                 "bias": 0.1,

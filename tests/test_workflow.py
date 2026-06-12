@@ -21,14 +21,6 @@ from dml_project.simulation.scenario_builders import (
 )
 
 
-OLD_DGP_NAMES = {
-    "linear_baseline",
-    "linear_sparse_correlated",
-    "linear_dense_independent",
-    "nonlinear_smooth",
-    "threshold_interaction",
-}
-
 TASK_FILES = [
     path
     for path in (Path(__file__).resolve().parents[1] / "tasks").glob("*.py")
@@ -37,13 +29,14 @@ TASK_FILES = [
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_workflow_task_files_do_not_reference_old_dgps() -> None:
-    """Task files should not carry old DGP design names."""
+def test_workflow_task_files_use_current_dgp_config() -> None:
+    """Task files should depend on the configured DGP set."""
 
-    for path in TASK_FILES:
-        text = path.read_text(encoding="utf-8")
-        for old_name in OLD_DGP_NAMES:
-            assert old_name not in text, f"{path} still references {old_name}"
+    figure_text = (PROJECT_ROOT / "tasks" / "task_figures.py").read_text(encoding="utf-8")
+    table_text = (PROJECT_ROOT / "tasks" / "task_tables.py").read_text(encoding="utf-8")
+
+    assert "config.DGP_NAMES" in figure_text
+    assert "config.DGP_NAMES" in table_text
 
 
 def test_workflow_task_files_do_not_use_n_folds_constant() -> None:
@@ -70,9 +63,22 @@ def test_allowed_modes_are_smoke_and_full() -> None:
     assert VALID_RUN_MODES == {"smoke", "full"}
 
 
-@pytest.mark.parametrize("mode", ["pilot", "dev", "fast"])
-def test_removed_modes_are_rejected(mode: str) -> None:
-    """Removed workflow modes should fail clearly."""
+def test_project_config_exposes_no_obsolete_workflow_aliases() -> None:
+    """Makefile and pixi tasks should not expose removed workflow aliases."""
+
+    makefile_text = (PROJECT_ROOT / "Makefile").read_text(encoding="utf-8")
+    pixi_config = tomllib.loads((PROJECT_ROOT / "pixi.toml").read_text())
+    pixi_tasks = pixi_config["tasks"]
+    config_text = makefile_text + "\n" + (PROJECT_ROOT / "pixi.toml").read_text(encoding="utf-8")
+
+    for obsolete_mode in ("fast", "pilot", "dev"):
+        assert obsolete_mode not in config_text
+    assert "pytask" in pixi_tasks
+
+
+@pytest.mark.parametrize("mode", ["invalid", "debug", "quick"])
+def test_unknown_modes_are_rejected(mode: str) -> None:
+    """Unsupported workflow modes should fail clearly."""
 
     with pytest.raises(ValueError, match="Allowed modes are smoke and full"):
         build_scenarios_for_mode(mode)
@@ -123,12 +129,12 @@ def test_mode_specific_builders_and_replication_counts() -> None:
     assert output_suffix("full") == ""
 
 
-def test_task_files_do_not_use_pilot_grid() -> None:
-    """Workflow tasks should not use the removed pilot grid."""
+def test_task_files_do_not_use_removed_grid_constant() -> None:
+    """Workflow tasks should not use a removed grid constant."""
 
     for path in TASK_FILES:
         text = path.read_text(encoding="utf-8")
-        assert "PILOT_N_P_PAIRS" not in text, f"{path} still uses pilot grid"
+        assert "PILOT" not in text, f"{path} still uses a removed grid constant"
 
 
 def test_pytask_ignores_pytest_temp_directories() -> None:

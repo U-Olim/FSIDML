@@ -21,11 +21,11 @@ def _base_rows() -> pd.DataFrame:
         [
             {
                 "scenario_id": 1,
-                "scenario_name": "linear_n100_p5_k2_ols",
+                "scenario_name": "dense_linear_independent_n100_p5_k2_ols",
                 "n_obs": 100,
                 "n_covariates": 5,
                 "n_folds": 2,
-                "dgp_name": "linear_confounding",
+                "dgp_name": "dense_linear_independent",
                 "learner_name": "ols",
                 "replication": 0,
                 "theta_0": 1.0,
@@ -51,11 +51,11 @@ def _base_rows() -> pd.DataFrame:
             },
             {
                 "scenario_id": 1,
-                "scenario_name": "linear_n100_p5_k2_ols",
+                "scenario_name": "dense_linear_independent_n100_p5_k2_ols",
                 "n_obs": 100,
                 "n_covariates": 5,
                 "n_folds": 2,
-                "dgp_name": "linear_confounding",
+                "dgp_name": "dense_linear_independent",
                 "learner_name": "ols",
                 "replication": 1,
                 "theta_0": 1.0,
@@ -81,11 +81,11 @@ def _base_rows() -> pd.DataFrame:
             },
             {
                 "scenario_id": 1,
-                "scenario_name": "linear_n100_p5_k2_ols",
+                "scenario_name": "dense_linear_independent_n100_p5_k2_ols",
                 "n_obs": 100,
                 "n_covariates": 5,
                 "n_folds": 2,
-                "dgp_name": "linear_confounding",
+                "dgp_name": "dense_linear_independent",
                 "learner_name": "ols",
                 "replication": 2,
                 "theta_0": 1.0,
@@ -307,7 +307,7 @@ def test_grouping_includes_n_folds() -> None:
     df_k2 = _base_rows().iloc[[0]].copy()
     df_k5 = df_k2.copy()
     df_k5["scenario_id"] = 2
-    df_k5["scenario_name"] = "linear_n100_p5_k5_ols"
+    df_k5["scenario_name"] = "dense_linear_independent_n100_p5_k5_ols"
     df_k5["n_folds"] = 5
     df = pd.concat([df_k2, df_k5], ignore_index=True)
 

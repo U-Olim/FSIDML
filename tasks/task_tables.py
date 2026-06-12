@@ -25,12 +25,7 @@ except ModuleNotFoundError:
 MODE = get_run_mode()
 SUFFIX = output_suffix(MODE)
 
-DGP_LABELS = {
-    "linear_confounding": "Linear",
-    "quadratic_confounding": "Quadratic",
-    "interaction_confounding": "Interaction",
-    "step_confounding": "Step",
-}
+DGP_LABELS = {dgp_name: dgp_name.replace("_", " ").title() for dgp_name in config.DGP_NAMES}
 
 LEARNER_LABELS = {
     "ols": "OLS",
