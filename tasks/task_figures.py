@@ -42,12 +42,6 @@ LEARNER_LABELS = {
     "gradient_boosting": "Gradient Boosting",
 }
 
-NONLINEAR_DGPS = [
-    "quadratic_confounding",
-    "interaction_confounding",
-    "step_confounding",
-]
-
 SORT_COLUMNS = ["dgp_name", "learner_name", "n_obs", "n_covariates", "n_folds"]
 
 LEARNER_COLORS = {
@@ -83,7 +77,7 @@ METRIC_LABELS = {
 }
 
 K_SENSITIVITY_METRICS = set(METRIC_LABELS)
-NONLINEAR_METRICS = {"mae", "rmse", "coverage", "non_convergence_rate"}
+LEARNER_PERFORMANCE_METRICS = {"mae", "rmse", "coverage", "non_convergence_rate"}
 
 
 def _label_dgp(dgp_name: str) -> str:
@@ -344,31 +338,31 @@ def plot_k_sensitivity(
     return fig
 
 
-def plot_nonlinear_dgp_learners(
+def plot_learner_performance_by_dgp(
     df: pd.DataFrame,
     metric: str = "mae",
     save_path: str | Path | None = None,
 ) -> Figure:
-    """Plot learner performance in nonlinear DGPs as grouped bars."""
+    """Plot mean learner performance across active DGPs as grouped bars."""
 
-    if metric not in NONLINEAR_METRICS:
-        raise ValueError(f"metric must be one of {sorted(NONLINEAR_METRICS)}")
+    if metric not in LEARNER_PERFORMANCE_METRICS:
+        raise ValueError(f"metric must be one of {sorted(LEARNER_PERFORMANCE_METRICS)}")
     _require_columns(
         df,
         {"dgp_name", "learner_name", metric},
-        "plot_nonlinear_dgp_learners",
+        "plot_learner_performance_by_dgp",
     )
     prepared = _sort_results(df)
-    prepared = prepared.loc[prepared["dgp_name"].isin(NONLINEAR_DGPS)].copy()
+    prepared = prepared.loc[prepared["dgp_name"].isin(config.DGP_NAMES)].copy()
     if prepared.empty:
-        raise ValueError("plot_nonlinear_dgp_learners has no nonlinear DGP rows")
+        raise ValueError("plot_learner_performance_by_dgp has no active DGP rows")
 
     plot_df = (
         prepared.groupby(["dgp_name", "learner_name"], as_index=False, sort=True)[metric]
         .mean()
         .sort_values(["dgp_name", "learner_name"])
     )
-    dgp_order = [dgp for dgp in NONLINEAR_DGPS if dgp in set(plot_df["dgp_name"])]
+    dgp_order = [dgp for dgp in config.DGP_NAMES if dgp in set(plot_df["dgp_name"])]
     learner_order = _learner_order(plot_df)
     x_positions = np.arange(len(dgp_order), dtype=float)
     width = 0.8 / max(len(learner_order), 1)
@@ -396,7 +390,7 @@ def plot_nonlinear_dgp_learners(
     ax.set_xticks(x_positions, [_label_dgp(dgp) for dgp in dgp_order])
     ax.set_xlabel("DGP")
     ax.set_ylabel(METRIC_LABELS[metric])
-    ax.set_title("Learner performance in nonlinear DGPs")
+    ax.set_title("Learner performance by DGP")
     ax.grid(axis="y", alpha=0.25)
     ax.legend(frameon=False, ncols=2)
     _maybe_save_figure(fig, save_path)
@@ -431,7 +425,7 @@ def task_figures(
         plot_coverage_by_fold_ratio(results, save_path=output_paths[0]),
         plot_condition_number_vs_se_distortion(results, save_path=output_paths[1]),
         plot_k_sensitivity(results, metric="coverage", save_path=output_paths[2]),
-        plot_nonlinear_dgp_learners(results, metric="mae", save_path=output_paths[3]),
+        plot_learner_performance_by_dgp(results, metric="mae", save_path=output_paths[3]),
     ]
     for fig in figures:
         plt.close(fig)

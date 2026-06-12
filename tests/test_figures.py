@@ -10,22 +10,18 @@ import pandas as pd
 import pytest
 from matplotlib.figure import Figure
 
+from dml_project import config
 from tasks.task_figures import (
     plot_condition_number_vs_se_distortion,
     plot_coverage_by_fold_ratio,
+    plot_learner_performance_by_dgp,
     plot_k_sensitivity,
-    plot_nonlinear_dgp_learners,
 )
 
 
 def _aggregated_results() -> pd.DataFrame:
     rows: list[dict] = []
-    dgp_names = [
-        "linear_confounding",
-        "quadratic_confounding",
-        "interaction_confounding",
-        "step_confounding",
-    ]
+    dgp_names = config.DGP_NAMES
     learner_names = ["ols", "lasso", "random_forest"]
     for dgp_index, dgp_name in enumerate(dgp_names):
         for learner_index, learner_name in enumerate(learner_names):
@@ -54,7 +50,7 @@ def _aggregated_results() -> pd.DataFrame:
 def test_coverage_by_fold_ratio_returns_figure_with_mean_fold_ratio() -> None:
     """Coverage-by-rho plot should return a Figure."""
 
-    fig = plot_coverage_by_fold_ratio(_aggregated_results(), dgp_name="linear_confounding")
+    fig = plot_coverage_by_fold_ratio(_aggregated_results(), dgp_name=config.DGP_NAMES[0])
 
     assert isinstance(fig, Figure)
     plt.close(fig)
@@ -64,7 +60,7 @@ def test_coverage_by_fold_ratio_computes_rho_when_missing() -> None:
     """Coverage plot should compute rho from n, p, and K when needed."""
 
     df = _aggregated_results().drop(columns=["mean_fold_ratio"])
-    fig = plot_coverage_by_fold_ratio(df, dgp_name="linear_confounding")
+    fig = plot_coverage_by_fold_ratio(df, dgp_name=config.DGP_NAMES[0])
 
     assert isinstance(fig, Figure)
     assert fig.axes[0].get_xlabel() == "Fold-level dimensionality, p / n_train"
@@ -98,14 +94,23 @@ def test_k_sensitivity_invalid_metric_raises() -> None:
         plot_k_sensitivity(_aggregated_results(), metric="bias")
 
 
-def test_nonlinear_dgp_learners_returns_figure() -> None:
-    """Nonlinear DGP learner plot should return a Figure."""
+@pytest.mark.parametrize("metric", ["mae", "rmse", "coverage", "non_convergence_rate"])
+def test_learner_performance_by_dgp_returns_figure_for_linear_dgps(metric: str) -> None:
+    """Learner-by-DGP plot should work with active linear DGPs."""
 
-    fig = plot_nonlinear_dgp_learners(_aggregated_results(), metric="mae")
+    fig = plot_learner_performance_by_dgp(_aggregated_results(), metric=metric)
 
     assert isinstance(fig, Figure)
     assert fig.axes[0].get_xlabel() == "DGP"
+    assert fig.axes[0].get_title() == "Learner performance by DGP"
     plt.close(fig)
+
+
+def test_learner_performance_by_dgp_invalid_metric_raises() -> None:
+    """Learner-by-DGP plot should reject unsupported metrics."""
+
+    with pytest.raises(ValueError, match="metric must be one of"):
+        plot_learner_performance_by_dgp(_aggregated_results(), metric="se_ratio")
 
 
 def test_missing_required_core_columns_raise_clear_value_error() -> None:
@@ -129,7 +134,7 @@ def test_save_path_writes_file() -> None:
     try:
         fig = plot_coverage_by_fold_ratio(
             _aggregated_results(),
-            dgp_name="linear_confounding",
+            dgp_name=config.DGP_NAMES[0],
             save_path=save_path,
         )
 
