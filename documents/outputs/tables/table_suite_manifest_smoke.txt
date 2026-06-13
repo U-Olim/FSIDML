@@ -1,0 +1,6 @@
+documents/outputs/tables/table_diagnostics_smoke.csv
+documents/outputs/tables/table_diagnostics_smoke.md
+documents/outputs/tables/table_main_results_smoke.csv
+documents/outputs/tables/table_main_results_smoke.md
+documents/outputs/tables/table_simulation_design_smoke.csv
+documents/outputs/tables/table_simulation_design_smoke.md
