@@ -1,11 +1,11 @@
-"""Tests for hard data-integrity checks used by pipeline tasks."""
+"""Tests for hard data-integrity validation used by pipeline tasks."""
 
 from __future__ import annotations
 
 import pandas as pd
 import pytest
 
-from dml_project.utils.checks import (
+from dml_project.utils.validation import (
     validate_main_results_schema,
     validate_replication_structure,
     validate_scenario_summary_schema,
@@ -56,7 +56,6 @@ def test_validate_summary_structure_raises_on_duplicate_design_keys() -> None:
                 "scenario_id": 0,
                 "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
-                "matched_specification": True,
                 "n": 150,
                 "p": 150,
                 "theta_true": 0.0,
@@ -66,7 +65,6 @@ def test_validate_summary_structure_raises_on_duplicate_design_keys() -> None:
                 "scenario_id": 1,
                 "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
-                "matched_specification": True,
                 "n": 150,
                 "p": 150,
                 "theta_true": 0.0,
@@ -81,7 +79,6 @@ def test_validate_summary_structure_raises_on_duplicate_design_keys() -> None:
             design_key_columns=[
                 "dgp_name",
                 "learner_name",
-                "matched_specification",
                 "n",
                 "p",
                 "theta_true",
@@ -97,7 +94,6 @@ def test_validate_scenario_summary_schema_requires_metrics_columns() -> None:
                 "scenario_id": 0,
                 "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
-                "matched_specification": True,
                 "n": 150,
                 "p": 150,
                 "theta_true": 0.0,
@@ -137,7 +133,6 @@ def test_validate_summary_and_results_alignment_requires_same_scenarios() -> Non
                 "scenario_id": 0,
                 "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
-                "matched_specification": True,
                 "n": 150,
                 "p": 150,
                 "theta_true": 0.0,
@@ -160,7 +155,6 @@ def test_validate_summary_and_results_alignment_requires_same_scenarios() -> Non
                 "scenario_id": 1,
                 "dgp_name": "dense_linear_independent",
                 "learner_name": "lasso",
-                "matched_specification": True,
                 "bias": 0.1,
                 "rmse": 0.2,
                 "empirical_sd": 0.3,

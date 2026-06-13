@@ -42,7 +42,7 @@ def test_config_contains_revised_design_constants() -> None:
     assert config.DEFAULT_N_FOLDS == 2
     assert config.N_FOLDS == config.DEFAULT_N_FOLDS
     assert config.INNER_CV_FOLDS == 5
-    assert config.SMOKE_N_REPLICATIONS == 10
+    assert config.SMOKE_N_REPLICATIONS == 100
     assert config.N_REPLICATIONS == 1000
     assert config.FULL_N_REPLICATIONS == config.N_REPLICATIONS
     assert config.FULL_N_REP == config.N_REPLICATIONS

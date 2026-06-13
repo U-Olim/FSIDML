@@ -22,6 +22,6 @@ nuisance learner stability, and confidence-interval calibration.
 
 1. Regenerate smoke outputs after the four-learner cleanup.
 2. Inspect the simulation tables and figures for learner, DGP, K, and fold-ratio patterns.
-3. Run the full simulation only after smoke diagnostics are consistent with the
+3. Run the full simulation only after smoke outputs are consistent with the
    final design.
 4. Render paper artifacts only after final full outputs are available.

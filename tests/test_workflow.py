@@ -133,7 +133,7 @@ def test_mode_specific_builders_and_replication_counts() -> None:
 
     assert len(build_scenarios_for_mode("smoke")) == _expected_full_scenario_count()
     assert len(build_scenarios_for_mode("full")) == len(build_all_scenarios())
-    assert config.SMOKE_N_REPLICATIONS == 10
+    assert config.SMOKE_N_REPLICATIONS == 100
     assert config.N_REPLICATIONS == 1000
     assert get_replication_count("smoke") == config.SMOKE_N_REPLICATIONS
     assert get_replication_count("full") == config.N_REPLICATIONS

@@ -29,7 +29,7 @@ try:
         build_scenarios_for_mode,
         count_scenarios_for_mode,
     )
-    from dml_project.utils.checks import validate_replication_structure
+    from dml_project.utils.validation import validate_replication_structure
 except ModuleNotFoundError:
     from src.dml_project import config
     from src.dml_project.pipeline_mode import (
@@ -42,7 +42,7 @@ except ModuleNotFoundError:
         build_scenarios_for_mode,
         count_scenarios_for_mode,
     )
-    from src.dml_project.utils.checks import validate_replication_structure
+    from src.dml_project.utils.validation import validate_replication_structure
 
 MODE = get_run_mode()
 SUFFIX = output_suffix(MODE)
@@ -97,7 +97,7 @@ def task_simulations(
         config.RAW_RESULTS_DIR / f"simulations{SUFFIX}.csv"
     ),
 ) -> None:
-    """Run simulations and write replication-level outputs with integrity checks."""
+    """Run simulations and write replication-level outputs with integrity validation."""
     mode = MODE
     suffix = SUFFIX
     expected_path = config.RAW_RESULTS_DIR / f"simulations{suffix}.csv"

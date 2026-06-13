@@ -1,4 +1,4 @@
-"""Validation checks for replication-level and aggregated simulation outputs."""
+"""Validation helpers for replication-level and aggregated simulation outputs."""
 
 from __future__ import annotations
 
@@ -24,7 +24,6 @@ SCENARIO_SUMMARY_COLUMNS = [
     "dgp_name",
     "learner_name",
     "n_rep",
-    "matched_specification",
     "bias",
     "median_bias",
     "mae",

@@ -135,7 +135,7 @@ class DMLPLR:
         Raises:
             ValueError: If inputs have invalid shapes, sample sizes mismatch,
                 or residualized treatment variance is near zero.
-            RuntimeError: If cross-fitting integrity checks fail.
+            RuntimeError: If cross-fitting integrity validation fails.
         """
 
         Y = np.asarray(Y)

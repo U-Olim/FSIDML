@@ -22,7 +22,7 @@ try:
         build_scenarios_for_mode,
         count_scenarios_for_mode,
     )
-    from dml_project.utils.checks import (
+    from dml_project.utils.validation import (
         SCENARIO_SUMMARY_COLUMNS,
         validate_replication_structure,
         validate_scenario_summary_schema,
@@ -36,7 +36,7 @@ except ModuleNotFoundError:
         build_scenarios_for_mode,
         count_scenarios_for_mode,
     )
-    from src.dml_project.utils.checks import (
+    from src.dml_project.utils.validation import (
         SCENARIO_SUMMARY_COLUMNS,
         validate_replication_structure,
         validate_scenario_summary_schema,
@@ -82,7 +82,6 @@ def task_aggregate(
                 "scenario_name": scenario.name,
                 "dgp_name": scenario.dgp_name,
                 "learner_name": scenario.learner_name,
-                "matched_specification": scenario.matched_specification,
                 "n": scenario.n,
                 "p": scenario.p,
                 "n_obs": scenario.n_obs,
@@ -144,7 +143,6 @@ def task_aggregate(
             "scenario_name",
             "dgp_name",
             "learner_name",
-            "matched_specification",
             "n",
             "p",
             "n_folds",

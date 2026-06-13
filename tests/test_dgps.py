@@ -12,9 +12,7 @@ from dml_project import config
 from dml_project.dgps.base import (
     active_dimension,
     ar1_covariance,
-    centered_quadratic,
     sparse_coefficients,
-    standard_normal_step,
 )
 
 DGPOutput = tuple[np.ndarray, np.ndarray, np.ndarray]
@@ -78,22 +76,6 @@ def test_active_dimension_caps_at_ten() -> None:
 
     assert active_dimension(5) == 5
     assert active_dimension(20) == 10
-
-
-def test_standard_normal_step_values() -> None:
-    """Step helper should implement the fixed quartile thresholds."""
-
-    actual = standard_normal_step(np.array([-1.0, -0.1, 0.1, 1.0]))
-
-    assert np.array_equal(actual, np.array([-3.0, -1.0, 1.0, 3.0]))
-
-
-def test_centered_quadratic_values() -> None:
-    """Quadratic helper should return x squared minus one."""
-
-    actual = centered_quadratic(np.array([0.0, 1.0, 2.0]))
-
-    assert np.array_equal(actual, np.array([-1.0, 0.0, 3.0]))
 
 
 def test_ar1_covariance_values() -> None:

@@ -81,13 +81,13 @@ def mc_se_rmse(theta_hat: np.ndarray, theta_true: np.ndarray) -> float:
 
 
 def mc_se_coverage(covered: np.ndarray) -> float:
-    """Compute binomial Monte Carlo standard error for empirical coverage.
+    """Compute binomial Monte Carlo standard error for simulated coverage.
 
     Args:
         covered: Indicator array (0/1) for CI coverage by replication.
 
     Returns:
-        Standard error of empirical coverage.
+        Standard error of simulated coverage.
     """
 
     coverage = float(np.mean(covered))

@@ -22,7 +22,7 @@ accuracy, and confidence-interval coverage.
 | Cross-fitting folds | K = {2, 5, 10} |
 | DGPs | dense_linear_independent, sparse_linear_independent, sparse_linear_correlated, weak_signal_sparse |
 | Nuisance learners | OLS, Lasso, Elastic Net, Gradient Boosting |
-| Smoke replications | 10 per scenario |
+| Smoke replications | 100 per scenario |
 | Full replications | 1000 per scenario |
 
 The active grid contains `3 * 5 * 3 * 4 * 4 = 720` scenarios. Smoke mode
@@ -30,7 +30,7 @@ therefore produces 7,200 simulation rows, and full mode produces 720,000 rows.
 
 ## Workflow Modes
 
-- `smoke`: full scenario grid with 10 replications for quick checks.
+- `smoke`: full scenario grid with 100 replications for validation.
 - `full`: full scenario grid with 1000 replications for final results.
 
 ## Run Commands

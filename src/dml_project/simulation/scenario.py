@@ -22,7 +22,6 @@ class Scenario:
     theta: float = config.THETA_TRUE
     n_rep: int = config.FULL_N_REP
     base_seed: int = config.BASE_SEED
-    matched_specification: bool = False
 
     def __post_init__(self) -> None:
         """Validate scenario fields against the project design."""
@@ -49,12 +48,6 @@ class Scenario:
             raise ValueError("learner_name is not supported")
         if not math.isclose(self.theta, config.THETA_TRUE, abs_tol=1e-9):
             raise ValueError(f"theta must equal fixed design value {config.THETA_TRUE}")
-
-        object.__setattr__(
-            self,
-            "matched_specification",
-            self.dgp_name.startswith("linear_"),
-        )
 
     @property
     def name(self) -> str:

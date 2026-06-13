@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import numpy as np
 
-_STEP_CUTOFF = 0.67448975
-
 
 def generate_independent_covariates(
     n_obs: int,
@@ -118,37 +116,6 @@ def alternating_sparse_coefficients(
     return coefficients
 
 
-def coefficient_vectors(n_active: int) -> tuple[np.ndarray, np.ndarray]:
-    """Return treatment and outcome nuisance coefficient vectors."""
-
-    if n_active <= 0:
-        raise ValueError("n_active must be > 0")
-    j = np.arange(1, n_active + 1, dtype=float)
-    a = 1.0 / j
-    b = ((-1.0) ** (j + 1.0)) / j
-    return a, b
-
-
-def centered_quadratic(x: np.ndarray) -> np.ndarray:
-    """Return centered quadratic terms."""
-
-    return x**2 - 1.0
-
-
-def standard_normal_step(x: np.ndarray) -> np.ndarray:
-    """Apply a fixed four-level standard-normal quartile step function."""
-
-    return np.select(
-        [
-            x < -_STEP_CUTOFF,
-            (x >= -_STEP_CUTOFF) & (x < 0.0),
-            (x >= 0.0) & (x < _STEP_CUTOFF),
-            x >= _STEP_CUTOFF,
-        ],
-        [-3.0, -1.0, 1.0, 3.0],
-    )
-
-
 def make_plr_data(
     x: np.ndarray,
     r0: np.ndarray,
@@ -177,15 +144,3 @@ def generate_covariates(n: int, p: int, rng: np.random.Generator) -> np.ndarray:
         rng=rng,
     )
 
-
-def generate_baseline_errors(
-    n: int,
-    rng: np.random.Generator,
-) -> tuple[np.ndarray, np.ndarray]:
-    """Generate independent Gaussian outcome and treatment errors."""
-
-    if n <= 0:
-        raise ValueError("n must be > 0")
-    epsilon = rng.normal(loc=0.0, scale=1.0, size=n)
-    v = rng.normal(loc=0.0, scale=1.0, size=n)
-    return epsilon, v

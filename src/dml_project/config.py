@@ -5,8 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 
 # Run-mode replication counts.
-# Smoke mode checks the full scenario grid with a low replication count.
-SMOKE_N_REPLICATIONS = 10
+# Smoke mode validates the full scenario grid with a low replication count.
+SMOKE_N_REPLICATIONS = 100
 # Full mode is for final Monte Carlo evaluation on the same grid.
 N_REPLICATIONS = 1000
 FULL_N_REPLICATIONS = N_REPLICATIONS
@@ -58,4 +58,3 @@ RAW_RESULTS_DIR = OUTPUT_DIR / "raw"
 AGGREGATED_RESULTS_DIR = OUTPUT_DIR / "aggregated"
 TABLES_DIR = OUTPUT_DIR / "tables"
 FIGURES_DIR = OUTPUT_DIR / "figures"
-OUTPUT_ARCHIVE_DIR = OUTPUT_DIR / "archive"

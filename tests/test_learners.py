@@ -209,7 +209,7 @@ def test_stochastic_learners_are_reproducible(learner_name: str) -> None:
     assert np.allclose(learner_1.predict(X[:5]), learner_2.predict(X[:5]))
 
 
-@pytest.mark.parametrize("bad_name", ["ridge", "random_forest", ""])
+@pytest.mark.parametrize("bad_name", ["ridge", "unknown_learner", ""])
 def test_invalid_learner_name_raises_value_error(bad_name: str) -> None:
     """Unknown learner names should raise ValueError."""
     with pytest.raises(ValueError):
