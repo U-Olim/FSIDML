@@ -1,0 +1,8 @@
+documents/outputs/checks/result_diagnostics/best_20_scenarios_smoke.csv
+documents/outputs/checks/result_diagnostics/coverage_gap_smoke.csv
+documents/outputs/checks/result_diagnostics/dgp_ranking_smoke.csv
+documents/outputs/checks/result_diagnostics/fold_ratio_bins_smoke.csv
+documents/outputs/checks/result_diagnostics/k_ranking_smoke.csv
+documents/outputs/checks/result_diagnostics/learner_ranking_smoke.csv
+documents/outputs/checks/result_diagnostics/rf_diagnostic_smoke.csv
+documents/outputs/checks/result_diagnostics/worst_20_scenarios_smoke.csv
