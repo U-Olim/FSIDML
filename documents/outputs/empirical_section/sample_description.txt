@@ -1,4 +1,0 @@
-Sample size (N): 9915
-Number of covariates (p): 9
-Outcome variable: net_tfa
-Treatment variable: e401

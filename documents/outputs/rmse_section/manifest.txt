@@ -1,4 +1,0 @@
-﻿C:\Users\User\DML_project\documents\outputs\rmse_section\figures\fig_rmse_grouped_bar.png
-C:\Users\User\DML_project\documents\outputs\rmse_section\figures\fig_rmse_line.png
-C:\Users\User\DML_project\documents\outputs\rmse_section\tables\rmse_table_by_dgp.csv
-C:\Users\User\DML_project\documents\outputs\rmse_section\tables\rmse_table_by_dgp.md
