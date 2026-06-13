@@ -42,12 +42,12 @@ def _aggregated_results() -> pd.DataFrame:
                 "mean_nuisance_r2_d": 0.45678,
             },
             {
-                "scenario_name": "dense_linear_independent_n100_p20_k2_rf",
+                "scenario_name": "dense_linear_independent_n100_p20_k2_gradient_boosting",
                 "n_obs": 100,
                 "n_covariates": 20,
                 "n_folds": 2,
                 "dgp_name": "dense_linear_independent",
-                "learner_name": "random_forest",
+                "learner_name": "gradient_boosting",
                 "bias": 0.1,
                 "median_bias": 0.2,
                 "mae": 0.3,
@@ -89,7 +89,7 @@ def test_table_labels_are_readable() -> None:
     table = table_simulation_design(_aggregated_results())
 
     assert set(table["DGP"]) == {"Dense Linear Independent", "Sparse Linear Correlated"}
-    assert set(table["Learner"]) == {"Random Forest", "Lasso"}
+    assert set(table["Learner"]) == {"Gradient Boosting", "Lasso"}
 
 
 def test_table_main_results_contains_revised_metrics() -> None:

@@ -1,61 +1,39 @@
-# Finite-Sample Inference in Double Machine Learning: OLS Instability under Cross-Fitting
+# Finite-Sample Inference in Double Machine Learning
 
-This repository contains code to reproduce the simulation and empirical results in "Finite-Sample Inference in Double Machine Learning: OLS Instability under Cross-Fitting". It implements Double Machine Learning estimators with alternative nuisance learners and evaluates finite-sample inference performance
+This repository contains a simulation-only study of finite-sample inference in
+Double Machine Learning (DML) under cross-fitting. The project focuses on how
+fold-level dimensionality affects nuisance estimation, treatment-effect
+accuracy, and confidence-interval coverage.
 
-All results in the paper can be reproduced using the scripts provided in this repository. The code generates simulation results and empirical estimates from raw data.
+## Project Structure
 
-## Repository Structure
+- `src/dml_project/`: DGPs, nuisance learners, estimator, and simulation pipeline.
+- `tasks/`: `pytask` workflow definitions for simulations, aggregation, tables, and figures.
+- `tests/`: Unit and integration tests for the simulation workflow.
+- `documents/paper/`: Paper source files.
+- `documents/outputs/`: Generated outputs from smoke or full runs.
 
-- `src/dml_project/`: Core implementation (DGPs, learners, estimators, simulation pipeline, utilities).
-- `tasks/`: `pytask` workflow definitions for simulations, tables, figures, and empirical outputs.
-- `tests/`: Unit and integration tests for core modules and task logic.
-- `documents/paper/`: Paper source and rendered outputs.
-- `documents/real_data_401k/`: 401(k) empirical dataset used in the application.
-- `pixi.toml`, `pyproject.toml`: Environment, dependencies, and project configuration.
+## Final Simulation Design
 
-## Simulation Design
+| Component | Setting |
+| --- | --- |
+| Sample sizes | n = {250, 500, 1000} |
+| Covariate dimensions | p = {25, 50, 100, 150, 300} |
+| Cross-fitting folds | K = {2, 5, 10} |
+| DGPs | dense_linear_independent, sparse_linear_independent, sparse_linear_correlated, weak_signal_sparse |
+| Nuisance learners | OLS, Lasso, Elastic Net, Gradient Boosting |
+| Smoke replications | 10 per scenario |
+| Full replications | 1000 per scenario |
 
-We conduct a Monte Carlo simulation where many artificial datasets are generated and the DML estimator is applied repeatedly.
+The active grid contains `3 * 5 * 3 * 4 * 4 = 720` scenarios. Smoke mode
+therefore produces 7,200 simulation rows, and full mode produces 720,000 rows.
 
-| Component                 | Setting                                                                 |
-| ------------------------- | ----------------------------------------------------------------------- |
-| Sample sizes              | n = {250, 500, 1000}                                                    |
-| Covariate dimension       | p = {25, 50, 100, 150, 300}                                             |
-| Cross-fitting folds       | K = {2, 5, 10}                                                          |
-| Nuisance estimators       | OLS, Lasso, Elastic Net, Random Forest, Gradient Boosting               |
-| Data generating processes | dense_linear_independent, sparse_linear_independent, sparse_linear_correlated, weak_signal_sparse |
-| Replications              | `1000` per full-simulation scenario                                     |
+## Workflow Modes
 
-The DGPs are adapted benchmark designs with linear, quadratic/U-shaped, interaction, and step-function confounding. The contribution is not inventing new theoretical DGPs; it is studying how these nuisance structures interact with fold-level dimensionality and learner stability in finite-sample DML inference.
+- `smoke`: full scenario grid with 10 replications for quick checks.
+- `full`: full scenario grid with 1000 replications for final results.
 
-Total number of full scenarios:
-
-4 (DGP) x 3 (n) x 5 (p) x 3 (K) x 5 (learners) = 900
-
-Full simulation mode requires many model fits and can take substantial time depending on hardware. The revised workflow uses two modes: `smoke`, which runs the full scenario grid with R = 10, and `full`, which runs the full scenario grid with R = 1000.
-
-## Real Data Application
-
-In addition to the simulation study, the project includes an empirical application using real data:
-
-- Dataset: 1991 Survey of Income and Program Participation (SIPP) 401(k) data
-- File used in this repository: `documents/real_data_401k/sipp_1991.csv`
-
-This real-data exercise complements the Monte Carlo results by showing how the estimators behave on observed household financial data.
-
-## How the Simulation Works
-
-1. Generate artificial data from a known DGP.
-2. Estimate the treatment effect using DML.
-3. Compare estimated effects with the true parameter.
-4. Repeat many times and summarize performance metrics.
-
-If an estimator is reliable:
-
-- Estimates should be close to the true effect.
-- Confidence intervals should contain the true effect around 95% of the time.
-
-## How to Run the Project
+## Run Commands
 
 Install dependencies:
 
@@ -69,14 +47,15 @@ Run tests:
 pixi run pytest
 ```
 
-Run full simulation pipeline:
+Collect tasks without running them:
+
+```bash
+$env:DML_RUN_MODE = "smoke"
+pixi run python -m pytask collect
+```
+
+Run the current workflow:
 
 ```bash
 pixi run pytask
-```
-
-## Rendering the Paper
-
-```bash
-pixi run paper-pdf
 ```

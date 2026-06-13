@@ -22,7 +22,7 @@ from tasks.task_figures import (
 def _aggregated_results() -> pd.DataFrame:
     rows: list[dict] = []
     dgp_names = config.DGP_NAMES
-    learner_names = ["ols", "lasso", "random_forest"]
+    learner_names = ["ols", "lasso", "gradient_boosting"]
     for dgp_index, dgp_name in enumerate(dgp_names):
         for learner_index, learner_name in enumerate(learner_names):
             for n_folds in [2, 5]:

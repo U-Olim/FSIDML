@@ -9,13 +9,11 @@ from dml_project.learners.elastic_net import ElasticNetCVLearner
 from dml_project.learners.gradient_boosting import GradientBoostingLearner
 from dml_project.learners.lasso import LassoCVLearner, LassoLearner
 from dml_project.learners.ols import OLSLearner
-from dml_project.learners.random_forest import RandomForestLearner
 
 __all__ = [
     "OLSLearner",
     "LassoLearner",
     "LassoCVLearner",
     "ElasticNetCVLearner",
-    "RandomForestLearner",
     "GradientBoostingLearner",
 ]

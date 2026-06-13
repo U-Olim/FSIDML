@@ -97,12 +97,6 @@ documents/outputs/aggregated/*.csv
 documents/outputs/tables/*.csv
 documents/outputs/figures/*.png
 documents/outputs/figures/*.pdf
-documents/outputs/checks/runtime_profile/*.csv
-documents/outputs/archive/
-documents/outputs/bias_section/
-documents/outputs/rmse_section/
-documents/outputs/coverage_section/
-documents/outputs/t-stat_section/
 documents/outputs/paper/*.html
 documents/outputs/paper/*.pdf
 documents/paper/*.html

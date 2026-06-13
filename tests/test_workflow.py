@@ -27,6 +27,18 @@ TASK_FILES = [
     if path.name != "__init__.py"
 ]
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+ACTIVE_TASK_MODULES = {
+    "task_aggregate.py",
+    "task_figures.py",
+    "task_simulations.py",
+    "task_tables.py",
+}
+
+
+def test_only_simulation_paper_tasks_are_present() -> None:
+    """Workflow should expose only active simulation-paper task files."""
+
+    assert {path.name for path in TASK_FILES} == ACTIVE_TASK_MODULES
 
 
 def test_workflow_task_files_use_current_dgp_config() -> None:

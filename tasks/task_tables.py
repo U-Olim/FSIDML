@@ -31,7 +31,6 @@ LEARNER_LABELS = {
     "ols": "OLS",
     "lasso": "Lasso",
     "elastic_net": "Elastic Net",
-    "random_forest": "Random Forest",
     "gradient_boosting": "Gradient Boosting",
 }
 

@@ -33,7 +33,6 @@ LEARNER_LABELS = {
     "ols": "OLS",
     "lasso": "Lasso",
     "elastic_net": "Elastic Net",
-    "random_forest": "Random Forest",
     "gradient_boosting": "Gradient Boosting",
 }
 
@@ -43,7 +42,6 @@ LEARNER_COLORS = {
     "ols": "#4c78a8",
     "lasso": "#f58518",
     "elastic_net": "#54a24b",
-    "random_forest": "#b279a2",
     "gradient_boosting": "#e45756",
 }
 
@@ -51,7 +49,6 @@ LEARNER_MARKERS = {
     "ols": "o",
     "lasso": "s",
     "elastic_net": "^",
-    "random_forest": "D",
     "gradient_boosting": "v",
 }
 

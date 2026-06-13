@@ -1,0 +1,1 @@
+row_type,dgp_name,learner_name,scenario_name,n_obs,n_covariates,n_folds,mean_mae,mean_rmse,mean_coverage,mean_se_ratio,mean_nuisance_r2_y,mean_nuisance_r2_d,mean_fold_ratio,mean_condition_number,rank_deficiency_rate,mae,rmse,coverage,se_ratio

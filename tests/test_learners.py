@@ -21,7 +21,6 @@ try:
     from dml_project.learners.gradient_boosting import GradientBoostingLearner
     from dml_project.learners.lasso import LassoLearner
     from dml_project.learners.ols import OLSLearner
-    from dml_project.learners.random_forest import RandomForestLearner
     from dml_project.learners.tuning import make_main_learner
 except ModuleNotFoundError:
     from src.dml_project import config
@@ -29,7 +28,6 @@ except ModuleNotFoundError:
     from src.dml_project.learners.gradient_boosting import GradientBoostingLearner
     from src.dml_project.learners.lasso import LassoLearner
     from src.dml_project.learners.ols import OLSLearner
-    from src.dml_project.learners.random_forest import RandomForestLearner
     from src.dml_project.learners.tuning import make_main_learner
 
 
@@ -47,7 +45,6 @@ def _toy_data(n: int = 80, p: int = 10) -> tuple[np.ndarray, np.ndarray]:
         OLSLearner(),
         LassoLearner(),
         ElasticNetLearner(random_state=123),
-        RandomForestLearner(random_state=123),
         GradientBoostingLearner(random_state=123),
     ],
 )
@@ -64,7 +61,6 @@ def test_predict_before_fit_raises_runtime_error(learner) -> None:
         ("ols", OLSLearner),
         ("lasso", LassoLearner),
         ("elastic_net", ElasticNetLearner),
-        ("random_forest", RandomForestLearner),
         ("gradient_boosting", GradientBoostingLearner),
     ],
 )
@@ -86,7 +82,6 @@ def test_config_learners_are_exact_revised_set() -> None:
         "ols",
         "lasso",
         "elastic_net",
-        "random_forest",
         "gradient_boosting",
     ]
 
@@ -179,24 +174,6 @@ def test_elastic_net_uses_configured_fixed_hyperparameters() -> None:
     assert learner.model_.random_state == 456
 
 
-def test_random_forest_uses_configured_hyperparameters() -> None:
-    """Random Forest should use centralized runtime-conscious hyperparameters."""
-
-    X, y = _toy_data()
-    learner = make_main_learner("random_forest", random_state=456)
-
-    learner.fit(X, y)
-    predictions = learner.predict(X[:7])
-
-    assert predictions.shape == (7,)
-    assert learner.model_.n_estimators == config.RANDOM_FOREST_N_ESTIMATORS
-    assert learner.model_.max_depth == config.RANDOM_FOREST_MAX_DEPTH
-    assert learner.model_.min_samples_leaf == config.RANDOM_FOREST_MIN_SAMPLES_LEAF
-    assert learner.model_.max_features == config.RANDOM_FOREST_MAX_FEATURES
-    assert learner.model_.n_jobs == config.RANDOM_FOREST_N_JOBS
-    assert learner.model_.random_state == 456
-
-
 def test_gradient_boosting_uses_configured_hyperparameters() -> None:
     """Gradient Boosting should use centralized runtime-conscious hyperparameters."""
 
@@ -218,7 +195,7 @@ def test_gradient_boosting_uses_configured_hyperparameters() -> None:
     assert learner.model_.random_state == 456
 
 
-@pytest.mark.parametrize("learner_name", ["random_forest", "gradient_boosting"])
+@pytest.mark.parametrize("learner_name", ["gradient_boosting"])
 def test_stochastic_learners_are_reproducible(learner_name: str) -> None:
     """Stochastic learners should reproduce predictions for the same seed."""
 
@@ -232,7 +209,7 @@ def test_stochastic_learners_are_reproducible(learner_name: str) -> None:
     assert np.allclose(learner_1.predict(X[:5]), learner_2.predict(X[:5]))
 
 
-@pytest.mark.parametrize("bad_name", ["ridge", ""])
+@pytest.mark.parametrize("bad_name", ["ridge", "random_forest", ""])
 def test_invalid_learner_name_raises_value_error(bad_name: str) -> None:
     """Unknown learner names should raise ValueError."""
     with pytest.raises(ValueError):

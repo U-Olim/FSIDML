@@ -56,9 +56,9 @@ def test_config_contains_revised_design_constants() -> None:
         "ols",
         "lasso",
         "elastic_net",
-        "random_forest",
         "gradient_boosting",
     ]
+    assert count_all_scenarios() == 720
 
 
 @pytest.mark.parametrize("dgp_name", config.DGP_NAMES)
